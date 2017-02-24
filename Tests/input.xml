@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pyreefcore xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<!-- Simulation time structure -->
+	<time>
+		<!-- Simulation start time [a] -->
+		<start>0.</start>
+		<!-- Simulation end time [a] -->
+		<end>500.</end>
+		<!-- Time step for carbonate module [a] -->
+		<tcarb>1.</tcarb>
+		<!-- Display interval [a] -->
+		<display>50.</display>
+		<!-- Stratigraphic layer interval [a] -->
+		<laytime>10.</laytime>
+	</time>
+
+	<!-- Species definition, initial population and position. -->
+	<habitats>
+		<!-- Initial depth relative to sea-level at start time [m].
+        Note: positive when below sea-level. -->
+		<depth>1.</depth>
+		<!-- Number of species to define. -->
+		<speciesNb>5</speciesNb>
+
+		<!-- Species definition -->
+		<species>
+			<!-- Species name needs to be lower than 10 characters -->
+			<name>species1</name>
+      <!-- Definition of intrinsic rate of increase/decrease of the
+         considered population of species (Malthusian parameter). -->
+      <malthus>0.007</malthus>
+      <!-- Initial population number for considered species. -->
+      <population>10.</population>
+      <!-- Species maximum production rate for considered species [m/y]. -->
+      <production>0.001</production>
+		</species>
+
+		<!-- Species definition -->
+		<species>
+			<!-- Species name needs to be lower than 10 characters -->
+			<name>species2</name>
+      <!-- Definition of intrinsic rate of increase/decrease of the
+         considered population of species (Malthusian parameter). -->
+      <malthus>0.006</malthus>
+      <!-- Initial population number for considered species. -->
+      <population>15.</population>
+      <!-- Species maximum production rate for considered species [m/y]. -->
+      <production>0.0015</production>
+		</species>
+
+		<!-- Species definition -->
+		<species>
+			<!-- Species name needs to be lower than 10 characters -->
+			<name>species3</name>
+      <!-- Definition of intrinsic rate of increase/decrease of the
+         considered population of species (Malthusian parameter). -->
+      <malthus>0.12</malthus>
+      <!-- Initial population number for considered species. -->
+      <population>5.</population>
+      <!-- Species maximum production rate for considered species [m/y]. -->
+      <production>0.008</production>
+		</species>
+
+		<!-- Species definition -->
+		<species>
+			<!-- Species name needs to be lower than 10 characters -->
+			<name>species4</name>
+      <!-- Definition of intrinsic rate of increase/decrease of the
+         considered population of species (Malthusian parameter). -->
+      <malthus>0.015</malthus>
+      <!-- Initial population number for considered species. -->
+      <population>12.</population>
+      <!-- Species maximum production rate for considered species [m/y]. -->
+      <production>0.003</production>
+		</species>
+
+		<!-- Species definition -->
+		<species>
+			<!-- Species name needs to be lower than 10 characters -->
+			<name>species5</name>
+      <!-- Definition of intrinsic rate of increase/decrease of the
+         considered population of species (Malthusian parameter). -->
+      <malthus>0.01</malthus>
+      <!-- Initial population number for considered species. -->
+      <population>8.</population>
+      <!-- Species maximum production rate for considered species [m/y]. -->
+      <production>0.0015</production>
+		</species>
+
+    <!-- Community matrix representing the interactions between species.
+       αij is the interaction coefficient among the species association i and j ,
+       (a particular case is αii, the interaction of one species association with itself).
+
+       Example on how to define the following community matrix of αij coefficients
+       with i the column and j the row:
+                     -0.001   0.001   0.      0.      0.
+                     -0.001  -0.001   0.001   0.      0.
+                      0.0034 -0.001  -0.001  -0.02    0.004
+                      0.      0.      0.001  -0.001  -0.001
+                      0.      0.      0.      0.001  -0.001
+      -->
+    <communityMatrix>
+      <!-- Interaction for species 1 -->
+      <value col="0" row="0">-0.001</value>
+      <value col="1" row="0">0.001</value>
+      <value col="2" row="0">0.</value>
+      <value col="3" row="0">0.</value>
+      <value col="4" row="0">0.</value>
+
+      <!-- Interaction for species 2 -->
+      <value col="0" row="1">-0.001</value>
+      <value col="1" row="1">-0.001</value>
+      <value col="2" row="1">0.001</value>
+      <value col="3" row="1">0.</value>
+      <value col="4" row="1">0.</value>
+
+      <!-- Interaction for species 3 -->
+      <value col="0" row="2">0.0034</value>
+      <value col="1" row="2">-0.001</value>
+      <value col="2" row="2">-0.001</value>
+      <value col="3" row="2">-0.02</value>
+      <value col="4" row="2">0.004</value>
+
+      <!-- Interaction for species 4 -->
+      <value col="0" row="3">0.</value>
+      <value col="1" row="3">0.</value>
+      <value col="2" row="3">0.001</value>
+      <value col="3" row="3">-0.001</value>
+      <value col="4" row="3">-0.001</value>
+
+      <!-- Interaction for species 5 -->
+      <value col="0" row="4">0.</value>
+      <value col="1" row="4">0.</value>
+      <value col="2" row="4">0.</value>
+      <value col="3" row="4">0.001</value>
+      <value col="4" row="4">-0.001</value>
+    </communityMatrix>
+
+	</habitats>
+
+	<!-- Sea-level structure
+		The following methods can be used:
+			- a constant sea-level position for the entire simulation [m]
+			- a sea-level fluctuations curve (defined in a file)
+	-->
+	<sea>
+		<!-- Constant sea-level value [m] -->
+		<val>0.</val>
+		<!-- Sea-level curve - (optional). The file is made of 2 columns:
+			- first column: the time in year (increasing order)
+			- second column: the sea-level position for the considered time [m]
+			 For any given time in the simulation the sea-level is obtained by linear interpolation
+		-->
+		<!--curve>data/sealvl.csv</curve-->
+	</sea>
+
+	<!-- Ocean flow structure
+		The following methods can be used:
+			- a constant flow velocity for the entire simulation [m/d]
+			- a flow velocity fluctuations curve (defined in a file)
+			- a flow velocity function dependent of water depth
+	-->
+	<flow>
+		<!-- Constant velocity value [m/d] -->
+		<val>0.</val>
+		<!-- Flow velocity curve - (optional). The file is made of 2 columns:
+			- first column: the time in year (increasing order)
+			- second column: the flow velocity for the considered time [m/d]
+			 For any given time in the simulation the flow velocity is obtained by linear interpolation
+		-->
+		<!--curve>data/flow.csv</curve-->
+		<!-- Flow velocity function - (optional).
+			 For any given time in the simulation the flow velocity is obtained from water depth evaluation
+       using the following function:
+                                      Need to be implemented
+		-->
+		<!--function></function-->
+	</flow>
+
+	<!-- Siliciclastic input structure
+		The following methods can be used:
+			- a constant sediment influx for the entire simulation [m/y]
+			- a sediment influx fluctuations curve (defined in a file)
+			- a sediment influx function dependent of water depth
+	-->
+	<sedinput>
+		<!-- Constant velocity value [m/d] -->
+		<val>0.</val>
+		<!-- Flow velocity curve - (optional). The file is made of 2 columns:
+			- first column: the time in year (increasing order)
+			- second column: the flow velocity for the considered time [m/d]
+			 For any given time in the simulation the flow velocity is obtained by linear interpolation
+		-->
+		<!--curve>data/sedinput.csv</curve-->
+		<!-- Sediment input function - (optional).
+			 For any given time in the simulation the sediment inputis obtained from water depth evaluation
+       using the following function:
+                                        Need to be implemented
+		-->
+		<!--function></function-->
+	</sedinput>
+
+  <!-- Combining environmental parameters and carbonate production structure.
+    The influence functions for each environmental factor (water depth, flow velocity, and sediment input)
+    are used to model the interaction between species and their environment. For the sake of simplicity,
+    these functions have a trapezoidal shape that the user can define through four points [A,B,C,D].
+    A is the minimal value below which the species cannot live. Points B and C define the range where
+    the species has the best conditions for development. D is the value over which the species cannot live.
+    The function is linearly interpolated between these points.
+    This is optional.
+  -->
+  <envishape>
+
+    <!-- Definition of water depth shape function influencing each species [m].
+                      Min.[A]    Opt.1 [B]    Opt.2 [C]    Max. [D]
+            Species1    1.          2.          20.          50.
+            Species2    1.         10.          40.         165.
+            Species3    5.         50.          70.         150.
+            Species4    1.         50.         160.         200.
+            Species5    0.         2.           50.         200.
+    -->
+    <depthshape>
+      <!-- Definition of point A, B, C and D for first species -->
+      <dvalue col="0" row="0">1.</dvalue>
+      <dvalue col="1" row="0">2.</dvalue>
+      <dvalue col="2" row="0">20.</dvalue>
+      <dvalue col="3" row="0">50.</dvalue>
+      <!-- Definition of point A, B, C and D for second species -->
+      <dvalue col="0" row="1">1.</dvalue>
+      <dvalue col="1" row="1">10.</dvalue>
+      <dvalue col="2" row="1">40.</dvalue>
+      <dvalue col="3" row="1">165.</dvalue>
+      <!-- Definition of point A, B, C and D for third species -->
+      <dvalue col="0" row="2">5.</dvalue>
+      <dvalue col="1" row="2">50.</dvalue>
+      <dvalue col="2" row="2">70.</dvalue>
+      <dvalue col="3" row="2">150.</dvalue>
+      <!-- Definition of point A, B, C and D for fourth species -->
+      <dvalue col="0" row="3">1.</dvalue>
+      <dvalue col="1" row="3">50.</dvalue>
+      <dvalue col="2" row="3">160.</dvalue>
+      <dvalue col="3" row="3">200.</dvalue>
+      <!-- Definition of point A, B, C and D for fifth species -->
+      <dvalue col="0" row="4">0.</dvalue>
+      <dvalue col="1" row="4">2.</dvalue>
+      <dvalue col="2" row="4">50.</dvalue>
+      <dvalue col="3" row="4">200.</dvalue>
+    </depthshape>
+
+    <!-- Definition of flow velocity shape function influencing each species [m/d].
+                      Min.[A]    Opt.1 [B]    Opt.2 [C]    Max. [D]
+            Species1    1.          1.          39.          40.
+            Species2    0.          0.          39.          40.
+            Species3    1.5         1.5         25.          40.
+            Species4    0.          0.           2.           3.
+            Species5    0.          2.           3.           5.
+    -->
+    <flowshape>
+      <!-- Definition of point A, B, C and D for first species -->
+      <fvalue col="0" row="0">1.</fvalue>
+      <fvalue col="1" row="0">1.</fvalue>
+      <fvalue col="2" row="0">39.</fvalue>
+      <fvalue col="3" row="0">40.</fvalue>
+      <!-- Definition of point A, B, C and D for second species -->
+      <fvalue col="0" row="1">0.</fvalue>
+      <fvalue col="1" row="1">0.</fvalue>
+      <fvalue col="2" row="1">39.</fvalue>
+      <fvalue col="3" row="1">40.</fvalue>
+      <!-- Definition of point A, B, C and D for third species -->
+      <fvalue col="0" row="2">1.5</fvalue>
+      <fvalue col="1" row="2">1.5</fvalue>
+      <fvalue col="2" row="2">25.</fvalue>
+      <fvalue col="3" row="2">40.</fvalue>
+      <!-- Definition of point A, B, C and D for fourth species -->
+      <fvalue col="0" row="3">0.</fvalue>
+      <fvalue col="1" row="3">0.</fvalue>
+      <fvalue col="2" row="3">2.</fvalue>
+      <fvalue col="3" row="3">3.</fvalue>
+      <!-- Definition of point A, B, C and D for fifth species -->
+      <fvalue col="0" row="4">0.</fvalue>
+      <fvalue col="1" row="4">2.</fvalue>
+      <fvalue col="2" row="4">3.</fvalue>
+      <fvalue col="3" row="4">5.</fvalue>
+    </flowshape>
+
+    <!-- Definition of sedimentation shape function influencing each species [m/d].
+                      Min.[A]    Opt.1 [B]    Opt.2 [C]    Max. [D]
+            Species1    0.001       0.0015       0.003       0.004
+            Species2    0.003       0.004        0.005       0.006
+            Species3    0.0008      0.001        0.0015      0.002
+            Species4    0.002       0.004        0.005       0.0055
+            Species5    0.001       0.005        0.008       0.01
+    -->
+    <sedshape>
+      <!-- Definition of point A, B, C and D for first species -->
+      <svalue col="0" row="0">0.001</svalue>
+      <svalue col="1" row="0">0.0015</svalue>
+      <svalue col="2" row="0">0.003</svalue>
+      <svalue col="3" row="0">0.004</svalue>
+      <!-- Definition of point A, B, C and D for second species -->
+      <svalue col="0" row="1">0.003</svalue>
+      <svalue col="1" row="1">0.004</svalue>
+      <svalue col="2" row="1">0.005</svalue>
+      <svalue col="3" row="1">0.006</svalue>
+      <!-- Definition of point A, B, C and D for third species -->
+      <svalue col="0" row="2">0.0008</svalue>
+      <svalue col="1" row="2">0.001</svalue>
+      <svalue col="2" row="2">0.0015</svalue>
+      <svalue col="3" row="2">0.002</svalue>
+      <!-- Definition of point A, B, C and D for fourth species -->
+      <svalue col="0" row="3">0.002</svalue>
+      <svalue col="1" row="3">0.004</svalue>
+      <svalue col="2" row="3">0.005</svalue>
+      <svalue col="3" row="3">0.0055</svalue>
+      <!-- Definition of point A, B, C and D for fifth species -->
+      <svalue col="0" row="4">0.001</svalue>
+      <svalue col="1" row="4">0.005</svalue>
+      <svalue col="2" row="4">0.008</svalue>
+      <svalue col="3" row="4">0.01</svalue>
+    </sedshape>
+  </envishape>
+
+  <!-- Output folder path -->
+	<outfolder>outReef</outfolder>
+
+</pyreefcore>
