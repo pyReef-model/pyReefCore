@@ -13,7 +13,7 @@ import time
 import numpy as np
 import mpi4py.MPI as mpi
 
-from pyReefCore import (xmlParser, coralGLV)
+from pyReefCore import (xmlParser, coralGLV, coreData)
 
 # profiling support
 import cProfile
@@ -54,6 +54,7 @@ class Model(object):
         self.input = xmlParser.xmlParser(filename, makeUniqueOutputDir=(self._rank == 0))
         self.tNow = self.input.tStart
         self.tCoral = self.tNow
+        self.tLayer = self.tNow + self.input.laytime
 
         # Sync the chosen output dir to all nodes
         self.input.outDir = self._comm.bcast(self.input.outDir, root=0)
@@ -66,6 +67,7 @@ class Model(object):
         seed = self._comm.bcast(seed, root=0)
         np.random.seed(seed)
         self.iter = 0
+        self.layID = 0
 
 
     def run_to_time(self, tEnd, showtime=10, profile=False, verbose=False):
@@ -75,7 +77,7 @@ class Model(object):
         If profile is True, dump cProfile output to /tmp.
         """
 
-        viewtime = self.tNow+showtime
+        timeVerbose = self.tNow+showtime
 
         if profile:
             pid = os.getpid()
@@ -93,6 +95,8 @@ class Model(object):
         self.coral = coralGLV.coralGLV(input=self.input)
         self.odeRKF = self.coral.solverGLV()
 
+        # Initialise core data
+        self.core = coreData.coreData(input=self.input)
 
         # Perform main simulation loop
         # NOTE: number of iteration for the ODE during a given time step, could be user defined...
@@ -122,16 +126,20 @@ class Model(object):
             self.iter += 1
             self.coral.population[:,self.iter] = population[:,-1]
 
-            # Compute carbonate production
-            # TODO
-            # Update coral core characteristics
-            # TODO
+            # Compute carbonate production and update coral core characteristics
+            self.core.coralProduction(self.layID,self.coral.population[:,self.iter],
+                                      self.coral.epsilon)
 
             # Update time step
             self.tNow = self.tCoral
 
-            if self._rank == 0 and self.tNow>=viewtime:
-                viewtime = self.tNow+showtime
+            # Update stratigraphic layer ID
+            if self.tLayer < self.tNow :
+                self.tLayer += self.input.laytime
+                self.layID += 1
+
+            if self._rank == 0 and self.tNow>=timeVerbose:
+                timeVerbose = self.tNow+showtime
                 print 'tNow = %s [yr]' %self.tNow
 
         return

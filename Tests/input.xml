@@ -12,14 +12,14 @@
 		<!-- Display interval [a] -->
 		<display>50.</display>
 		<!-- Stratigraphic layer interval [a] -->
-		<laytime>10.</laytime>
+		<laytime>1.</laytime>
 	</time>
 
 	<!-- Species definition, initial population and position. -->
 	<habitats>
 		<!-- Initial depth relative to sea-level at start time [m].
-        Note: positive when below sea-level. -->
-		<depth>1.</depth>
+             Note: positive when below sea-level. -->
+		<depth>10.</depth>
 		<!-- Number of species to define. -->
 		<speciesNb>5</speciesNb>
 
@@ -27,115 +27,115 @@
 		<species>
 			<!-- Species name needs to be lower than 10 characters -->
 			<name>species1</name>
-      <!-- Definition of intrinsic rate of increase/decrease of the
-         considered population of species (Malthusian parameter). -->
-      <malthus>0.007</malthus>
-      <!-- Initial population number for considered species. -->
-      <population>10.</population>
-      <!-- Species maximum production rate for considered species [m/y]. -->
-      <production>0.001</production>
+			<!-- Definition of intrinsic rate of increase/decrease of the
+                 considered population of species (Malthusian parameter). -->
+			<malthus>0.007</malthus>
+			<!-- Initial population number for considered species. -->
+			<population>10.</population>
+			<!-- Species maximum production rate for considered species [m/y]. -->
+			<production>0.001</production>
 		</species>
 
 		<!-- Species definition -->
 		<species>
 			<!-- Species name needs to be lower than 10 characters -->
 			<name>species2</name>
-      <!-- Definition of intrinsic rate of increase/decrease of the
-         considered population of species (Malthusian parameter). -->
-      <malthus>0.006</malthus>
-      <!-- Initial population number for considered species. -->
-      <population>15.</population>
-      <!-- Species maximum production rate for considered species [m/y]. -->
-      <production>0.0015</production>
+			<!-- Definition of intrinsic rate of increase/decrease of the
+				 considered population of species (Malthusian parameter). -->
+			<malthus>0.006</malthus>
+			<!-- Initial population number for considered species. -->
+			<population>15.</population>
+			<!-- Species maximum production rate for considered species [m/y]. -->
+			<production>0.0015</production>
 		</species>
 
 		<!-- Species definition -->
 		<species>
 			<!-- Species name needs to be lower than 10 characters -->
 			<name>species3</name>
-      <!-- Definition of intrinsic rate of increase/decrease of the
-         considered population of species (Malthusian parameter). -->
-      <malthus>0.12</malthus>
-      <!-- Initial population number for considered species. -->
-      <population>5.</population>
-      <!-- Species maximum production rate for considered species [m/y]. -->
-      <production>0.008</production>
+			<!-- Definition of intrinsic rate of increase/decrease of the
+				 considered population of species (Malthusian parameter). -->
+			<malthus>0.12</malthus>
+			<!-- Initial population number for considered species. -->
+			<population>5.</population>
+			<!-- Species maximum production rate for considered species [m/y]. -->
+			<production>0.008</production>
 		</species>
 
 		<!-- Species definition -->
 		<species>
 			<!-- Species name needs to be lower than 10 characters -->
 			<name>species4</name>
-      <!-- Definition of intrinsic rate of increase/decrease of the
-         considered population of species (Malthusian parameter). -->
-      <malthus>0.015</malthus>
-      <!-- Initial population number for considered species. -->
-      <population>12.</population>
-      <!-- Species maximum production rate for considered species [m/y]. -->
-      <production>0.003</production>
+			<!-- Definition of intrinsic rate of increase/decrease of the
+				 considered population of species (Malthusian parameter). -->
+			<malthus>0.015</malthus>
+			<!-- Initial population number for considered species. -->
+			<population>12.</population>
+			<!-- Species maximum production rate for considered species [m/y]. -->
+			<production>0.003</production>
 		</species>
 
 		<!-- Species definition -->
 		<species>
 			<!-- Species name needs to be lower than 10 characters -->
 			<name>species5</name>
-      <!-- Definition of intrinsic rate of increase/decrease of the
-         considered population of species (Malthusian parameter). -->
-      <malthus>0.01</malthus>
-      <!-- Initial population number for considered species. -->
-      <population>8.</population>
-      <!-- Species maximum production rate for considered species [m/y]. -->
-      <production>0.0015</production>
+			<!-- Definition of intrinsic rate of increase/decrease of the
+				 considered population of species (Malthusian parameter). -->
+			<malthus>0.01</malthus>
+			<!-- Initial population number for considered species. -->
+			<population>8.</population>
+			<!-- Species maximum production rate for considered species [m/y]. -->
+			<production>0.0015</production>
 		</species>
 
-    <!-- Community matrix representing the interactions between species.
-       αij is the interaction coefficient among the species association i and j ,
-       (a particular case is αii, the interaction of one species association with itself).
+        <!-- Community matrix representing the interactions between species.
+           αij is the interaction coefficient among the species association i and j ,
+           (a particular case is αii, the interaction of one species association with itself).
 
-       Example on how to define the following community matrix of αij coefficients
-       with i the column and j the row:
-                     -0.001   0.001   0.      0.      0.
-                     -0.001  -0.001   0.001   0.      0.
-                      0.0034 -0.001  -0.001  -0.02    0.004
-                      0.      0.      0.001  -0.001  -0.001
-                      0.      0.      0.      0.001  -0.001
-      -->
-    <communityMatrix>
-      <!-- Interaction for species 1 -->
-      <value col="0" row="0">-0.001</value>
-      <value col="1" row="0">0.001</value>
-      <value col="2" row="0">0.</value>
-      <value col="3" row="0">0.</value>
-      <value col="4" row="0">0.</value>
+           Example on how to define the following community matrix of αij coefficients
+           with i the column and j the row:
+                         -0.001   0.001   0.      0.      0.
+                         -0.001  -0.001   0.001   0.      0.
+                          0.0034 -0.001  -0.001  -0.02    0.004
+                          0.      0.      0.001  -0.001  -0.001
+                          0.      0.      0.      0.001  -0.001
+        -->
+        <communityMatrix>
+          <!-- Interaction for species 1 -->
+          <value col="0" row="0">-0.001</value>
+          <value col="1" row="0">0.001</value>
+          <value col="2" row="0">0.</value>
+          <value col="3" row="0">0.</value>
+          <value col="4" row="0">0.</value>
 
-      <!-- Interaction for species 2 -->
-      <value col="0" row="1">-0.001</value>
-      <value col="1" row="1">-0.001</value>
-      <value col="2" row="1">0.001</value>
-      <value col="3" row="1">0.</value>
-      <value col="4" row="1">0.</value>
+          <!-- Interaction for species 2 -->
+          <value col="0" row="1">-0.001</value>
+          <value col="1" row="1">-0.001</value>
+          <value col="2" row="1">0.001</value>
+          <value col="3" row="1">0.</value>
+          <value col="4" row="1">0.</value>
 
-      <!-- Interaction for species 3 -->
-      <value col="0" row="2">0.0034</value>
-      <value col="1" row="2">-0.001</value>
-      <value col="2" row="2">-0.001</value>
-      <value col="3" row="2">-0.02</value>
-      <value col="4" row="2">0.004</value>
+          <!-- Interaction for species 3 -->
+          <value col="0" row="2">0.0034</value>
+          <value col="1" row="2">-0.001</value>
+          <value col="2" row="2">-0.001</value>
+          <value col="3" row="2">-0.02</value>
+          <value col="4" row="2">0.004</value>
 
-      <!-- Interaction for species 4 -->
-      <value col="0" row="3">0.</value>
-      <value col="1" row="3">0.</value>
-      <value col="2" row="3">0.001</value>
-      <value col="3" row="3">-0.001</value>
-      <value col="4" row="3">-0.001</value>
+          <!-- Interaction for species 4 -->
+          <value col="0" row="3">0.</value>
+          <value col="1" row="3">0.</value>
+          <value col="2" row="3">0.001</value>
+          <value col="3" row="3">-0.001</value>
+          <value col="4" row="3">-0.001</value>
 
-      <!-- Interaction for species 5 -->
-      <value col="0" row="4">0.</value>
-      <value col="1" row="4">0.</value>
-      <value col="2" row="4">0.</value>
-      <value col="3" row="4">0.001</value>
-      <value col="4" row="4">-0.001</value>
-    </communityMatrix>
+          <!-- Interaction for species 5 -->
+          <value col="0" row="4">0.</value>
+          <value col="1" row="4">0.</value>
+          <value col="2" row="4">0.</value>
+          <value col="3" row="4">0.001</value>
+          <value col="4" row="4">-0.001</value>
+        </communityMatrix>
 
 	</habitats>
 
@@ -320,8 +320,5 @@
       <svalue col="3" row="4">0.01</svalue>
     </sedshape>
   </envishape>
-
-  <!-- Output folder path -->
-	<outfolder>outReef</outfolder>
 
 </pyreefcore>
