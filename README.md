@@ -7,7 +7,7 @@ The most common models of species evolution in ecological modeling are the preda
 
 From LV equations, one can formulate the **Generalized Lotka-Volterra (GLV)** equation that allows unlimited number of species and different types of interactions among species. The GLV equation is mainly formed by two parts, the logistic growth/decay of a species and its interaction with the other species,
 
-![equation](http://www.sciweavers.org/tex2img.php?eq=%5Cfrac%7Bdx_i%7D%7Bdt%7D%20%3D%20%5Cepsilon_i%20x_i%20%2B%20%5Csum_%7Bj%3D1%7D%5E%7BN_s%7D%20%5Calpha_%7Bij%7Dx_ix_j&bc=White&fc=Black&im=jpg&fs=12&ff=arev&edit=0)
+![equation](http://bit.ly/2mgyrpI)
 $$\frac{dx_i}{dt} = \epsilon_i x_i + \sum_{j=1}^{N_s} \alpha_{ij}x_ix_j$$
 
 where $x_i$ is the population density of species _i_; $\epsilon_i$ is the intrinsic rate of increase/decrease of a population of species _i_ (also called **Malthusian** parameter); $\alpha_{ij}$ is the interaction coefficient among the species association _i_ and _j_, (a particular case is $\alpha_{ii}$, the interaction of one species association with itself); and _t_ is time. Equation 1 can be written in matrix formulation as:
