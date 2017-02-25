@@ -53,12 +53,28 @@ which gives:
 
 We define the maximum carbonate production rate (m/y) for each species in the **XmL** input file.
 
+## Installation
 
-## Usage
+### Local install
+
+The code is available from our github [page](https://github.com/pyReef-model/pyReefCore.git) and can be obtained either from this page or using **git**
+```
+git clone https://github.com/pyReef-model/pyReefCore.git
+```
+
+Once donwloaded, navigate to the **pyReefCore** folder and run the following command:
+```
+pip install -e /workspace/volume/pyReef/
+```
+
+### Docker container
 
 The code is available from Docker Hub at [pyreefmodel/pyreef-Docker](https://hub.docker.com/u/pyreefmodel/) and can be downloaded using **Kitematic**. An example of model is provided in the [Tests](https://github.com/pyReef-model/pyReefCore/tree/master/Tests) folder using IPython Notebook.
 
+## Usage
 
+pyReefCore can be use from an _IPython notebook_ or a _python script_ directly. An example of functions available is provided below:
+  
 ```python
 
 %matplotlib inline
@@ -67,7 +83,7 @@ import matplotlib.pyplot as plt
 import numpy
 
 %config InlineBackend.figure_format = 'svg'
-from pyReefCore.model import Model 
+from pyReefCore.model import Model
 
 # initialise model
 reef = Model()
