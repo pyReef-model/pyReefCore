@@ -64,7 +64,7 @@ git clone https://github.com/pyReef-model/pyReefCore.git
 
 Once donwloaded, navigate to the **pyReefCore** folder and run the following command:
 ```
-pip install -e /workspace/volume/pyReef/
+pip install -e /workspace/volume/pyReefCore/
 ```
 
 ### Docker container
@@ -74,7 +74,7 @@ The code is available from Docker Hub at [pyreefmodel/pyreef-Docker](https://hub
 ## Usage
 
 pyReefCore can be use from an _IPython notebook_ or a _python script_ directly. An example of functions available is provided below:
-  
+
 ```python
 
 %matplotlib inline

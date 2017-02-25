@@ -8,21 +8,21 @@ The most common models of species evolution in ecological modeling are the preda
 
 From LV equations, one can formulate the **Generalized Lotka-Volterra (GLV)** equation that allows unlimited number of species and different types of interactions among species. The GLV equation is mainly formed by two parts, the logistic growth/decay of a species and its interaction with the other species,
 
-<p align="center"><img src="https://rawgit.com/pyReef-model/pyReefCore/None/svgs/36c0f67b25b915d50ae129824705fc29.svg?invert_in_darkmode" align=middle width=173.0751pt height=50.188545pt/></p>
+<p align="center"><img src="svgs/36c0f67b25b915d50ae129824705fc29.svg?invert_in_darkmode" align=middle width=173.0751pt height=50.188545pt/></p>
 
-where <img src="https://rawgit.com/pyReef-model/pyReefCore/None/svgs/9fc20fb1d3825674c6a279cb0d5ca636.svg?invert_in_darkmode" align=middle width=13.993485pt height=14.10255pt/> is the population density of species _i_; <img src="https://rawgit.com/pyReef-model/pyReefCore/None/svgs/1cd32b0756da515bc59142b9318ff797.svg?invert_in_darkmode" align=middle width=11.28105pt height=14.10255pt/> is the intrinsic rate of increase/decrease of a population of species _i_ (also called **Malthusian** parameter); <img src="https://rawgit.com/pyReef-model/pyReefCore/None/svgs/8175b4b012861c57d7f99a503fdcaa72.svg?invert_in_darkmode" align=middle width=21.19161pt height=14.10255pt/> is the interaction coefficient among the species association _i_ and _j_, (a particular case is <img src="https://rawgit.com/pyReef-model/pyReefCore/None/svgs/ff41937f5cd113c5b9d670fd51ac28f1.svg?invert_in_darkmode" align=middle width=19.743405pt height=14.10255pt/>, the interaction of one species association with itself); and _t_ is time. Equation 1 can be written in matrix formulation as:
+where <img src="svgs/9fc20fb1d3825674c6a279cb0d5ca636.svg?invert_in_darkmode" align=middle width=13.993485pt height=14.10255pt/> is the population density of species _i_; <img src="svgs/1cd32b0756da515bc59142b9318ff797.svg?invert_in_darkmode" align=middle width=11.28105pt height=14.10255pt/> is the intrinsic rate of increase/decrease of a population of species _i_ (also called **Malthusian** parameter); <img src="svgs/8175b4b012861c57d7f99a503fdcaa72.svg?invert_in_darkmode" align=middle width=21.19161pt height=14.10255pt/> is the interaction coefficient among the species association _i_ and _j_, (a particular case is <img src="svgs/ff41937f5cd113c5b9d670fd51ac28f1.svg?invert_in_darkmode" align=middle width=19.743405pt height=14.10255pt/>, the interaction of one species association with itself); and _t_ is time. Equation 1 can be written in matrix formulation as:
 
-<p align="center"><img src="https://rawgit.com/pyReef-model/pyReefCore/None/svgs/75aeba56acecbc8c3ead4fd18a21d6b3.svg?invert_in_darkmode" align=middle width=169.01445pt height=33.769395pt/></p>
+<p align="center"><img src="svgs/75aeba56acecbc8c3ead4fd18a21d6b3.svg?invert_in_darkmode" align=middle width=169.01445pt height=33.769395pt/></p>
 
-where <img src="https://rawgit.com/pyReef-model/pyReefCore/None/svgs/cbfb1b2a33b28eab8a3e59464768e810.svg?invert_in_darkmode" align=middle width=14.85297pt height=22.38192pt/> is the vector of population densities of each species _i_, <img src="https://rawgit.com/pyReef-model/pyReefCore/None/svgs/7ccca27b5ccc533a2dd72dc6fa28ed84.svg?invert_in_darkmode" align=middle width=6.6475035pt height=14.10255pt/> is the vector of all _Mathusian_ parameters, <img src="https://rawgit.com/pyReef-model/pyReefCore/None/svgs/53d147e7f3fe6e47ee05b88b166bd3f6.svg?invert_in_darkmode" align=middle width=12.282765pt height=22.38192pt/> is the matrix of interaction coefficients, also known as community matrix, and <img src="https://rawgit.com/pyReef-model/pyReefCore/None/svgs/9f0dfe8a0e850780e96018103aa5fe64.svg?invert_in_darkmode" align=middle width=55.17996pt height=24.56553pt/> is a square matrix with diagonal elements equal to <img src="https://rawgit.com/pyReef-model/pyReefCore/None/svgs/cbfb1b2a33b28eab8a3e59464768e810.svg?invert_in_darkmode" align=middle width=14.85297pt height=22.38192pt/>, and zeros outside the diagonal.
+where <img src="svgs/cbfb1b2a33b28eab8a3e59464768e810.svg?invert_in_darkmode" align=middle width=14.85297pt height=22.38192pt/> is the vector of population densities of each species _i_, <img src="svgs/7ccca27b5ccc533a2dd72dc6fa28ed84.svg?invert_in_darkmode" align=middle width=6.6475035pt height=14.10255pt/> is the vector of all _Mathusian_ parameters, <img src="svgs/53d147e7f3fe6e47ee05b88b166bd3f6.svg?invert_in_darkmode" align=middle width=12.282765pt height=22.38192pt/> is the matrix of interaction coefficients, also known as community matrix, and <img src="svgs/9f0dfe8a0e850780e96018103aa5fe64.svg?invert_in_darkmode" align=middle width=55.17996pt height=24.56553pt/> is a square matrix with diagonal elements equal to <img src="svgs/cbfb1b2a33b28eab8a3e59464768e810.svg?invert_in_darkmode" align=middle width=14.85297pt height=22.38192pt/>, and zeros outside the diagonal.
 
 ## Definition of species rate and community matrix
 
 To solve the ODEs, the user needs to define several initial conditions:
 
-- the initial species population number <img src="https://rawgit.com/pyReef-model/pyReefCore/None/svgs/8058174c3e47972feecfee6a81720995.svg?invert_in_darkmode" align=middle width=23.046375pt height=22.38192pt/>
-- the intrinsic rate of a population species <img src="https://rawgit.com/pyReef-model/pyReefCore/None/svgs/7ccca27b5ccc533a2dd72dc6fa28ed84.svg?invert_in_darkmode" align=middle width=6.6475035pt height=14.10255pt/>
-- the interaction coefficients among the species association <img src="https://rawgit.com/pyReef-model/pyReefCore/None/svgs/c745b9b57c145ec5577b82542b2df546.svg?invert_in_darkmode" align=middle width=10.537065pt height=14.10255pt/>
+- the initial species population number <img src="svgs/8058174c3e47972feecfee6a81720995.svg?invert_in_darkmode" align=middle width=23.046375pt height=22.38192pt/>
+- the intrinsic rate of a population species <img src="svgs/7ccca27b5ccc533a2dd72dc6fa28ed84.svg?invert_in_darkmode" align=middle width=6.6475035pt height=14.10255pt/>
+- the interaction coefficients among the species association <img src="svgs/c745b9b57c145ec5577b82542b2df546.svg?invert_in_darkmode" align=middle width=10.537065pt height=14.10255pt/>
 
 Several other input are required and will need to be set in a **XmL** inputfile. An example of such file is provided in [here](https://github.com/pyReef-model/pyReefCore/blob/master/Tests/input.xml).
 
@@ -41,15 +41,15 @@ The _Fehlberg_ method requires 5 parameters :
 ## Carbonate production
 
 Once a species association population is computed, carbonate production is calculated using a carbonate production factor. Production factors are specified for the maximum population, and linearly scaled to the actual population following the relation
-<p align="center"><img src="https://rawgit.com/pyReef-model/pyReefCore/None/svgs/86747a51e4fe91aa94ce20bfe5b4a600.svg?invert_in_darkmode" align=middle width=106.14813pt height=36.235155pt/></p>
+<p align="center"><img src="svgs/86747a51e4fe91aa94ce20bfe5b4a600.svg?invert_in_darkmode" align=middle width=106.14813pt height=36.235155pt/></p>
 
-where <img src="https://rawgit.com/pyReef-model/pyReefCore/None/svgs/df5a289587a2f0247a5b97c1e8ac58ca.svg?invert_in_darkmode" align=middle width=12.78882pt height=22.38192pt/> is the carbonate production, <img src="https://rawgit.com/pyReef-model/pyReefCore/None/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.913963pt height=20.1465pt/> is time, <img src="https://rawgit.com/pyReef-model/pyReefCore/None/svgs/ea449f9e9a48e2959872aac8fa65e1ca.svg?invert_in_darkmode" align=middle width=38.586405pt height=22.38192pt/> is the carbonate production factor when population is at its maximum, and <img src="https://rawgit.com/pyReef-model/pyReefCore/None/svgs/655ca15e2b101fb431577b12d4442580.svg?invert_in_darkmode" align=middle width=18.5427pt height=22.38192pt/> is the maximum population of species _i_, computed as
+where <img src="svgs/df5a289587a2f0247a5b97c1e8ac58ca.svg?invert_in_darkmode" align=middle width=12.78882pt height=22.38192pt/> is the carbonate production, <img src="svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.913963pt height=20.1465pt/> is time, <img src="svgs/ea449f9e9a48e2959872aac8fa65e1ca.svg?invert_in_darkmode" align=middle width=38.586405pt height=22.38192pt/> is the carbonate production factor when population is at its maximum, and <img src="svgs/655ca15e2b101fb431577b12d4442580.svg?invert_in_darkmode" align=middle width=18.5427pt height=22.38192pt/> is the maximum population of species _i_, computed as
 
-<p align="center"><img src="https://rawgit.com/pyReef-model/pyReefCore/None/svgs/43e99ce899b3ecaaa637f00ee554b2ae.svg?invert_in_darkmode" align=middle width=63.86358pt height=31.913475pt/></p>
+<p align="center"><img src="svgs/43e99ce899b3ecaaa637f00ee554b2ae.svg?invert_in_darkmode" align=middle width=63.86358pt height=31.913475pt/></p>
 
 which gives:
 
-<p align="center"><img src="https://rawgit.com/pyReef-model/pyReefCore/None/svgs/2baed347518e8396d33d82d9c18e283b.svg?invert_in_darkmode" align=middle width=124.960935pt height=36.235155pt/></p>
+<p align="center"><img src="svgs/2baed347518e8396d33d82d9c18e283b.svg?invert_in_darkmode" align=middle width=124.960935pt height=36.235155pt/></p>
 
 We define the maximum carbonate production rate (m/y) for each species in the **XmL** input file.
 
@@ -64,7 +64,7 @@ git clone https://github.com/pyReef-model/pyReefCore.git
 
 Once donwloaded, navigate to the **pyReefCore** folder and run the following command:
 ```
-pip install -e /workspace/volume/pyReef/
+pip install -e /workspace/volume/pyReefCore/
 ```
 
 ### Docker container
@@ -74,7 +74,7 @@ The code is available from Docker Hub at [pyreefmodel/pyreef-Docker](https://hub
 ## Usage
 
 pyReefCore can be use from an _IPython notebook_ or a _python script_ directly. An example of functions available is provided below:
-  
+
 ```python
 
 %matplotlib inline
