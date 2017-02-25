@@ -67,7 +67,7 @@ import matplotlib.pyplot as plt
 import numpy
 
 %config InlineBackend.figure_format = 'svg'
-from pyReefCore.model import Model
+from pyReefCore.model import Model 
 
 # initialise model
 reef = Model()
