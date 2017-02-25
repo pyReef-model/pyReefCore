@@ -13,3 +13,4 @@
 from .forcing import xmlParser
 from .simulation import coralGLV
 from .simulation import coreData
+from .simulation import modelPlot

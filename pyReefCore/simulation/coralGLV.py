@@ -22,7 +22,7 @@ class coralGLV:
     method (RKF45 or Fehlberg as defined in the odespy library)
     """
 
-    def __init__(self, input = input):
+    def __init__(self, input = None):
         """
         Constructor.
         """

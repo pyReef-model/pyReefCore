@@ -13,7 +13,7 @@ import time
 import numpy as np
 import mpi4py.MPI as mpi
 
-from pyReefCore import (xmlParser, coralGLV, coreData)
+from pyReefCore import (xmlParser, coralGLV, coreData, modelPlot)
 
 # profiling support
 import cProfile
@@ -54,7 +54,7 @@ class Model(object):
         self.input = xmlParser.xmlParser(filename, makeUniqueOutputDir=(self._rank == 0))
         self.tNow = self.input.tStart
         self.tCoral = self.tNow
-        self.tLayer = self.tNow + self.input.laytime
+        self.tLayer = self.tNow #+ self.input.laytime
 
         # Sync the chosen output dir to all nodes
         self.input.outDir = self._comm.bcast(self.input.outDir, root=0)
@@ -91,12 +91,16 @@ class Model(object):
             tEnd = self.input.tEnd
             print 'Requested time is set to the simulation end time as defined in the XmL input file'
 
-        # Initialise Generalized Lotka-Volterra equation
-        self.coral = coralGLV.coralGLV(input=self.input)
-        self.odeRKF = self.coral.solverGLV()
+        if self.tNow == self.input.tStart:
+            # Initialise Generalized Lotka-Volterra equation
+            self.coral = coralGLV.coralGLV(input=self.input)
+            self.odeRKF = self.coral.solverGLV()
 
-        # Initialise core data
-        self.core = coreData.coreData(input=self.input)
+            # Initialise plotting functions
+            self.plot = modelPlot.modelPlot(input=self.input)
+
+            # Initialise core data
+            self.core = coreData.coreData(input=self.input)
 
         # Perform main simulation loop
         # NOTE: number of iteration for the ODE during a given time step, could be user defined...

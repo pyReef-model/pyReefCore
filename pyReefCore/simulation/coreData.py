@@ -71,5 +71,14 @@ class coreData:
         self.thickness[layID] += toth
         # Update current layer top elevation
         self.topH -= toth
+        # print self.prod
+        # print self.alpha
+        # print epsilon
+        # print coral
+        # print self.dt
+        # print toth
+        # print production
+        # print layID
+        # print ''
 
         return
