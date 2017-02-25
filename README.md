@@ -7,13 +7,13 @@ The most common models of species evolution in ecological modeling are the preda
 
 From LV equations, one can formulate the **Generalized Lotka-Volterra (GLV)** equation that allows unlimited number of species and different types of interactions among species. The GLV equation is mainly formed by two parts, the logistic growth/decay of a species and its interaction with the other species,
 
-$$\frac{dx_i}{dt} = \epsilon_i x_i + \sum_{j=1}^{N_s} \alpha_{ij}x_ix_j$$
+<p align="center"><img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/36c0f67b25b915d50ae129824705fc29.svg?invert_in_darkmode" align=middle width=173.0751pt height=50.188545pt/></p>
 
-where $x_i$ is the population density of species _i_; $\epsilon_i$ is the intrinsic rate of increase/decrease of a population of species _i_ (also called **Malthusian** parameter); $\alpha_{ij}$ is the interaction coefficient among the species association _i_ and _j_, (a particular case is $\alpha_{ii}$, the interaction of one species association with itself); and _t_ is time. Equation 1 can be written in matrix formulation as:
+where <img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/9fc20fb1d3825674c6a279cb0d5ca636.svg?invert_in_darkmode" align=middle width=13.993485pt height=14.10255pt/> is the population density of species _i_; <img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/1cd32b0756da515bc59142b9318ff797.svg?invert_in_darkmode" align=middle width=11.28105pt height=14.10255pt/> is the intrinsic rate of increase/decrease of a population of species _i_ (also called **Malthusian** parameter); <img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/8175b4b012861c57d7f99a503fdcaa72.svg?invert_in_darkmode" align=middle width=21.19161pt height=14.10255pt/> is the interaction coefficient among the species association _i_ and _j_, (a particular case is <img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/ff41937f5cd113c5b9d670fd51ac28f1.svg?invert_in_darkmode" align=middle width=19.743405pt height=14.10255pt/>, the interaction of one species association with itself); and _t_ is time. Equation 1 can be written in matrix formulation as:
 
-$$\frac{dx_i}{dt} = diag[X](\epsilon + AX)$$
+<p align="center"><img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/75aeba56acecbc8c3ead4fd18a21d6b3.svg?invert_in_darkmode" align=middle width=169.01445pt height=33.769395pt/></p>
 
-where $X$ is the vector of population densities of each species _i_; $\epsilon$ is the vector of all _Mathusian_ parameters; $A$ is the matrix of interaction coefficients, also known as community matrix; and $diag[X]$ is a square matrix with diagonal elements equal to $X$, and zeros outside the diagonal.
+where <img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/cbfb1b2a33b28eab8a3e59464768e810.svg?invert_in_darkmode" align=middle width=14.85297pt height=22.38192pt/> is the vector of population densities of each species _i_; <img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/7ccca27b5ccc533a2dd72dc6fa28ed84.svg?invert_in_darkmode" align=middle width=6.6475035pt height=14.10255pt/> is the vector of all _Mathusian_ parameters; <img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/53d147e7f3fe6e47ee05b88b166bd3f6.svg?invert_in_darkmode" align=middle width=12.282765pt height=22.38192pt/> is the matrix of interaction coefficients, also known as community matrix; and <img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/9f0dfe8a0e850780e96018103aa5fe64.svg?invert_in_darkmode" align=middle width=55.17996pt height=24.56553pt/> is a square matrix with diagonal elements equal to <img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/cbfb1b2a33b28eab8a3e59464768e810.svg?invert_in_darkmode" align=middle width=14.85297pt height=22.38192pt/>, and zeros outside the diagonal.
 
 Here we show how to solve this system of ODEs with 5 species.
 
@@ -21,9 +21,9 @@ Here we show how to solve this system of ODEs with 5 species.
 
 To solve the ODEs we first need to define some initial conditions:
 
-- the initial species population number $X0$
-- the intrinsic rate of a population species $\epsilon$
-- the interaction coefficients among the species association $\alpha$
+- the initial species population number <img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/8058174c3e47972feecfee6a81720995.svg?invert_in_darkmode" align=middle width=23.046375pt height=22.38192pt/>
+- the intrinsic rate of a population species <img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/7ccca27b5ccc533a2dd72dc6fa28ed84.svg?invert_in_darkmode" align=middle width=6.6475035pt height=14.10255pt/>
+- the interaction coefficients among the species association <img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/c745b9b57c145ec5577b82542b2df546.svg?invert_in_darkmode" align=middle width=10.537065pt height=14.10255pt/>
 
 ```python
 %matplotlib inline
@@ -60,14 +60,14 @@ The _Fehlberg_ method requires 5 parameters to solve the GLV ODEs:
 ## Carbonate production
 
 Once a species association population is computed, carbonate production is calculated using a carbonate production factor. Production factors are specified for the maximum population, and linearly scaled to the actual population following the relation
-$$ \frac{dP}{dt} = R_{max}\frac{x_i}{K_i}$$
+<p align="center"><img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/86747a51e4fe91aa94ce20bfe5b4a600.svg?invert_in_darkmode" align=middle width=106.14813pt height=36.235155pt/></p>
 
-where $P$ is the carbonate production, $t$ is time, $R_{max}$ is the carbonate production factor when population is at its maximum, and $K_i$ is the maximum population of species _i_, computed as
+where <img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/df5a289587a2f0247a5b97c1e8ac58ca.svg?invert_in_darkmode" align=middle width=12.78882pt height=22.38192pt/> is the carbonate production, <img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/4f4f4e395762a3af4575de74c019ebb5.svg?invert_in_darkmode" align=middle width=5.913963pt height=20.1465pt/> is time, <img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/ea449f9e9a48e2959872aac8fa65e1ca.svg?invert_in_darkmode" align=middle width=38.586405pt height=22.38192pt/> is the carbonate production factor when population is at its maximum, and <img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/655ca15e2b101fb431577b12d4442580.svg?invert_in_darkmode" align=middle width=18.5427pt height=22.38192pt/> is the maximum population of species _i_, computed as
 
-$$K_i=\frac{\epsilon_i}{\alpha_{ii}}$$
+<p align="center"><img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/43e99ce899b3ecaaa637f00ee554b2ae.svg?invert_in_darkmode" align=middle width=63.86358pt height=31.913475pt/></p>
 
 which gives:
 
-$$ \frac{dP}{dt} = R_{max}\frac{\alpha_{ii}\, x_i}{\epsilon_i}$$
+<p align="center"><img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/2baed347518e8396d33d82d9c18e283b.svg?invert_in_darkmode" align=middle width=124.960935pt height=36.235155pt/></p>
 
 We define the maximum carbonate production rate (m/y) for each species
