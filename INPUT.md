@@ -1,7 +1,8 @@
 # pyReefCore
-Synthetic coral reef core model
 
-# Generalized Lotka-Volterra model
+**pyReefCore** is a 1D model which simulates evolution of mixed carbonate-siliciclastic system under environmental forcing conditions (_e.g._ sea-level, water flow, siliciclastic input). The carbonate production model simulates the logistic growth and interaction among species based on **Generalized Lotka-Volterra** equations. The environmental forces are converted to factors and combined into one single environmental value to model the evolution of species. The interaction among species is quantified using a _community matrix_ that captures the beneficial or detrimental effects of the presence of each species on the other.
+
+## Generalized Lotka-Volterra model
 
 The most common models of species evolution in ecological modeling are the predator-prey **Lotka-Volterra (LV)** equation and its modifications.
 
@@ -13,43 +14,23 @@ where $x_i$ is the population density of species _i_; $\epsilon_i$ is the intrin
 
 $$\frac{dx_i}{dt} = diag[X](\epsilon + AX)$$
 
-where $X$ is the vector of population densities of each species _i_; $\epsilon$ is the vector of all _Mathusian_ parameters; $A$ is the matrix of interaction coefficients, also known as community matrix; and $diag[X]$ is a square matrix with diagonal elements equal to $X$, and zeros outside the diagonal.
-
-Here we show how to solve this system of ODEs with 5 species.
+where $X$ is the vector of population densities of each species _i_, $\epsilon$ is the vector of all _Mathusian_ parameters, $A$ is the matrix of interaction coefficients, also known as community matrix, and $diag[X]$ is a square matrix with diagonal elements equal to $X$, and zeros outside the diagonal.
 
 ## Definition of species rate and community matrix
 
-To solve the ODEs we first need to define some initial conditions:
+To solve the ODEs, the user needs to define several initial conditions:
 
 - the initial species population number $X0$
 - the intrinsic rate of a population species $\epsilon$
 - the interaction coefficients among the species association $\alpha$
 
-```python
-%matplotlib inline
-import matplotlib.pyplot as plt
-
-import numpy
-#import cmocean
-
-%config InlineBackend.figure_format = 'svg'
-from pyReefCore.model import Model
-
-# initialise model
-reef = Model()
-
-# Define the XmL input file
-reef.load_xml('input.xml')
-
-# Run to a given time
-reef.run_to_time(500,showtime=100.)
-```
+Several other input are required and will need to be set in a **XmL** inputfile. An example of such file is provided in [here](https://github.com/pyReef-model/pyReefCore/blob/master/Tests/input.xml).
 
 ## Solving the ODEs system
 
-The mathematical model for the species population evolution results in a set of differential equations (ODEs), one for each species associations modeled. The **Runge-Kutta-Fehlberg** method (_RKF45_ or _Fehlberg_ as defined in the odespy library) is used to solve this **GLV ODE system**.
+The mathematical model for the species population evolution results in a set of differential equations (ODEs), one for each species associations modeled. The **Runge-Kutta-Fehlberg** method (_RKF45_ or _Fehlberg_ as defined in the [**odespy**](http://hplgit.github.io/odespy/doc/pub/tutorial/html/main_odespy.html) library) is used to solve the **GLV ODE system**.
 
-The _Fehlberg_ method requires 5 parameters to solve the GLV ODEs:
+The _Fehlberg_ method requires 5 parameters :
 
 - the step-size (or time step)
 - an initial population of the species association
@@ -70,4 +51,49 @@ which gives:
 
 $$ \frac{dP}{dt} = R_{max}\frac{\alpha_{ii}\, x_i}{\epsilon_i}$$
 
-We define the maximum carbonate production rate (m/y) for each species
+We define the maximum carbonate production rate (m/y) for each species in the **XmL** input file.
+
+
+## Usage
+
+The code is available from Docker Hub at [pyreefmodel/pyreef-Docker](https://hub.docker.com/u/pyreefmodel/) and can be downloaded using **Kitematic**. An example of model is provided in the [Tests](https://github.com/pyReef-model/pyReefCore/tree/master/Tests) folder using IPython Notebook.
+
+
+```python
+
+%matplotlib inline
+import matplotlib.pyplot as plt
+
+import numpy
+
+%config InlineBackend.figure_format = 'svg'
+from pyReefCore.model import Model
+
+# initialise model
+reef = Model()
+
+# Define the XmL input file
+reef.load_xml('input.xml')
+
+# Run to a given time (for example 500 years)
+reef.run_to_time(500.,showtime=100.)
+
+# Define a colorscale to display the core
+# Some colormaps are available from the following link:
+# http://matplotlib.org/examples/color/colormaps_reference.html
+from matplotlib.cm import terrain
+nbcolors = len(reef.core.coralH)+3
+colors = terrain(numpy.linspace(0, 1, nbcolors))
+
+# Plot evolution of species population with time
+reef.plot.speciesTime(pop=reef.coral.population, time=reef.coral.iterationTime, colors=colors,
+                      size=(8,4), font=8, dpi=80,fname='pop.pdf')
+
+# Plot evolution of species population with depth
+reef.plot.speciesDepth(pop=reef.coral.population, depth=reef.core.thickness, colors=colors,
+                       size=(8,4), font=8, dpi=80)
+
+# Plot coral facies distribution core and assemblages
+reef.plot.drawCore(pop=reef.core.coralH, depth=reef.core.thickness, surf=reef.core.topH,
+                   colors=colors, size=(8,10), font=8, dpi=380, fname='out.pdf')
+```
