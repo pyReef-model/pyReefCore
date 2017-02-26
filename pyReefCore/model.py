@@ -69,6 +69,11 @@ class Model(object):
         self.iter = 0
         self.layID = 0
 
+        # Initialise plotting functions
+        self.plot = modelPlot.modelPlot(input=self.input)
+
+        # Initialise core data
+        self.core = coreData.coreData(input=self.input)
 
     def run_to_time(self, tEnd, showtime=10, profile=False, verbose=False):
         """
@@ -95,12 +100,6 @@ class Model(object):
             # Initialise Generalized Lotka-Volterra equation
             self.coral = coralGLV.coralGLV(input=self.input)
             self.odeRKF = self.coral.solverGLV()
-
-            # Initialise plotting functions
-            self.plot = modelPlot.modelPlot(input=self.input)
-
-            # Initialise core data
-            self.core = coreData.coreData(input=self.input)
 
         # Perform main simulation loop
         # NOTE: number of iteration for the ODE during a given time step, could be user defined...
