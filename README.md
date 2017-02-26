@@ -1,5 +1,10 @@
 # pyReefCore
 
+<div align="center">
+    <img width=600 src="http://sydney.edu.au/science/geosciences/images/core.jpg" alt="OTR core from the Geocoastal Group - USyD" title="Core sample, including a well-preserved Faviidae coral recovered from 16 m depth. The red arrows are drawn on to indicate upwards recovery direction.."</img>
+</div>
+
+
 **pyReefCore** is a 1D model which simulates evolution of mixed carbonate-siliciclastic system under environmental forcing conditions (_e.g._ sea-level, water flow, siliciclastic input). The carbonate production model simulates the logistic growth and interaction among species based on **Generalized Lotka-Volterra** equations. The environmental forces are converted to factors and combined into one single environmental value to model the evolution of species. The interaction among species is quantified using a _community matrix_ that captures the beneficial or detrimental effects of the presence of each species on the other.
 
 ## Generalized Lotka-Volterra model
@@ -24,7 +29,7 @@ To solve the ODEs, the user needs to define several initial conditions:
 - the intrinsic rate of a population species <img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/7ccca27b5ccc533a2dd72dc6fa28ed84.svg?invert_in_darkmode" align=middle width=6.6475035pt height=14.10255pt/>
 - the interaction coefficients among the species association <img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/c745b9b57c145ec5577b82542b2df546.svg?invert_in_darkmode" align=middle width=10.537065pt height=14.10255pt/>
 
-Several other input are required and will need to be set in a **XmL** inputfile. An example of such file is provided in [here](https://github.com/pyReef-model/pyReefCore/blob/master/Tests/input.xml).
+Several other input are required and will need to be set in the **XmL** inputfile. An example of such file is provided [here](https://github.com/pyReef-model/pyReefCore/blob/master/Tests/input.xml).
 
 ## Solving the ODEs system
 
@@ -85,7 +90,7 @@ import numpy
 %config InlineBackend.figure_format = 'svg'
 from pyReefCore.model import Model
 
-# initialise model
+# Initialise model
 reef = Model()
 
 # Define the XmL input file
@@ -110,6 +115,10 @@ reef.plot.speciesDepth(pop=reef.coral.population, depth=reef.core.thickness, col
                        size=(8,4), font=8, dpi=80)
 
 # Plot coral facies distribution core and assemblages
-reef.plot.drawCore(pop=reef.core.coralH, depth=reef.core.thickness, surf=reef.core.topH,
-                   colors=colors, size=(8,10), font=8, dpi=380, fname='out.pdf')
+reef.plot.drawCore(pop=reef.core.coralH, depth=reef.core.thickness, depthext = [5.,10.],
+                   thext = [0.,0.004], propext = [0.,0.5], surf=reef.core.topH, lwidth = 3,
+                   colors=colors, size=(8,10), font=8, dpi=380, figname='out.pdf',
+                   filename='out.csv', sep='\t')
 ```
+
+## Model results

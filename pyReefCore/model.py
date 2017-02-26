@@ -13,7 +13,7 @@ import time
 import numpy as np
 import mpi4py.MPI as mpi
 
-from pyReefCore import (xmlParser, coralGLV, coreData, modelPlot)
+from pyReefCore import (preProc, xmlParser, coralGLV, coreData, modelPlot)
 
 # profiling support
 import cProfile
@@ -44,6 +44,9 @@ class Model(object):
         self._rank = mpi.COMM_WORLD.rank
         self._size = mpi.COMM_WORLD.size
         self._comm = mpi.COMM_WORLD
+
+        # Initialise pre-processing functions
+        self.enviforcing = preProc.preProc()
 
     def load_xml(self, filename, verbose=False):
         """
