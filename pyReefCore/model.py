@@ -57,7 +57,7 @@ class Model(object):
         self.input = xmlParser.xmlParser(filename, makeUniqueOutputDir=(self._rank == 0))
         self.tNow = self.input.tStart
         self.tCoral = self.tNow
-        self.tLayer = self.tNow #+ self.input.laytime
+        self.tLayer = self.tNow + self.input.laytime
 
         # Seed the random number generator consistently on all nodes
         seed = None
@@ -134,7 +134,9 @@ class Model(object):
 
             # Get sediment input
             if self.input.sedOn:
-                sfac = self.force.getSed(self.tNow)
+                sedh, sfac = self.force.getSed(self.tNow)
+            else:
+                sedh = 0.
 
             # Get flow velocity
             if self.input.flowOn:
@@ -163,17 +165,17 @@ class Model(object):
             population[ids,-1] = 0.
             ids = np.where(np.logical_and(fac==1,population[:,-1]==0.))[0]
             population[ids,-1] = 1.
-            self.coral.population[:,self.iter] = population[:,-1]
+            self.coral.population[:self.input.speciesNb,self.iter] = population[:,-1]
 
             # Compute carbonate production and update coral core characteristics
             self.core.coralProduction(self.layID,self.coral.population[:,self.iter],
-                                      self.coral.epsilon)
+                                      self.coral.epsilon, sedh)
 
             # Update time step
             self.tNow = self.tCoral
 
             # Update stratigraphic layer ID
-            if self.tLayer < self.tNow :
+            if self.tLayer <= self.tNow :
                 self.tLayer += self.input.laytime
                 self.layID += 1
 

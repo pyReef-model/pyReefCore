@@ -31,7 +31,9 @@ class modelPlot():
         Constructor.
         """
 
-        self.names = input.speciesName
+        self.names = np.empty(input.speciesNb+1, dtype="S14")
+        self.names[:input.speciesNb] = input.speciesName
+        self.names[-1] = 'silicilastic'
         self.step = int(input.laytime/input.tCarb)
         self.pop = None
         self.timeCarb = None
@@ -124,8 +126,10 @@ class modelPlot():
         ax.set_axis_bgcolor('#f2f2f3')
 
         # Plotting curves
+        bottom = self.surf + self.depth.sum()
+        d = bottom - np.cumsum(self.depth)
         for s in range(len(self.pop)):
-            ax.plot(np.cumsum(self.depth), self.pop[s,::self.step], label=self.names[s],linewidth=3,c=colors[s])
+            ax.plot(d, self.pop[s,::self.step], label=self.names[s],linewidth=3,c=colors[s])
 
         # Legend, title and labels
         plt.grid()
@@ -133,7 +137,7 @@ class modelPlot():
         plt.xlabel('Depth [m]',size=font+2)
         plt.ylabel('Population',size=font+2)
         plt.ylim(0., int(self.pop.max())+1)
-        plt.xlim(0., self.depth.sum())
+        plt.xlim(d.max(), d.min())
 
         ttl = ax.title
         ttl.set_position([.5, 1.05])
@@ -191,11 +195,12 @@ class modelPlot():
             Separator used in the CSV file.
         """
 
-        p1 = self.sedH
-        p2 = self.sedH/self.depth
-        p3 = np.cumsum(self.sedH/self.depth,axis=0)
-        bottom = self.surf + self.depth.sum()
-        d = bottom - np.cumsum(self.depth)
+        p1 = self.sedH[:,:-1]
+        p2 = self.sedH[:,:-1]/self.depth[:-1]
+        p3 = np.cumsum(self.sedH[:,:-1]/self.depth[:-1],axis=0)
+        bottom = self.surf + self.depth[:-1].sum()
+        d = bottom - np.cumsum(self.depth[:-1])
+        facies = np.argmax(p1, axis=0)
 
         if thext == None:
             thext = [0.,p1.max()]
@@ -236,6 +241,7 @@ class modelPlot():
             y[0] = d[s]
             y[1] = d[s]
             ax4.fill_between(x, old, y, color=coltime[s])
+            ax5.fill_between(x, old, y, color=colsed[facies[s]])
             old[0] = y[0]
             old[1] = y[1]
             ax4.plot(x,y,'w')
@@ -248,7 +254,7 @@ class modelPlot():
         ax4.get_yaxis().set_visible(False)
         ax5.get_xaxis().set_visible(False)
         ax5.get_yaxis().set_visible(False)
-        lgd = ax1.legend(frameon=False, loc=1, prop={'size':font+1}, bbox_to_anchor=(5.,0.2))
+        lgd = ax1.legend(frameon=False, loc=1, prop={'size':font+1}, bbox_to_anchor=(5,0.2))
         ax1.locator_params(axis='x', nbins=4)
         ax2.locator_params(axis='x', nbins=5)
         ax3.locator_params(axis='x', nbins=5)
@@ -284,9 +290,13 @@ class modelPlot():
         tt4.set_position([.5, 1.025])
         tt5.set_position([.5, 1.025])
         fig.tight_layout()
-
+        plt.tight_layout()
+        #labels = [item.get_text() for item in ax2.get_yticklabels()]
+        #for l in range(len(labels)):
+        #    labels[l] = ' '
+        #ax2.set_yticklabels(labels)
+        #ax3.set_yticklabels(labels)
         plt.show()
-
         if figname is not None:
             fig.savefig(figname, bbox_extra_artists=(lgd,), bbox_inches='tight')
 

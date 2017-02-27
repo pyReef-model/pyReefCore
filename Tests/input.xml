@@ -152,13 +152,13 @@
 		-->
 		<curve>data/sealevel.csv</curve>
 	</sea>
-    <?ignore
 	<!-- Ocean flow structure (Optional)
 		The following methods can be used:
 			- a constant flow velocity for the entire simulation [m/d]
 			- a flow velocity fluctuations curve (defined in a file)
 			- a flow velocity function dependent of water depth
 	-->
+    <?ignore
 	<flow>
 		<!-- Constant velocity value [m/d] -->
 		<val>0.</val>

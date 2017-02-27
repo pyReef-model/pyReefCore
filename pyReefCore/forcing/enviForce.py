@@ -242,7 +242,7 @@ class enviForce:
             else:
                 factors[s] = self._extract_enviParam( self.xs, self.strap[s], self.sedlevel )
 
-        return factors
+        return self.sedlevel,factors
 
     def getFlow(self, time):
         """

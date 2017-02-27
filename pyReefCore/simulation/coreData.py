@@ -41,7 +41,7 @@ class coreData:
         # Core parameters size based on layer number
         self.layNb = int((input.tEnd - input.tStart)/input.laytime)+1
         self.thickness = numpy.zeros(self.layNb,dtype=float)
-        self.coralH = numpy.zeros((input.speciesNb,self.layNb),dtype=float)
+        self.coralH = numpy.zeros((input.speciesNb+1,self.layNb),dtype=float)
 
         # Diagonal part of the community matrix (coefficient ii)
         self.communityMatrix = input.communityMatrix
@@ -191,23 +191,23 @@ class coreData:
         ax2.locator_params(axis='x', nbins=5)
         ax3.locator_params(axis='x', nbins=5)
         ax1.locator_params(axis='y', nbins=10)
-        
+
         if self.seaFunc is not None:
             ax1.plot(self.seaFunc(self.seatime), self.seatime, linewidth=width, c='slateblue')
-            ax1.set_xlim(self.seaFunc(self.seatime).min(), self.seaFunc(self.seatime).max())
+            ax1.set_xlim(self.seaFunc(self.seatime).min()-0.0001, self.seaFunc(self.seatime).max()+0.0001)
         else:
             ax1.plot(numpy.zeros(len(self.layTime)), self.layTime, linewidth=width, c='slateblue')
 
         if self.sedFunc is not None:
             ax2.plot(self.sedFunc(self.sedtime), self.sedtime, linewidth=width, c='sandybrown')
-            ax2.set_xlim(self.sedFunc(self.sedtime).min(), self.sedFunc(self.sedtime).max())
+            ax2.set_xlim(self.sedFunc(self.sedtime).min()-0.0001, self.sedFunc(self.sedtime).max()+0.0001)
         else:
             ax2.plot(numpy.zeros(len(self.layTime)), self.layTime, linewidth=width, c='sandybrown')
 
         if self.flowFunc is not None:
             it = int(nbcolors/2.)
             ax3.plot(self.flowFunc(self.flowtime), self.flowtime, linewidth=width, c='darkcyan')
-            ax3.set_xlim(self.flowFunc(self.flowtime).min(), self.flowFunc(self.flowtime).max())
+            ax3.set_xlim(self.flowFunc(self.flowtime).min()-0.0001, self.flowFunc(self.flowtime).max()+0.0001)
         else:
             it = int(nbcolors/2.)
             ax3.plot(numpy.zeros(len(self.layTime)), self.layTime, linewidth=width, c='darkcyan')
@@ -226,7 +226,7 @@ class coreData:
 
         return
 
-    def coralProduction(self, layID, coral, epsilon):
+    def coralProduction(self, layID, coral, epsilon, sedh):
         """
         This function estimates the coral growth based on newly computed population.
 
@@ -241,20 +241,53 @@ class coreData:
 
         variable : epsilon
             Intrinsic rate of a population species (malthus parameter)
+
+        variable : sedh
+            Silicilastic sediment input m/d
         """
 
         # Compute production for the given time step [m]
         production = - self.prod * self.alpha / epsilon * coral * self.dt
         ids = numpy.where(epsilon==0.)[0]
         production[ids] = 0.
-        # Total thickness deposited
-        toth = production.sum()
 
-        # Update current layer composition
-        self.coralH[:,layID] += production
-        # Update current layer thickness
-        self.thickness[layID] += toth
-        # Update current layer top elevation
-        self.topH -= toth
+        # Total thickness deposited
+        sh = sedh * self.dt * 365.
+        toth = production.sum() + sh
+
+        if self.topH > 0. and self.topH - toth < 0:
+            maxcarbh = self.topH
+            if production.sum() > maxcarbh:
+                frac = maxcarbh/production.sum()
+                production *= frac
+                toth = production.sum() + sh
+
+            # Update current layer composition
+            self.coralH[0:len(self.prod),layID] += production
+            # Convert sediment input from m/d to m/a
+            self.coralH[len(self.prod),layID] += sh
+            # Update current layer thickness
+            self.thickness[layID] += toth
+            # Update current layer top elevation
+            self.topH -= toth
+            
+        elif self.topH > 0.:
+            # Update current layer composition
+            self.coralH[0:len(self.prod),layID] += production
+            # Convert sediment input from m/d to m/a
+            self.coralH[len(self.prod),layID] += sh
+            # Update current layer thickness
+            self.thickness[layID] += toth
+            # Update current layer top elevation
+            self.topH -= toth
+
+        elif sh > 0.:
+            # Convert sediment input from m/d to m/a
+            self.coralH[len(self.prod),layID] += sh
+
+            # Update current layer thickness
+            self.thickness[layID] += sh
+            # Update current layer top elevation
+            self.topH -= sh
 
         return
