@@ -81,6 +81,7 @@ class modelPlot():
         plt.xlabel('Time [y]',size=font+2)
         plt.ylabel('Population',size=font+2)
         plt.ylim(0., int(self.pop.max())+1)
+        plt.xlim(0., self.timeCarb.max())
 
 
         ttl = ax.title
@@ -132,7 +133,7 @@ class modelPlot():
         plt.xlabel('Depth [m]',size=font+2)
         plt.ylabel('Population',size=font+2)
         plt.ylim(0., int(self.pop.max())+1)
-
+        plt.xlim(0., self.depth.sum())
 
         ttl = ax.title
         ttl.set_position([.5, 1.05])
