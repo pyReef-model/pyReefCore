@@ -42,7 +42,6 @@ class xmlParser:
         self.tStart = None
         self.tEnd = None
         self.tCarb = None
-        self.tDisplay = None
         self.laytime = None
 
         self.depth0 = None
@@ -115,27 +114,15 @@ class xmlParser:
             else:
                 raise ValueError('Error in the definition of the simulation time: simulation time step for carbonate module is required')
             element = None
-            element = time.find('display')
-            if element is not None:
-                self.tDisplay = float(element.text)
-            else:
-                raise ValueError('Error in the definition of the simulation time: display time declaration is required')
-            if Decimal(self.tEnd - self.tStart) % Decimal(self.tDisplay) != 0.:
-                raise ValueError('Error in the definition of the simulation time: display time needs to be a multiple of simulation time.')
-            element = None
             element = time.find('laytime')
             if element is not None:
                 self.laytime = float(element.text)
             else:
-                self.laytime = self.tDisplay
-            if self.laytime >  self.tDisplay:
-                 self.laytime = self.tDisplay
-            if Decimal(self.tDisplay) % Decimal(self.laytime) != 0.:
-                raise ValueError('Error in the XmL file: stratal layer interval needs to be an exact multiple of the display interval!')
-            if Decimal(self.tDisplay) % Decimal(self.tCarb) != 0.:
-                raise ValueError('Error in the XmL file: time step interval needs to be an exact multiple of the display interval!')
-            if Decimal(self.tEnd-self.tStart) % Decimal(self.tDisplay) != 0.:
-                raise ValueError('Error in the XmL file: display interval needs to be an exact multiple of the simulation time interval!')
+                self.laytime = self.tCarb
+            if Decimal(self.laytime) % Decimal(self.tCarb) != 0.:
+                raise ValueError('Error in the XmL file: stratal layer interval needs to be an exact multiple of the carbonate interval!')
+            if Decimal(self.tEnd-self.tStart) % Decimal(self.laytime) != 0.:
+                raise ValueError('Error in the XmL file: layer time interval needs to be an exact multiple of the simulation time interval!')
         else:
             raise ValueError('Error in the XmL file: time structure definition is required!')
 

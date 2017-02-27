@@ -13,7 +13,7 @@ import time
 import numpy as np
 import mpi4py.MPI as mpi
 
-from pyReefCore import (preProc, xmlParser, coralGLV, coreData, modelPlot)
+from pyReefCore import (preProc, xmlParser, enviForce, coralGLV, coreData, modelPlot)
 
 # profiling support
 import cProfile
@@ -59,9 +59,6 @@ class Model(object):
         self.tCoral = self.tNow
         self.tLayer = self.tNow #+ self.input.laytime
 
-        # Sync the chosen output dir to all nodes
-        self.input.outDir = self._comm.bcast(self.input.outDir, root=0)
-
         # Seed the random number generator consistently on all nodes
         seed = None
         if self._rank == 0:
@@ -72,11 +69,23 @@ class Model(object):
         self.iter = 0
         self.layID = 0
 
-        # Initialise plotting functions
-        self.plot = modelPlot.modelPlot(input=self.input)
+        # Initialise environmental forcing conditions
+        self.force = enviForce.enviForce(input=self.input)
 
         # Initialise core data
         self.core = coreData.coreData(input=self.input)
+        # Environmental forces functions
+        self.core.seatime = self.force.seatime
+        self.core.sedtime = self.force.sedtime
+        self.core.flowtime = self.force.flowtime
+        self.core.seaFunc = self.force.seaFunc
+        self.core.sedFunc = self.force.sedFunc
+        self.core.flowFunc = self.force.flowFunc
+
+        # Initialise plotting functions
+        self.plot = modelPlot.modelPlot(input=self.input)
+
+        return
 
     def run_to_time(self, tEnd, showtime=10, profile=False, verbose=False):
         """
@@ -107,14 +116,34 @@ class Model(object):
         # Perform main simulation loop
         # NOTE: number of iteration for the ODE during a given time step, could be user defined...
         N = 100
+
+        # Define environmental factors
+        dfac = np.ones(self.input.speciesNb,dtype=float)
+        sfac = np.ones(self.input.speciesNb,dtype=float)
+        ffac = np.ones(self.input.speciesNb,dtype=float)
         while self.tNow < tEnd:
 
             # Initial coral population
             if self.tNow == self.input.tStart:
                 self.coral.population[:,self.iter] = self.input.speciesPopulation
 
+            # Get sea-level
+            if self.input.seaOn:
+                tmp = self.core.topH
+                self.core.topH, dfac = self.force.getSea(self.tNow, tmp)
+
+            # Get sediment input
+            if self.input.sedOn:
+                sfac = self.force.getSed(self.tNow)
+
+            # Get flow velocity
+            if self.input.flowOn:
+                ffac = self.force.getFlow(self.tNow)
+
             # Limit species activity from environmental forces
-            # TODO: will update self.coral.epsilon
+            tmp = np.minimum(dfac, sfac)
+            fac = np.minimum(ffac, tmp)
+            self.coral.epsilon = self.input.malthusParam*fac
 
             # Initialise RKF conditions
             self.odeRKF.set_initial_condition(self.coral.population[:,self.iter])
@@ -130,6 +159,10 @@ class Model(object):
 
             # Update coral population
             self.iter += 1
+            ids = np.where(self.coral.epsilon==0.)[0]
+            population[ids,-1] = 0.
+            ids = np.where(np.logical_and(fac==1,population[:,-1]==0.))[0]
+            population[ids,-1] = 1.
             self.coral.population[:,self.iter] = population[:,-1]
 
             # Compute carbonate production and update coral core characteristics
@@ -147,6 +180,14 @@ class Model(object):
             if self._rank == 0 and self.tNow>=timeVerbose:
                 timeVerbose = self.tNow+showtime
                 print 'tNow = %s [yr]' %self.tNow
+
+        # Update plotting parameters
+        self.plot.pop = self.coral.population
+        self.plot.timeCarb = self.coral.iterationTime
+        self.plot.depth = self.core.thickness
+        self.plot.sedH = self.core.coralH
+        self.plot.timeLay = self.core.layTime
+        self.plot.surf = self.core.topH
 
         return
 

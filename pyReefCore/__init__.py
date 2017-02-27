@@ -12,6 +12,7 @@
 
 from .forcing import preProc
 from .forcing import xmlParser
+from .forcing import enviForce
 from .simulation import coralGLV
 from .simulation import coreData
 from .simulation import modelPlot

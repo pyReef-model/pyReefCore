@@ -9,10 +9,8 @@
 		<end>500.</end>
 		<!-- Time step for carbonate module [a] -->
 		<tcarb>1.</tcarb>
-		<!-- Display interval [a] -->
-		<display>50.</display>
 		<!-- Stratigraphic layer interval [a] -->
-		<laytime>1.</laytime>
+		<laytime>5.</laytime>
 	</time>
 
 	<!-- Species definition, initial population and position. -->
@@ -139,23 +137,23 @@
 
 	</habitats>
 
-	<!-- Sea-level structure
+	<!-- Sea-level structure (Optional)
 		The following methods can be used:
 			- a constant sea-level position for the entire simulation [m]
 			- a sea-level fluctuations curve (defined in a file)
 	-->
 	<sea>
 		<!-- Constant sea-level value [m] -->
-		<val>0.</val>
+		<!--val>0.</val-->
 		<!-- Sea-level curve - (optional). The file is made of 2 columns:
 			- first column: the time in year (increasing order)
 			- second column: the sea-level position for the considered time [m]
 			 For any given time in the simulation the sea-level is obtained by linear interpolation
 		-->
-		<!--curve>data/sealvl.csv</curve-->
+		<curve>data/sealevel.csv</curve>
 	</sea>
-
-	<!-- Ocean flow structure
+    <?ignore
+	<!-- Ocean flow structure (Optional)
 		The following methods can be used:
 			- a constant flow velocity for the entire simulation [m/d]
 			- a flow velocity fluctuations curve (defined in a file)
@@ -178,7 +176,7 @@
 		<!--function></function-->
 	</flow>
 
-	<!-- Siliciclastic input structure
+	<!-- Siliciclastic input structure (Optional)
 		The following methods can be used:
 			- a constant sediment influx for the entire simulation [m/y]
 			- a sediment influx fluctuations curve (defined in a file)
@@ -200,7 +198,8 @@
 		-->
 		<!--function></function-->
 	</sedinput>
-
+    ?>
+    
   <!-- Combining environmental parameters and carbonate production structure.
     The influence functions for each environmental factor (water depth, flow velocity, and sediment input)
     are used to model the interaction between species and their environment. For the sake of simplicity,
@@ -212,7 +211,7 @@
   -->
   <envishape>
 
-    <!-- Definition of water depth shape function influencing each species [m].
+    <!-- Definition of water depth shape function influencing each species [m]. (Optional)
                       Min.[A]    Opt.1 [B]    Opt.2 [C]    Max. [D]
             Species1    1.          2.          20.          50.
             Species2    1.         10.          40.         165.
@@ -247,8 +246,8 @@
       <dvalue col="2" row="4">50.</dvalue>
       <dvalue col="3" row="4">200.</dvalue>
     </depthshape>
-
-    <!-- Definition of flow velocity shape function influencing each species [m/d].
+    <?ignore
+    <!-- Definition of flow velocity shape function influencing each species [m/d]. (Optional)
                       Min.[A]    Opt.1 [B]    Opt.2 [C]    Max. [D]
             Species1    1.          1.          39.          40.
             Species2    0.          0.          39.          40.
@@ -284,7 +283,7 @@
       <fvalue col="3" row="4">5.</fvalue>
     </flowshape>
 
-    <!-- Definition of sedimentation shape function influencing each species [m/d].
+    <!-- Definition of sedimentation shape function influencing each species [m/d]. (Optional)
                       Min.[A]    Opt.1 [B]    Opt.2 [C]    Max. [D]
             Species1    0.001       0.0015       0.003       0.004
             Species2    0.003       0.004        0.005       0.006
@@ -319,6 +318,7 @@
       <svalue col="2" row="4">0.008</svalue>
       <svalue col="3" row="4">0.01</svalue>
     </sedshape>
+    ?>
   </envishape>
 
 </pyreefcore>

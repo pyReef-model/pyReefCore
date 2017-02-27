@@ -16,6 +16,7 @@ import pandas as pd
 import skfuzzy as fuzz
 
 import matplotlib
+from matplotlib import gridspec
 import matplotlib.pyplot as plt
 
 class coreData:
@@ -38,7 +39,7 @@ class coreData:
         self.names = input.speciesName
 
         # Core parameters size based on layer number
-        self.layNb = int((input.tEnd - input.tStart)/input.laytime)
+        self.layNb = int((input.tEnd - input.tStart)/input.laytime)+1
         self.thickness = numpy.zeros(self.layNb,dtype=float)
         self.coralH = numpy.zeros((input.speciesNb,self.layNb),dtype=float)
 
@@ -48,9 +49,26 @@ class coreData:
         self.layTime = numpy.arange(input.tStart, input.tEnd+input.laytime, input.laytime)
 
         # Shape functions
-        self.edepth = input.enviDepth
-        self.eflow = input.enviFlow
-        self.esed = input.enviSed
+        self.seaOn = input.seaOn
+        self.edepth = numpy.array([[0.,0.,1000.,1000.],]*input.speciesNb)
+        if input.seaOn:
+            self.edepth = input.enviDepth
+        self.flowOn = input.flowOn
+        self.eflow = numpy.array([[0.,0.,5000.,5000.],]*input.speciesNb)
+        if input.flowOn:
+            self.eflow = input.enviFlow
+        self.sedOn = input.sedOn
+        self.esed = numpy.array([[0.,0.,500.,500.],]*input.speciesNb)
+        if input.sedOn:
+            self.esed = input.enviSed
+
+        # Environmental forces functions
+        self.seatime = None
+        self.sedtime = None
+        self.flowtime = None
+        self.seaFunc = None
+        self.sedFunc = None
+        self.flowFunc = None
 
         return
 
@@ -86,7 +104,7 @@ class coreData:
 
         return
 
-    def initialSetting(self, font=8, size=(8,2.5), width=3, dpi=80, fname=None):
+    def initialSetting(self, font=8, size=(8,2.5), size2=(8,3.5), width=3, dpi=80, fname=None):
         """
         Visualise the initial conditions of the model run.
 
@@ -97,6 +115,9 @@ class coreData:
 
         variable : size
             Environmental shape figures size
+
+        variable : size2
+            Environmental function figures size
 
         variable : width
             Environmental shape figures line width
@@ -146,6 +167,63 @@ class coreData:
         self._plot_fuzzy_curve(xd, xs, xf, dtrap, strap, ftrap, size,
                                dpi, font, colors, width, fname)
 
+        if self.seaFunc is None and self.sedFunc is None and self.flowFunc is None:
+            return
+
+        print ''
+        print 'Environmental functions:'
+
+        matplotlib.rcParams.update({'font.size': font})
+        fig = plt.figure(figsize=size2, dpi=dpi)
+        gs = gridspec.GridSpec(1,12)
+        ax1 = fig.add_subplot(gs[:4])
+        ax2 = fig.add_subplot(gs[4:8], sharey=ax1)
+        ax3 = fig.add_subplot(gs[8:12], sharey=ax1)
+        ax1.set_axis_bgcolor('#f2f2f3')
+        ax2.set_axis_bgcolor('#f2f2f3')
+        ax3.set_axis_bgcolor('#f2f2f3')
+
+        # Legend, title and labels
+        ax1.grid()
+        ax2.grid()
+        ax3.grid()
+        ax1.locator_params(axis='x', nbins=4)
+        ax2.locator_params(axis='x', nbins=5)
+        ax3.locator_params(axis='x', nbins=5)
+        ax1.locator_params(axis='y', nbins=10)
+        
+        if self.seaFunc is not None:
+            ax1.plot(self.seaFunc(self.seatime), self.seatime, linewidth=width, c='slateblue')
+            ax1.set_xlim(self.seaFunc(self.seatime).min(), self.seaFunc(self.seatime).max())
+        else:
+            ax1.plot(numpy.zeros(len(self.layTime)), self.layTime, linewidth=width, c='slateblue')
+
+        if self.sedFunc is not None:
+            ax2.plot(self.sedFunc(self.sedtime), self.sedtime, linewidth=width, c='sandybrown')
+            ax2.set_xlim(self.sedFunc(self.sedtime).min(), self.sedFunc(self.sedtime).max())
+        else:
+            ax2.plot(numpy.zeros(len(self.layTime)), self.layTime, linewidth=width, c='sandybrown')
+
+        if self.flowFunc is not None:
+            it = int(nbcolors/2.)
+            ax3.plot(self.flowFunc(self.flowtime), self.flowtime, linewidth=width, c='darkcyan')
+            ax3.set_xlim(self.flowFunc(self.flowtime).min(), self.flowFunc(self.flowtime).max())
+        else:
+            it = int(nbcolors/2.)
+            ax3.plot(numpy.zeros(len(self.layTime)), self.layTime, linewidth=width, c='darkcyan')
+        # Axis
+        ax1.set_ylabel('Time [years]', size=font+2)
+        # Title
+        tt1 = ax1.set_title('Sea-level [m]', size=font+3)
+        tt2 = ax2.set_title('Water flow [m/d]', size=font+3)
+        tt3 = ax3.set_title('Sediment input [m/d]', size=font+3)
+        tt1.set_position([.5, 1.03])
+        tt2.set_position([.5, 1.03])
+        tt3.set_position([.5, 1.03])
+        fig.tight_layout()
+
+        plt.show()
+
         return
 
     def coralProduction(self, layID, coral, epsilon):
@@ -167,7 +245,8 @@ class coreData:
 
         # Compute production for the given time step [m]
         production = - self.prod * self.alpha / epsilon * coral * self.dt
-
+        ids = numpy.where(epsilon==0.)[0]
+        production[ids] = 0.
         # Total thickness deposited
         toth = production.sum()
 
