@@ -81,6 +81,10 @@ class Model(object):
         self.core.seaFunc = self.force.seaFunc
         self.core.sedFunc = self.force.sedFunc
         self.core.flowFunc = self.force.flowFunc
+        self.core.sedfctx = self.force.plotsedy
+        self.core.sedfcty = self.force.plotsedx
+        self.core.flowfctx = self.force.plotflowy
+        self.core.flowfcty = self.force.plotflowx
 
         # Initialise plotting functions
         self.plot = modelPlot.modelPlot(input=self.input)
@@ -131,16 +135,19 @@ class Model(object):
             if self.input.seaOn:
                 tmp = self.core.topH
                 self.core.topH, dfac = self.force.getSea(self.tNow, tmp)
+                self.core.sealevel[self.layID] = self.force.sealevel
 
             # Get sediment input
             if self.input.sedOn:
-                sedh, sfac = self.force.getSed(self.tNow)
+                sedh, sfac = self.force.getSed(self.tNow, self.core.topH)
+                self.core.sedinput[self.layID] = self.force.sedlevel
             else:
                 sedh = 0.
 
             # Get flow velocity
             if self.input.flowOn:
-                ffac = self.force.getFlow(self.tNow)
+                ffac = self.force.getFlow(self.tNow, self.core.topH)
+                self.core.waterflow[self.layID] = self.force.sedlevel
 
             # Limit species activity from environmental forces
             tmp = np.minimum(dfac, sfac)
@@ -190,6 +197,9 @@ class Model(object):
         self.plot.sedH = self.core.coralH
         self.plot.timeLay = self.core.layTime
         self.plot.surf = self.core.topH
+        self.plot.sealevel = self.core.sealevel
+        self.plot.sedinput = self.core.sedinput
+        self.plot.waterflow = self.core.waterflow
 
         return
 

@@ -60,11 +60,17 @@ class xmlParser:
         self.flowval = 0.
         self.flowfile = None
         self.flowfunc = None
+        self.flowdecay = None
+        self.flowlinb = None
+        self.flowlina = None
 
         self.sedOn = False
         self.sedval = 0.
         self.sedfile = None
         self.sedfunc = None
+        self.seddecay = None
+        self.sedlinb = None
+        self.sedlina = None
 
         self.enviDepth = None
         self.enviSed = None
@@ -239,8 +245,40 @@ class xmlParser:
                 self.flowfile = element.text
                 if not os.path.isfile(self.flowfile):
                     raise ValueError('Flow velocity file is missing or the given path is incorrect.')
+            element = None
+            fun = flow.find('function')
+            if fun is not None:
+                self.flowfunc = 0
+                linear = fun.find('linear')
+                if linear is not None:
+                    element = linear.find('a')
+                    if element is not None:
+                        self.flowlina = float(element.text)
+                    element = linear.find('b')
+                    if element is not None:
+                        self.flowlinb = float(element.text)
+                    if self.flowlinb is not None and self.flowlina is None:
+                         raise ValueError('Flow velocity linear function is declared but is missing a.')
+                    if self.flowlina is not None and self.flowlinb is None:
+                         raise ValueError('Flow velocity linear function is declared but is missing b.')
+                edec = fun.find('expdecay')
+                if edec is not None:
+                    self.flowdecay = numpy.zeros((2,3), dtype=float)
+                    data = defaultdict(list)
+                    # Group into rows of (col, val) tuples
+                    for val in edec.iter('fdvalue'):
+                        data[int(val.attrib['row'])].append((int(val.attrib['col']), val.text))
+                    # Sort columns and format into a space separated string
+                    rows = []
+                    for row in data:
+                        rows.append(' '.join([cols[1] for cols in sorted(data[row])]))
+                    # Build array from matrix string
+                    self.flowdecay = numpy.array(numpy.mat(';'.join(rows)))
+                if self.flowdecay is None and self.flowlina is None:
+                    raise ValueError('Flow velocity function is declared but is missing some parameters.')
             else:
                 self.flowfile = None
+                self.flowfunc = None
         else:
             self.flowval = 0.
             self.flowfile = None
@@ -262,8 +300,40 @@ class xmlParser:
                 self.sedfile = element.text
                 if not os.path.isfile(self.salfile):
                     raise ValueError('Sediment input file is missing or the given path is incorrect.')
+            element = None
+            fct = sed.find('function')
+            if fct is not None:
+                self.sedfunc = 0
+                linear = fct.find('linear')
+                if linear is not None:
+                    element = linear.find('a')
+                    if element is not None:
+                        self.sedlina = float(element.text)
+                    element = linear.find('b')
+                    if element is not None:
+                        self.sedlinb = float(element.text)
+                    if self.sedlinb is not None and self.sedlina is None:
+                         raise ValueError('Flow velocity linear function is declared but is missing fa.')
+                    if self.sedlina is not None and self.sedlinb is None:
+                         raise ValueError('Flow velocity linear function is declared but is missing fb.')
+                edec = fct.find('expdecay')
+                if edec is not None:
+                    self.seddecay = numpy.zeros((2,3), dtype=float)
+                    data = defaultdict(list)
+                    # Group into rows of (col, val) tuples
+                    for val in edec.iter('sdvalue'):
+                        data[int(val.attrib['row'])].append((int(val.attrib['col']), val.text))
+                    # Sort columns and format into a space separated string
+                    rows = []
+                    for row in data:
+                        rows.append(' '.join([cols[1] for cols in sorted(data[row])]))
+                    # Build array from matrix string
+                    self.seddecay = numpy.array(numpy.mat(';'.join(rows)))
+                if self.seddecay is None and self.sedlina is None:
+                    raise ValueError('Sediment input function is declared but is missing some parameters.')
             else:
                 self.sedfile = None
+                self.sedfunc = None
         else:
             self.sedval = 0.
             self.sedfile = None

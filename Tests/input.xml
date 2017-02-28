@@ -9,8 +9,10 @@
 		<end>500.</end>
 		<!-- Time step for carbonate module [a] -->
 		<tcarb>1.</tcarb>
+		<!-- Display interval [a] -->
+		<display>50.</display>
 		<!-- Stratigraphic layer interval [a] -->
-		<laytime>5.</laytime>
+		<laytime>10.</laytime>
 	</time>
 
 	<!-- Species definition, initial population and position. -->
@@ -137,22 +139,23 @@
 
 	</habitats>
 
-	<!-- Sea-level structure (Optional)
+	<!-- Sea-level structure
 		The following methods can be used:
 			- a constant sea-level position for the entire simulation [m]
 			- a sea-level fluctuations curve (defined in a file)
 	-->
 	<sea>
 		<!-- Constant sea-level value [m] -->
-		<!--val>0.</val-->
+		<val>0.</val>
 		<!-- Sea-level curve - (optional). The file is made of 2 columns:
 			- first column: the time in year (increasing order)
 			- second column: the sea-level position for the considered time [m]
 			 For any given time in the simulation the sea-level is obtained by linear interpolation
 		-->
-		<curve>data/sealevel.csv</curve>
+		<!--curve>data/sealvl.csv</curve-->
 	</sea>
-	<!-- Ocean flow structure (Optional)
+
+	<!-- Ocean flow structure
 		The following methods can be used:
 			- a constant flow velocity for the entire simulation [m/d]
 			- a flow velocity fluctuations curve (defined in a file)
@@ -161,7 +164,7 @@
     <?ignore
 	<flow>
 		<!-- Constant velocity value [m/d] -->
-		<val>0.</val>
+		<!--val>0.</val-->
 		<!-- Flow velocity curve - (optional). The file is made of 2 columns:
 			- first column: the time in year (increasing order)
 			- second column: the flow velocity for the considered time [m/d]
@@ -170,13 +173,30 @@
 		<!--curve>data/flow.csv</curve-->
 		<!-- Flow velocity function - (optional).
 			 For any given time in the simulation the flow velocity is obtained from water depth evaluation
-       using the following function:
-                                      Need to be implemented
+			 using either :
+			 		- a linear function (y=ax+b) or
+					- an exponential decay function based on 3 points fitting.
+			 The points need to be specify below:
 		-->
-		<!--function></function-->
+		<function>
+			<!--linear>
+				<a>-0.33</a>
+				<b>20</b>
+			</linear-->
+			<expdecay>
+				<!-- X coordinates (velocity) m/d -->
+				<fdvalue col="0" row="0">0.</fdvalue>
+				<fdvalue col="1" row="0">30.</fdvalue>
+				<fdvalue col="2" row="0">60.</fdvalue>
+				<!-- Y coordinates (depth) m -->
+				<fdvalue col="0" row="1">20</fdvalue>
+				<fdvalue col="1" row="1">3.</fdvalue>
+				<fdvalue col="2" row="1">0.</fdvalue>
+			</expdecay>
+		</function>
 	</flow>
 
-	<!-- Siliciclastic input structure (Optional)
+	<!-- Siliciclastic input structure
 		The following methods can be used:
 			- a constant sediment influx for the entire simulation [m/y]
 			- a sediment influx fluctuations curve (defined in a file)
@@ -184,7 +204,7 @@
 	-->
 	<sedinput>
 		<!-- Constant velocity value [m/d] -->
-		<val>0.</val>
+		<!--val>0.</val-->
 		<!-- Flow velocity curve - (optional). The file is made of 2 columns:
 			- first column: the time in year (increasing order)
 			- second column: the flow velocity for the considered time [m/d]
@@ -192,14 +212,31 @@
 		-->
 		<!--curve>data/sedinput.csv</curve-->
 		<!-- Sediment input function - (optional).
-			 For any given time in the simulation the sediment inputis obtained from water depth evaluation
-       using the following function:
-                                        Need to be implemented
+			 For any given time in the simulation the sediment input is obtained from water depth evaluation
+			 using either :
+			 		- a linear function (y=ax+b) or
+					- an exponential decay function based on 3 points fitting.
+			 The points need to be specify below:
 		-->
-		<!--function></function-->
+		<function>
+			<linear>
+				<a>-6.e6</a>
+				<b>20.</b>
+			</linear>
+			<expdecay>
+				<!-- X coordinates (sediment input) m/d -->
+				<sdvalue col="0" row="0">1.e-7</sdvalue>
+				<sdvalue col="1" row="0">5.e-7</sdvalue>
+				<sdvalue col="2" row="0">1.e-6</sdvalue>
+				<!-- Y coordinates (depth) m -->
+				<sdvalue col="0" row="1">20</sdvalue>
+				<sdvalue col="1" row="1">3.</sdvalue>
+				<sdvalue col="2" row="1">0.</sdvalue>
+			</expdecay>
+		</function>    
 	</sedinput>
     ?>
-    
+
   <!-- Combining environmental parameters and carbonate production structure.
     The influence functions for each environmental factor (water depth, flow velocity, and sediment input)
     are used to model the interaction between species and their environment. For the sake of simplicity,
@@ -211,7 +248,7 @@
   -->
   <envishape>
 
-    <!-- Definition of water depth shape function influencing each species [m]. (Optional)
+    <!-- Definition of water depth shape function influencing each species [m].
                       Min.[A]    Opt.1 [B]    Opt.2 [C]    Max. [D]
             Species1    1.          2.          20.          50.
             Species2    1.         10.          40.         165.
@@ -219,6 +256,7 @@
             Species4    1.         50.         160.         200.
             Species5    0.         2.           50.         200.
     -->
+    <?ignore
     <depthshape>
       <!-- Definition of point A, B, C and D for first species -->
       <dvalue col="0" row="0">1.</dvalue>
@@ -246,8 +284,8 @@
       <dvalue col="2" row="4">50.</dvalue>
       <dvalue col="3" row="4">200.</dvalue>
     </depthshape>
-    <?ignore
-    <!-- Definition of flow velocity shape function influencing each species [m/d]. (Optional)
+
+    <!-- Definition of flow velocity shape function influencing each species [m/d].
                       Min.[A]    Opt.1 [B]    Opt.2 [C]    Max. [D]
             Species1    1.          1.          39.          40.
             Species2    0.          0.          39.          40.
@@ -283,7 +321,7 @@
       <fvalue col="3" row="4">5.</fvalue>
     </flowshape>
 
-    <!-- Definition of sedimentation shape function influencing each species [m/d]. (Optional)
+    <!-- Definition of sedimentation shape function influencing each species [m/d].
                       Min.[A]    Opt.1 [B]    Opt.2 [C]    Max. [D]
             Species1    0.001       0.0015       0.003       0.004
             Species2    0.003       0.004        0.005       0.006

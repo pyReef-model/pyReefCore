@@ -10,12 +10,15 @@
 This module defines several functions used to force pyReefCore simulation with external
 processes related to sediment input, flow velocity and sea level.
 """
+import warnings
 
 import os
 import numpy
 import pandas
 import skfuzzy as fuzz
 from scipy import interpolate
+from scipy.optimize import curve_fit
+from scipy.optimize import OptimizeWarning
 
 class enviForce:
     """
@@ -43,12 +46,22 @@ class enviForce:
         self.sedlevel = None
         self.sedtime = None
         self.sedFunc = None
+        self.sedopt = None
+        self.sedlin = None
+        self.sedfct = False
+        self.plotsedx = None
+        self.plotsedy = None
 
         self.flow0 = input.flowval
         self.flowfile = input.flowfile
         self.flowlevel = None
         self.flowtime = None
         self.flowFunc = None
+        self.flowopt = None
+        self.flowlin = None
+        self.flowfct = False
+        self.plotflowx = None
+        self.plotflowy = None
 
         if self.seafile != None:
             self._build_Sea_function()
@@ -59,10 +72,50 @@ class enviForce:
         if self.flowfile != None:
             self._build_Flow_function()
 
+        if input.flowfunc != None:
+            self.flowfct = True
+            if input.flowdecay != None:
+                y = input.flowdecay[0,:]
+                x = input.flowdecay[1,:]
+                warnings.filterwarnings('ignore', category=OptimizeWarning)
+                popt, pcov = curve_fit(self._expdecay_func, x, y)
+                self.flowopt = popt
+                self.plotflowx = numpy.linspace(0., x.max(), 100)
+                self.plotflowy = self._expdecay_func(self.plotflowx, *popt)
+                self.plotflowy[self.plotflowy<0]=0.
+            else:
+                self.xflow = x
+                self.yflow = y
+                self.flowlin = [input.flowlina,input.flowlinb]
+                self.plotflowx = numpy.linspace(0, input.flowlinb, 100)
+                self.plotflowy = (self.plotflowx-self.flowlin[1])/self.flowlin[0]
+                self.plotflowy[self.plotflowy<0]=0.
+
+        if input.sedfunc != None:
+            self.sedfct = True
+            if input.seddecay != None:
+                y = input.seddecay[0,:]
+                x = input.seddecay[1,:]
+                self.xsed = y
+                self.ysed = x
+                warnings.filterwarnings('ignore', category=OptimizeWarning)
+                popt, pcov = curve_fit(self._expdecay_func, x, y)
+                self.sedopt = popt
+                self.plotsedx = numpy.linspace(0, x.max(), 100)
+                self.plotsedy = self._expdecay_func(self.plotsedx, *popt)
+                self.plotsedy[self.plotsedy<0]=0.
+            else:
+                self.sedlin = [input.sedlina,input.sedlinb]
+                self.plotsedx = numpy.linspace(x[0], x[-1], 100)
+                self.plotsedy = (self.plotsedx-self.sedlin[1])/self.sedlin[0]
+                self.plotsedy[self.plotsedy<0]=0.
+
         # Shape functions
         self.edepth = None
         self.xd = None
         self.dtrap = []
+        if input.seaOn and input.enviDepth is None:
+            input.seaOn = False
         if input.seaOn:
             self.edepth = input.enviDepth
             # Trapeizoidal environment depth production curve
@@ -74,6 +127,8 @@ class enviForce:
         self.eflow = None
         self.xf = None
         self.ftrap = []
+        if input.flowOn and input.enviFlow is None:
+            input.flowOn = False
         if input.flowOn:
             self.eflow = input.enviFlow
             # Trapeizoidal environment flow production curve
@@ -84,6 +139,8 @@ class enviForce:
         self.esed = None
         self.xs = None
         self.strap = []
+        if input.sedOn and input.enviSed is None:
+            input.sedOn = False
         if input.sedOn:
             self.esed = input.enviSed
             # Trapeizoidal environment sediment production curve
@@ -92,6 +149,10 @@ class enviForce:
                 self.strap.append(fuzz.trapmf(self.xs, self.esed[s,:]))
 
         return
+
+    def _expdecay_func(self, x, a, b, c):
+
+        return a*numpy.exp(-b*x) + c
 
     def _extract_enviParam(self, x, xmf, xx):
         """
@@ -210,7 +271,7 @@ class enviForce:
 
         return depth,factors
 
-    def getSed(self, time):
+    def getSed(self, time, elev):
         """
         Computes for a given time the sediment input according to input file parameters.
 
@@ -218,9 +279,23 @@ class enviForce:
         ----------
         float : time
             Requested time for which to compute sediment input.
+
+        float : elev
+            Elevation of the bed.
         """
 
-        if self.sedfile == None:
+        if self.sedfct:
+            if self.plotsedx.max()<elev:
+                self.sedlevel = 0.
+            elif self.plotsedx.min()>elev:
+                self.sedlevel = 0.
+            elif self.sedlin is None:
+                self.sedlevel = self._expdecay_func(elev,*self.sedopt)
+            else:
+                self.sedlevel = (elev-self.sedlin[1])/self.sedlin[0]
+            if self.sedlevel<0:
+                self.sedlevel = 0.
+        elif self.sedfile == None:
             self.sedlevel = self.sed0
         else:
             if time < self.sedtime.min():
@@ -244,7 +319,7 @@ class enviForce:
 
         return self.sedlevel,factors
 
-    def getFlow(self, time):
+    def getFlow(self, time, elev):
         """
         Computes for a given time the flow velocity according to input file parameters.
 
@@ -252,9 +327,23 @@ class enviForce:
         ----------
         float : time
             Requested time for which to compute flow velocity value.
+
+        float : elev
+            Elevation of the bed.
         """
 
-        if self.flowfile == None:
+        if self.flowfct:
+            if self.plotflowx.max()<elev:
+                self.flowlevel = 0.
+            elif self.plotflowx.min()>elev:
+                self.flowlevel = 0.
+            elif self.flowlin is None:
+                self.flowlevel = self._expdecay_func(elev,*self.flowopt)
+            else:
+                self.flowlevel = (elev-self.flowlin[1])/self.flowlin[0]
+            if self.flowlevel<0.:
+                self.flowlevel = 0.
+        elif self.flowfile == None:
             self.flowlevel = self.flow0
         else:
             if time < self.flowtime.min():

@@ -47,6 +47,9 @@ class coreData:
         self.communityMatrix = input.communityMatrix
         self.alpha = input.communityMatrix.diagonal()
         self.layTime = numpy.arange(input.tStart, input.tEnd+input.laytime, input.laytime)
+        self.sealevel = numpy.zeros(len(self.layTime),dtype=float)
+        self.sedinput = numpy.zeros(len(self.layTime),dtype=float)
+        self.waterflow = numpy.zeros(len(self.layTime),dtype=float)
 
         # Shape functions
         self.seaOn = input.seaOn
@@ -69,6 +72,10 @@ class coreData:
         self.seaFunc = None
         self.sedFunc = None
         self.flowFunc = None
+        self.sedfctx = None
+        self.sedfcty = None
+        self.flowfctx = None
+        self.flowfcty = None
 
         return
 
@@ -168,61 +175,204 @@ class coreData:
                                dpi, font, colors, width, fname)
 
         if self.seaFunc is None and self.sedFunc is None and self.flowFunc is None:
-            return
+            if self.sedfctx is None and self.flowfctx is None:
+                return
 
         print ''
         print 'Environmental functions:'
 
-        matplotlib.rcParams.update({'font.size': font})
-        fig = plt.figure(figsize=size2, dpi=dpi)
-        gs = gridspec.GridSpec(1,12)
-        ax1 = fig.add_subplot(gs[:4])
-        ax2 = fig.add_subplot(gs[4:8], sharey=ax1)
-        ax3 = fig.add_subplot(gs[8:12], sharey=ax1)
-        ax1.set_axis_bgcolor('#f2f2f3')
-        ax2.set_axis_bgcolor('#f2f2f3')
-        ax3.set_axis_bgcolor('#f2f2f3')
-
-        # Legend, title and labels
-        ax1.grid()
-        ax2.grid()
-        ax3.grid()
-        ax1.locator_params(axis='x', nbins=4)
-        ax2.locator_params(axis='x', nbins=5)
-        ax3.locator_params(axis='x', nbins=5)
-        ax1.locator_params(axis='y', nbins=10)
-
-        if self.seaFunc is not None:
+        if self.seaFunc is not None and self.sedFunc is not None and self.flowFunc is not None:
+            matplotlib.rcParams.update({'font.size': font})
+            fig = plt.figure(figsize=size2, dpi=dpi)
+            gs = gridspec.GridSpec(1,12)
+            ax1 = fig.add_subplot(gs[:4])
+            ax2 = fig.add_subplot(gs[4:8], sharey=ax1)
+            ax3 = fig.add_subplot(gs[8:12], sharey=ax1)
+            ax1.set_axis_bgcolor('#f2f2f3')
+            ax2.set_axis_bgcolor('#f2f2f3')
+            ax3.set_axis_bgcolor('#f2f2f3')
+            # Legend, title and labels
+            ax1.grid()
+            ax2.grid()
+            ax3.grid()
+            ax1.locator_params(axis='x', nbins=4)
+            ax2.locator_params(axis='x', nbins=5)
+            ax3.locator_params(axis='x', nbins=5)
+            ax1.locator_params(axis='y', nbins=10)
             ax1.plot(self.seaFunc(self.seatime), self.seatime, linewidth=width, c='slateblue')
             ax1.set_xlim(self.seaFunc(self.seatime).min()-0.0001, self.seaFunc(self.seatime).max()+0.0001)
-        else:
-            ax1.plot(numpy.zeros(len(self.layTime)), self.layTime, linewidth=width, c='slateblue')
-
-        if self.sedFunc is not None:
-            ax2.plot(self.sedFunc(self.sedtime), self.sedtime, linewidth=width, c='sandybrown')
             ax2.set_xlim(self.sedFunc(self.sedtime).min()-0.0001, self.sedFunc(self.sedtime).max()+0.0001)
-        else:
-            ax2.plot(numpy.zeros(len(self.layTime)), self.layTime, linewidth=width, c='sandybrown')
-
-        if self.flowFunc is not None:
-            it = int(nbcolors/2.)
             ax3.plot(self.flowFunc(self.flowtime), self.flowtime, linewidth=width, c='darkcyan')
             ax3.set_xlim(self.flowFunc(self.flowtime).min()-0.0001, self.flowFunc(self.flowtime).max()+0.0001)
-        else:
-            it = int(nbcolors/2.)
-            ax3.plot(numpy.zeros(len(self.layTime)), self.layTime, linewidth=width, c='darkcyan')
-        # Axis
-        ax1.set_ylabel('Time [years]', size=font+2)
-        # Title
-        tt1 = ax1.set_title('Sea-level [m]', size=font+3)
-        tt2 = ax2.set_title('Water flow [m/d]', size=font+3)
-        tt3 = ax3.set_title('Sediment input [m/d]', size=font+3)
-        tt1.set_position([.5, 1.03])
-        tt2.set_position([.5, 1.03])
-        tt3.set_position([.5, 1.03])
-        fig.tight_layout()
+            # Axis
+            ax1.set_ylabel('Time [years]', size=font+2)
+            # Title
+            tt1 = ax1.set_title('Sea-level [m]', size=font+3)
+            tt2 = ax2.set_title('Water flow [m/d]', size=font+3)
+            tt3 = ax3.set_title('Sediment input [m/d]', size=font+3)
+            tt1.set_position([.5, 1.03])
+            tt2.set_position([.5, 1.03])
+            tt3.set_position([.5, 1.03])
+            fig.tight_layout()
+            plt.show()
+            return
 
-        plt.show()
+        if self.seaFunc is not None and self.sedFunc is not None:
+            matplotlib.rcParams.update({'font.size': font})
+            fig = plt.figure(figsize=size2, dpi=dpi)
+            gs = gridspec.GridSpec(1,12)
+            ax1 = fig.add_subplot(gs[:4])
+            ax2 = fig.add_subplot(gs[4:8], sharey=ax1)
+            ax1.set_axis_bgcolor('#f2f2f3')
+            ax2.set_axis_bgcolor('#f2f2f3')
+            # Legend, title and labels
+            ax1.grid()
+            ax2.grid()
+            ax1.locator_params(axis='x', nbins=4)
+            ax2.locator_params(axis='x', nbins=5)
+            ax1.locator_params(axis='y', nbins=10)
+            ax1.plot(self.seaFunc(self.seatime), self.seatime, linewidth=width, c='slateblue')
+            ax1.set_xlim(self.seaFunc(self.seatime).min()-0.0001, self.seaFunc(self.seatime).max()+0.0001)
+            ax2.plot(self.sedFunc(self.sedtime), self.sedtime, linewidth=width, c='sandybrown')
+            ax2.set_xlim(self.sedFunc(self.sedtime).min()-0.0001, self.sedFunc(self.sedtime).max()+0.0001)
+            # Axis
+            ax1.set_ylabel('Time [years]', size=font+2)
+            # Title
+            tt1 = ax1.set_title('Sea-level [m]', size=font+3)
+            tt2 = ax2.set_title('Sediment input [m/d]', size=font+3)
+            tt1.set_position([.5, 1.03])
+            tt2.set_position([.5, 1.03])
+            fig.tight_layout()
+            plt.show()
+
+            if self.flowfcty is not None:
+                fig = plt.figure(figsize=size2, dpi=dpi)
+                gs = gridspec.GridSpec(1,12)
+                ax1 = fig.add_subplot(gs[:4])
+                ax1.set_axis_bgcolor('#f2f2f3')
+                # Legend, title and labels
+                ax1.grid()
+                ax1.locator_params(axis='x', nbins=4)
+                ax1.locator_params(axis='y', nbins=10)
+                ax1.plot(self.flowfctx, self.flowfcty, linewidth=width, c='darkcyan')
+                ax1.set_xlim(self.flowfctx.min(), self.flowfctx.max())
+                # Axis
+                ax1.set_ylabel('Depth [m]', size=font+2)
+                # Title
+                tt1 = ax1.set_title('Water flow [m/d]', size=font+3)
+                tt1.set_position([.5, 1.03])
+                plt.show()
+
+            return
+
+        if self.seaFunc is not None and self.flowFunc is not None:
+            matplotlib.rcParams.update({'font.size': font})
+            fig = plt.figure(figsize=size2, dpi=dpi)
+            gs = gridspec.GridSpec(1,12)
+            ax1 = fig.add_subplot(gs[:4])
+            ax2 = fig.add_subplot(gs[4:8], sharey=ax1)
+            ax1.set_axis_bgcolor('#f2f2f3')
+            ax2.set_axis_bgcolor('#f2f2f3')
+            # Legend, title and labels
+            ax1.grid()
+            ax2.grid()
+            ax1.locator_params(axis='x', nbins=4)
+            ax2.locator_params(axis='x', nbins=5)
+            ax1.locator_params(axis='y', nbins=10)
+            ax1.plot(self.seaFunc(self.seatime), self.seatime, linewidth=width, c='slateblue')
+            ax1.set_xlim(self.seaFunc(self.seatime).min()-0.0001, self.seaFunc(self.seatime).max()+0.0001)
+            ax2.plot(self.flowFunc(self.sedtime), self.sedtime, linewidth=width, c='darkcyan')
+            ax2.set_xlim(self.flowFunc(self.sedtime).min()-0.0001, self.flowFunc(self.sedtime).max()+0.0001)
+            # Axis
+            ax1.set_ylabel('Time [years]', size=font+2)
+            # Title
+            tt1 = ax1.set_title('Sea-level [m]', size=font+3)
+            tt2 = ax2.set_title('Water flow [m/d]', size=font+3)
+            tt1.set_position([.5, 1.03])
+            tt2.set_position([.5, 1.03])
+            fig.tight_layout()
+            plt.show()
+
+            if self.sedfcty is not None:
+                fig = plt.figure(figsize=size2, dpi=dpi)
+                gs = gridspec.GridSpec(1,12)
+                ax1 = fig.add_subplot(gs[:4])
+                ax1.set_axis_bgcolor('#f2f2f3')
+                # Legend, title and labels
+                ax1.grid()
+                ax1.locator_params(axis='x', nbins=4)
+                ax1.locator_params(axis='y', nbins=10)
+                ax1.plot(self.sedfctx, self.sedfcty, linewidth=width, c='sandybrown')
+                ax1.set_xlim(self.sedfctx.min(), self.sedfctx.max())
+                # Axis
+                ax1.set_ylabel('Depth [m]', size=font+2)
+                # Title
+                tt1 = ax1.set_title('Sediment input [m/d]', size=font+3)
+                tt1.set_position([.5, 1.03])
+                plt.show()
+
+            return
+
+        else:
+            matplotlib.rcParams.update({'font.size': font})
+            fig = plt.figure(figsize=size2, dpi=dpi)
+            gs = gridspec.GridSpec(1,12)
+            ax1 = fig.add_subplot(gs[:4])
+            ax1.set_axis_bgcolor('#f2f2f3')
+            # Legend, title and labels
+            ax1.grid()
+            ax1.locator_params(axis='x', nbins=4)
+            ax1.locator_params(axis='y', nbins=10)
+            if self.seaFunc is not None:
+                ax1.plot(self.seaFunc(self.seatime), self.seatime, linewidth=width, c='slateblue')
+                ax1.set_xlim(self.seaFunc(self.seatime).min()-0.0001, self.seaFunc(self.seatime).max()+0.0001)
+            else:
+                ax1.plot(numpy.zeros(len(self.layTime)), self.layTime, linewidth=width, c='slateblue')
+                ax1.set_xlim(-0.1, 0.1)
+            # Axis
+            ax1.set_ylabel('Time [years]', size=font+2)
+            # Title
+            tt1 = ax1.set_title('Sea-level [m]', size=font+3)
+            tt1.set_position([.5, 1.03])
+            plt.show()
+
+            if self.sedfcty is not None:
+                fig = plt.figure(figsize=size2, dpi=dpi)
+                gs = gridspec.GridSpec(1,12)
+                ax1 = fig.add_subplot(gs[:4])
+                ax1.set_axis_bgcolor('#f2f2f3')
+                # Legend, title and labels
+                ax1.grid()
+                ax1.locator_params(axis='x', nbins=4)
+                ax1.locator_params(axis='y', nbins=10)
+                ax1.plot(self.sedfctx, self.sedfcty, linewidth=width, c='sandybrown')
+                ax1.set_xlim(self.sedfctx.min(), self.sedfctx.max())
+                # Axis
+                ax1.set_ylabel('Depth [m]', size=font+2)
+                # Title
+                tt1 = ax1.set_title('Sediment input [m/d]', size=font+3)
+                tt1.set_position([.5, 1.03])
+                plt.show()
+
+            if self.flowfcty is not None:
+                fig = plt.figure(figsize=size2, dpi=dpi)
+                gs = gridspec.GridSpec(1,12)
+                ax1 = fig.add_subplot(gs[:4])
+                ax1.set_axis_bgcolor('#f2f2f3')
+                # Legend, title and labels
+                ax1.grid()
+                ax1.locator_params(axis='x', nbins=4)
+                ax1.locator_params(axis='y', nbins=10)
+                ax1.plot(self.flowfctx, self.flowfcty, linewidth=width, c='darkcyan')
+                ax1.set_xlim(self.flowfctx.min(), self.flowfctx.max())
+                # Axis
+                ax1.set_ylabel('Depth [m]', size=font+2)
+                # Title
+                tt1 = ax1.set_title('Water flow [m/d]', size=font+3)
+                tt1.set_position([.5, 1.03])
+                plt.show()
+
+            plt.show()
 
         return
 
@@ -252,7 +402,7 @@ class coreData:
         production[ids] = 0.
 
         # Total thickness deposited
-        sh = sedh * self.dt * 365.
+        sh = sedh * self.dt
         toth = production.sum() + sh
 
         if self.topH > 0. and self.topH - toth < 0:
@@ -270,7 +420,7 @@ class coreData:
             self.thickness[layID] += toth
             # Update current layer top elevation
             self.topH -= toth
-            
+
         elif self.topH > 0.:
             # Update current layer composition
             self.coralH[0:len(self.prod),layID] += production

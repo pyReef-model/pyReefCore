@@ -41,6 +41,9 @@ class modelPlot():
         self.timeLay = None
         self.surf = None
         self.sedH = None
+        self.sealevel = None
+        self.sedinput = None
+        self.waterflow = None
 
         return
 
@@ -208,6 +211,9 @@ class modelPlot():
         if depthext == None:
             depthext = [self.surf,bottom]
 
+
+        colsed[len(self.sedH)-1]=np.array([244./256.,164/256.,96/256.,1.])
+
         # Define figure size
         fig = plt.figure(figsize=size, dpi=dpi)
         gs = gridspec.GridSpec(1,11)
@@ -254,8 +260,8 @@ class modelPlot():
         ax4.get_yaxis().set_visible(False)
         ax5.get_xaxis().set_visible(False)
         ax5.get_yaxis().set_visible(False)
-        lgd = ax1.legend(frameon=False, loc=1, prop={'size':font+1}, bbox_to_anchor=(5,0.2))
-        ax1.locator_params(axis='x', nbins=4)
+        lgd = ax1.legend(frameon=False, loc=1, prop={'size':font+1}, bbox_to_anchor=(5.2,0.2))
+        ax1.locator_params(axis='x', nbins=5)
         ax2.locator_params(axis='x', nbins=5)
         ax3.locator_params(axis='x', nbins=5)
         ax1.locator_params(axis='y', nbins=10)
@@ -299,11 +305,52 @@ class modelPlot():
         plt.show()
         if figname is not None:
             fig.savefig(figname, bbox_extra_artists=(lgd,), bbox_inches='tight')
+            print 'Figure has been saved in',figname
 
+        # Define figure size
+        fig = plt.figure(figsize=size, dpi=dpi)
+        gs = gridspec.GridSpec(1,11)
+        ax1 = fig.add_subplot(gs[:3])
+        ax2 = fig.add_subplot(gs[3:6], sharey=ax1)
+        ax3 = fig.add_subplot(gs[6:9], sharey=ax1)
+
+        ax1.plot(self.sealevel, self.timeLay, linewidth=lwidth, c='slateblue')
+        ax2.plot(self.waterflow, self.timeLay, linewidth=lwidth, c='darkcyan')
+        ax3.plot(self.sedinput, self.timeLay, linewidth=lwidth, c='sandybrown')
+
+        ax1.set_ylabel('Simulation time [a]', size=font+4)
+        ax1.set_ylim(self.timeLay.min(), self.timeLay.max())
+        ax2.set_ylim(self.timeLay.min(), self.timeLay.max())
+        ax3.set_ylim(self.timeLay.min(), self.timeLay.max())
+        ax1.set_axis_bgcolor('#f2f2f3')
+        ax2.set_axis_bgcolor('#f2f2f3')
+        ax3.set_axis_bgcolor('#f2f2f3')
+        ax1.locator_params(axis='x', nbins=5)
+        ax2.locator_params(axis='x', nbins=5)
+        ax3.locator_params(axis='x', nbins=5)
+
+        # Title
+        tt1 = ax1.set_title('Sea-level [m]', size=font+3)
+        tt2 = ax2.set_title('Water flow [m/d]', size=font+3)
+        tt3 = ax3.set_title('Sediment input [m/d]', size=font+3)
+        tt1.set_position([.5, 1.04])
+        tt2.set_position([.5, 1.04])
+        tt3.set_position([.5, 1.04])
+        fig.tight_layout()
+        plt.tight_layout()
+        plt.show()
+        if figname is not None:
+            fig.savefig('envi'+figname, bbox_extra_artists=(lgd,), bbox_inches='tight')
+            print 'Figure has been saved in','envi'+figname
+        print ''
+        
         if filename is not None:
             tmp = np.column_stack((d.T,p1.T))
             tmp1 = np.column_stack((tmp,p2.T))
             tmp2 = np.column_stack((tmp1,p3.T))
+            tmp3 = np.column_stack((tmp2,self.sealevel[:-1].T))
+            tmp4 = np.column_stack((tmp3,self.waterflow[:-1].T))
+            tmp5 = np.column_stack((tmp4,self.sedinput[:-1].T))
 
             cols = []
             cols.append('depth')
@@ -313,8 +360,11 @@ class modelPlot():
                 cols.append('prop_'+self.names[s])
             for s in range(len(self.names)):
                 cols.append('acc_'+self.names[s])
+            cols.append('sealevel')
+            cols.append('watervel')
+            cols.append('sedinput')
 
-            df = pd.DataFrame(tmp2)
+            df = pd.DataFrame(tmp5)
             df.columns = cols
             df.to_csv(filename, sep=sep, encoding='utf-8', index=False)
             print 'Model results have been saved in',filename
