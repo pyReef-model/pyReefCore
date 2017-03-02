@@ -96,29 +96,30 @@ reef = Model()
 # Define the XmL input file
 reef.load_xml('input.xml')
 
+# Visualise initial setting parameters
+reef.core.initialSetting(size=(8,2.5), size2=(8,3.5))
+
 # Run to a given time (for example 500 years)
 reef.run_to_time(500.,showtime=100.)
 
 # Define a colorscale to display the core
 # Some colormaps are available from the following link:
 # http://matplotlib.org/examples/color/colormaps_reference.html
-from matplotlib.cm import terrain
-nbcolors = len(reef.core.coralH)+3
+from matplotlib.cm import terrain, plasma
+nbcolors = len(reef.core.coralH)+10
 colors = terrain(numpy.linspace(0, 1, nbcolors))
+nbcolors = len(reef.core.layTime)+3
+colors2 = plasma(numpy.linspace(0, 1, nbcolors))
 
 # Plot evolution of species population with time
-reef.plot.speciesTime(pop=reef.coral.population, time=reef.coral.iterationTime, colors=colors,
-                      size=(8,4), font=8, dpi=80,fname='pop.pdf')
+reef.plot.speciesTime(colors=colors, size=(8,4), font=8, dpi=80,fname='pop.pdf')
 
 # Plot evolution of species population with depth
-reef.plot.speciesDepth(pop=reef.coral.population, depth=reef.core.thickness, colors=colors,
-                       size=(8,4), font=8, dpi=80)
+reef.plot.speciesDepth(colors=colors, size=(8,4), font=8, dpi=80)
 
 # Plot coral facies distribution core and assemblages
-reef.plot.drawCore(pop=reef.core.coralH, depth=reef.core.thickness, depthext = [5.,10.],
-                   thext = [0.,0.004], propext = [0.,0.5], surf=reef.core.topH, lwidth = 3,
-                   colors=colors, size=(8,10), font=8, dpi=380, figname='out.pdf',
-                   filename='out.csv', sep='\t')
+reef.plot.drawCore(lwidth = 3, colsed=colors, coltime = colors2, size=(9,8), font=8, dpi=380, 
+                   figname='out.pdf', filename='out.csv', sep='\t')
 ```
 
 ## Model results
