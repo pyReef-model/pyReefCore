@@ -135,7 +135,10 @@ class Model(object):
             if self.input.seaOn:
                 tmp = self.core.topH
                 self.core.topH, dfac = self.force.getSea(self.tNow, tmp)
-                self.core.sealevel[self.layID] = self.force.sealevel
+                if self.tNow == self.input.tStart:
+                    self.core.sealevel[self.layID] = self.force.sealevel
+                else:
+                    self.core.sealevel[self.layID+1] = self.force.sealevel
 
             # Get sediment input
             if self.input.sedOn:
