@@ -176,7 +176,7 @@ class Model(object):
             self.iter += 1
             ids = np.where(self.coral.epsilon==0.)[0]
             population[ids,-1] = 0.
-            ids = np.where(np.logical_and(fac==0.5,population[:,-1]==0.))[0]
+            ids = np.where(np.logical_and(fac>=0.5,population[:,-1]==0.))[0]
             population[ids,-1] = 1.
             self.coral.population[:self.input.speciesNb,self.iter] = population[:,-1]
 

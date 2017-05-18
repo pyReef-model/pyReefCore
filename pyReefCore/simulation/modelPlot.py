@@ -249,8 +249,12 @@ class modelPlot():
         """
 
         p1 = self.sedH[:,:-1]
-        p2 = self.sedH[:,:-1]/self.depth[:-1]
-        p3 = np.cumsum(self.sedH[:,:-1]/self.depth[:-1],axis=0)
+        ids = np.where(self.depth[:-1]>0)[0]
+        p2 = np.zeros((self.sedH.shape))
+        p3 = np.zeros((self.sedH.shape))
+
+        p2[:,ids] = self.sedH[:,ids]/self.depth[ids]
+        p3[:,ids] = np.cumsum(self.sedH[:,ids]/self.depth[ids],axis=0)
         bottom = self.surf + self.depth[:-1].sum()
         d = bottom - np.cumsum(self.depth[:-1])
         facies = np.argmax(p1, axis=0)
@@ -286,12 +290,12 @@ class modelPlot():
         # Plotting curves
         for s in range(len(self.sedH)):
             ax1.plot(p1[s,:], d, label=self.names[s], linewidth=lwidth, c=colsed[s])
-            ax2.plot(p2[s,:], d, label=self.names[s], linewidth=lwidth, c=colsed[s])
+            ax2.plot(p2[s,:-1], d, label=self.names[s], linewidth=lwidth, c=colsed[s])
             if s == 0:
-                ax3.fill_betweenx(d, 0, p3[s,:], color=colsed[s])
+                ax3.fill_betweenx(d, 0, p3[s,:-1], color=colsed[s])
             else:
-                ax3.fill_betweenx(d, p3[s-1,:], p3[s,:], color=colsed[s])
-            ax3.plot(p3[s,:], d, 'k--', label=self.names[s], linewidth=lwidth-1)
+                ax3.fill_betweenx(d, p3[s-1,:-1], p3[s,:-1], color=colsed[s])
+            ax3.plot(p3[s,:-1], d, 'k--', label=self.names[s], linewidth=lwidth-1)
 
         for s in range(len(d)):
             y[0] = d[s]
@@ -396,8 +400,8 @@ class modelPlot():
 
         if filename is not None:
             tmp = np.column_stack((d.T,p1.T))
-            tmp1 = np.column_stack((tmp,p2.T))
-            tmp2 = np.column_stack((tmp1,p3.T))
+            tmp1 = np.column_stack((tmp,p2[:,:-1].T))
+            tmp2 = np.column_stack((tmp1,p3[:,:-1].T))
             tmp3 = np.column_stack((tmp2,self.sealevel[:-1].T))
             tmp4 = np.column_stack((tmp3,self.waterflow[:-1].T))
             tmp5 = np.column_stack((tmp4,self.sedinput[:-1].T))
