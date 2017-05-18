@@ -190,7 +190,7 @@ class enviForce:
 
         self.seatime = seadata.values[:,0]
         tmp = seadata.values[:,1]
-        self.seaFunc = interpolate.interp1d(self.seatime, tmp, kind='cubic')
+        self.seaFunc = interpolate.interp1d(self.seatime, tmp, kind='linear')
 
         return
 

@@ -181,7 +181,7 @@ class preProc:
 
         # Define figure size
         fig, ax = plt.subplots(1,figsize=size, dpi=dpi)
-        ax.set_axis_bgcolor('#f2f2f3')
+        ax.set_facecolor('#f2f2f3')
         fig.tight_layout()
 
         # Plotting curve

@@ -38,12 +38,62 @@ class modelPlot():
         self.pop = None
         self.timeCarb = None
         self.depth = None
+        self.accspace = None
         self.timeLay = None
         self.surf = None
         self.sedH = None
         self.sealevel = None
         self.sedinput = None
         self.waterflow = None
+
+        return
+
+    def accomodationTime(self, colors=None, size=(10,5), font=9, dpi=80, fname=None):
+        """
+        This function estimates the accomodation space through time.
+
+        Parameters
+        ----------
+
+        variable : colors
+            Matplotlib color map to use
+
+        variable : size
+            Figure size
+
+        variable : font
+            Figure font size
+
+        variable : dpi
+            Figure resolution
+
+        variable : fname
+            Save PNG filename.
+        """
+
+        matplotlib.rcParams.update({'font.size': font})
+
+        # Define figure size
+        fig, ax = plt.subplots(1,figsize=size, dpi=dpi)
+        ax.set_facecolor('#f2f2f3')
+
+        # Plotting curves
+        ax.plot(self.timeCarb[:-2], self.accspace[:-2], linewidth=3,c=colors)
+
+        # Legend, title and labels
+        plt.grid()
+        plt.xlabel('Time [y]',size=font+2)
+        plt.ylabel('accomodation space [m]',size=font+2)
+        plt.xlim(0., self.timeCarb.max())
+
+
+        ttl = ax.title
+        ttl.set_position([.5, 1.05])
+        plt.title('Accomodation space evolution through time',size=font+3)
+        plt.show()
+
+        if fname is not None:
+            fig.savefig(fname, bbox_inches='tight')
 
         return
 
@@ -74,7 +124,7 @@ class modelPlot():
 
         # Define figure size
         fig, ax = plt.subplots(1,figsize=size, dpi=dpi)
-        ax.set_axis_bgcolor('#f2f2f3')
+        ax.set_facecolor('#f2f2f3')
 
         # Plotting curves
         for s in range(len(self.pop)):
@@ -126,7 +176,7 @@ class modelPlot():
 
         # Define figure size
         fig, ax = plt.subplots(1,figsize=size, dpi=dpi)
-        ax.set_axis_bgcolor('#f2f2f3')
+        ax.set_facecolor('#f2f2f3')
 
         # Plotting curves
         bottom = self.surf + self.depth.sum()
@@ -222,9 +272,9 @@ class modelPlot():
         ax3 = fig.add_subplot(gs[6:9], sharey=ax1)
         ax4 = fig.add_subplot(gs[9], sharey=ax1)
         ax5 = fig.add_subplot(gs[10], sharey=ax1)
-        ax3.set_axis_bgcolor('#f2f2f3')
-        ax4.set_axis_bgcolor('#f2f2f3')
-        ax5.set_axis_bgcolor('#f2f2f3')
+        ax3.set_facecolor('#f2f2f3')
+        ax4.set_facecolor('#f2f2f3')
+        ax5.set_facecolor('#f2f2f3')
         x = np.zeros(2)
         y = np.zeros(2)
         x[0] = 0.
@@ -322,9 +372,9 @@ class modelPlot():
         ax1.set_ylim(self.timeLay.min(), self.timeLay.max())
         ax2.set_ylim(self.timeLay.min(), self.timeLay.max())
         ax3.set_ylim(self.timeLay.min(), self.timeLay.max())
-        ax1.set_axis_bgcolor('#f2f2f3')
-        ax2.set_axis_bgcolor('#f2f2f3')
-        ax3.set_axis_bgcolor('#f2f2f3')
+        ax1.set_facecolor('#f2f2f3')
+        ax2.set_facecolor('#f2f2f3')
+        ax3.set_facecolor('#f2f2f3')
         ax1.locator_params(axis='x', nbins=5)
         ax2.locator_params(axis='x', nbins=5)
         ax3.locator_params(axis='x', nbins=5)
@@ -343,7 +393,7 @@ class modelPlot():
             fig.savefig('envi'+figname, bbox_extra_artists=(lgd,), bbox_inches='tight')
             print 'Figure has been saved in','envi'+figname
         print ''
-        
+
         if filename is not None:
             tmp = np.column_stack((d.T,p1.T))
             tmp1 = np.column_stack((tmp,p2.T))

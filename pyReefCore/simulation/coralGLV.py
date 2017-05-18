@@ -40,6 +40,7 @@ class coralGLV:
         # Coral population record through time
         self.iterationTime = numpy.arange(input.tStart, input.tEnd+input.tCarb, input.tCarb)
         self.population = numpy.zeros((input.speciesNb,len(self.iterationTime)),dtype=float)
+        self.accspace = numpy.zeros(len(self.iterationTime),dtype=float)
 
         return
 

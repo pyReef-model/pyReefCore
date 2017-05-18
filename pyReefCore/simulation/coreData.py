@@ -86,9 +86,9 @@ class coreData:
 
         for s in range(len(self.names)):
             fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=size, sharey=True, dpi=dpi)
-            ax1.set_axis_bgcolor('#f2f2f3')
-            ax2.set_axis_bgcolor('#f2f2f3')
-            ax3.set_axis_bgcolor('#f2f2f3')
+            ax1.set_facecolor('#f2f2f3')
+            ax2.set_facecolor('#f2f2f3')
+            ax3.set_facecolor('#f2f2f3')
             fig.tight_layout()
             ax1.grid()
             ax2.grid()
@@ -188,9 +188,9 @@ class coreData:
             ax1 = fig.add_subplot(gs[:4])
             ax2 = fig.add_subplot(gs[4:8], sharey=ax1)
             ax3 = fig.add_subplot(gs[8:12], sharey=ax1)
-            ax1.set_axis_bgcolor('#f2f2f3')
-            ax2.set_axis_bgcolor('#f2f2f3')
-            ax3.set_axis_bgcolor('#f2f2f3')
+            ax1.set_facecolor('#f2f2f3')
+            ax2.set_facecolor('#f2f2f3')
+            ax3.set_facecolor('#f2f2f3')
             # Legend, title and labels
             ax1.grid()
             ax2.grid()
@@ -223,8 +223,8 @@ class coreData:
             gs = gridspec.GridSpec(1,12)
             ax1 = fig.add_subplot(gs[:4])
             ax2 = fig.add_subplot(gs[4:8], sharey=ax1)
-            ax1.set_axis_bgcolor('#f2f2f3')
-            ax2.set_axis_bgcolor('#f2f2f3')
+            ax1.set_facecolor('#f2f2f3')
+            ax2.set_facecolor('#f2f2f3')
             # Legend, title and labels
             ax1.grid()
             ax2.grid()
@@ -249,7 +249,7 @@ class coreData:
                 fig = plt.figure(figsize=size2, dpi=dpi)
                 gs = gridspec.GridSpec(1,12)
                 ax1 = fig.add_subplot(gs[:4])
-                ax1.set_axis_bgcolor('#f2f2f3')
+                ax1.set_facecolor('#f2f2f3')
                 # Legend, title and labels
                 ax1.grid()
                 ax1.locator_params(axis='x', nbins=4)
@@ -271,8 +271,8 @@ class coreData:
             gs = gridspec.GridSpec(1,12)
             ax1 = fig.add_subplot(gs[:4])
             ax2 = fig.add_subplot(gs[4:8], sharey=ax1)
-            ax1.set_axis_bgcolor('#f2f2f3')
-            ax2.set_axis_bgcolor('#f2f2f3')
+            ax1.set_facecolor('#f2f2f3')
+            ax2.set_facecolor('#f2f2f3')
             # Legend, title and labels
             ax1.grid()
             ax2.grid()
@@ -297,7 +297,7 @@ class coreData:
                 fig = plt.figure(figsize=size2, dpi=dpi)
                 gs = gridspec.GridSpec(1,12)
                 ax1 = fig.add_subplot(gs[:4])
-                ax1.set_axis_bgcolor('#f2f2f3')
+                ax1.set_facecolor('#f2f2f3')
                 # Legend, title and labels
                 ax1.grid()
                 ax1.locator_params(axis='x', nbins=4)
@@ -318,7 +318,7 @@ class coreData:
             fig = plt.figure(figsize=size2, dpi=dpi)
             gs = gridspec.GridSpec(1,12)
             ax1 = fig.add_subplot(gs[:4])
-            ax1.set_axis_bgcolor('#f2f2f3')
+            ax1.set_facecolor('#f2f2f3')
             # Legend, title and labels
             ax1.grid()
             ax1.locator_params(axis='x', nbins=4)
@@ -340,7 +340,7 @@ class coreData:
                 fig = plt.figure(figsize=size2, dpi=dpi)
                 gs = gridspec.GridSpec(1,12)
                 ax1 = fig.add_subplot(gs[:4])
-                ax1.set_axis_bgcolor('#f2f2f3')
+                ax1.set_facecolor('#f2f2f3')
                 # Legend, title and labels
                 ax1.grid()
                 ax1.locator_params(axis='x', nbins=4)
@@ -358,7 +358,7 @@ class coreData:
                 fig = plt.figure(figsize=size2, dpi=dpi)
                 gs = gridspec.GridSpec(1,12)
                 ax1 = fig.add_subplot(gs[:4])
-                ax1.set_axis_bgcolor('#f2f2f3')
+                ax1.set_facecolor('#f2f2f3')
                 # Legend, title and labels
                 ax1.grid()
                 ax1.locator_params(axis='x', nbins=4)
@@ -397,20 +397,35 @@ class coreData:
         """
 
         # Compute production for the given time step [m]
-        production = - self.prod * self.alpha / epsilon * coral * self.dt
-        ids = numpy.where(epsilon==0.)[0]
-        production[ids] = 0.
+        production = numpy.zeros((coral.shape))
+        ids = numpy.where(epsilon>0.)[0]
+        production[ids] = - self.prod[ids] * self.alpha[ids] / epsilon[ids] * coral[ids] * self.dt
 
         # Total thickness deposited
         sh = sedh * self.dt
         toth = production.sum() + sh
 
-        if self.topH > 0. and self.topH - toth < 0:
-            maxcarbh = self.topH
-            if production.sum() > maxcarbh:
-                frac = maxcarbh/production.sum()
-                production *= frac
-                toth = production.sum() + sh
+        # In case there is no accomodation space
+        if self.topH < 0.:
+            # Do nothing
+            return
+
+        # If there is some accomodation space but it is all filled by sediment
+        elif self.topH > 0. and self.topH - sh < 0.:
+            # Just add the sediments to the sea-level
+            self.coralH[len(self.prod),layID] += self.topH
+            # Update current layer thickness
+            self.thickness[layID] += self.topH
+            # Update current layer top elevation
+            self.topH = 0.
+
+        # If there is some accomodation space that will disappear due to a
+        # combination of carbonate growth and sediment input
+        elif self.topH > 0. and self.topH - toth < 0:
+            maxcarbh = self.topH - sh
+            frac = maxcarbh/production.sum()
+            production *= frac
+            toth = production.sum() + sh
 
             # Update current layer composition
             self.coralH[0:len(self.prod),layID] += production
@@ -421,6 +436,7 @@ class coreData:
             # Update current layer top elevation
             self.topH -= toth
 
+        # Otherwise
         elif self.topH > 0.:
             # Update current layer composition
             self.coralH[0:len(self.prod),layID] += production
@@ -430,14 +446,5 @@ class coreData:
             self.thickness[layID] += toth
             # Update current layer top elevation
             self.topH -= toth
-
-        elif sh > 0.:
-            # Convert sediment input from m/d to m/a
-            self.coralH[len(self.prod),layID] += sh
-
-            # Update current layer thickness
-            self.thickness[layID] += sh
-            # Update current layer top elevation
-            self.topH -= sh
 
         return

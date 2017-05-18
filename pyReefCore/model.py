@@ -131,6 +131,9 @@ class Model(object):
             if self.tNow == self.input.tStart:
                 self.coral.population[:,self.iter] = self.input.speciesPopulation
 
+            # Store accomodation space through time
+            self.coral.accspace[self.iter] = max(self.core.topH,0.)
+
             # Get sea-level
             if self.input.seaOn:
                 tmp = self.core.topH
@@ -173,9 +176,14 @@ class Model(object):
             self.iter += 1
             ids = np.where(self.coral.epsilon==0.)[0]
             population[ids,-1] = 0.
-            ids = np.where(np.logical_and(fac==1,population[:,-1]==0.))[0]
+            ids = np.where(np.logical_and(fac==0.5,population[:,-1]==0.))[0]
             population[ids,-1] = 1.
             self.coral.population[:self.input.speciesNb,self.iter] = population[:,-1]
+
+            # In case there is no accomodation space
+            if self.core.topH <= 0.:
+                population[ids,-1] = 0.
+                self.coral.population[:self.input.speciesNb,self.iter] = 0.
 
             # Compute carbonate production and update coral core characteristics
             self.core.coralProduction(self.layID,self.coral.population[:,self.iter],
@@ -203,6 +211,7 @@ class Model(object):
         self.plot.sealevel = self.core.sealevel
         self.plot.sedinput = self.core.sedinput
         self.plot.waterflow = self.core.waterflow
+        self.plot.accspace = self.coral.accspace
 
         return
 
