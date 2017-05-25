@@ -49,6 +49,7 @@ class xmlParser:
         self.speciesName = None
         self.malthusParam = None
         self.speciesPopulation = None
+        self.maxpop = None
         self.speciesProduction = None
         self.communityMatrix = None
 
@@ -150,6 +151,12 @@ class xmlParser:
                 self.speciesNb = int(element.text)
             else:
                 raise ValueError('Error you need to define at least 1 species!')
+            element = None
+            element = litho.find('maxPopulation')
+            if element is not None:
+                self.maxpop = int(element.text)
+            else:
+                self.maxpop = 20
             self.speciesName = numpy.empty(self.speciesNb, dtype="S14")
             self.malthusParam = numpy.zeros(self.speciesNb, dtype=float)
             self.speciesPopulation = numpy.zeros(self.speciesNb, dtype=float)

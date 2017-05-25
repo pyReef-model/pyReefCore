@@ -158,7 +158,7 @@ class Model(object):
             # Limit species activity from environmental forces
             tmp = np.minimum(dfac, sfac)
             fac = np.minimum(ffac, tmp)
-            self.coral.epsilon = self.input.malthusParam*fac
+            self.coral.epsilon = self.input.malthusParam
 
             # Initialise RKF conditions
             self.odeRKF.set_initial_condition(self.coral.population[:,self.iter])
@@ -171,6 +171,9 @@ class Model(object):
             # Solve the Generalized Lotka-Volterra equation
             coral,t = self.odeRKF.solve(tODE)
             population = coral.T
+            tmppop = np.copy(population[:,-1])
+            tmppop[tmppop>20.] = 20.
+            population[:,-1] = tmppop
 
             # Update coral population
             self.iter += 1
@@ -178,6 +181,7 @@ class Model(object):
             population[ids,-1] = 0.
             ids = np.where(np.logical_and(fac>=0.5,population[:,-1]==0.))[0]
             population[ids,-1] = 1.
+
             self.coral.population[:self.input.speciesNb,self.iter] = population[:,-1]
 
             # In case there is no accomodation space
@@ -186,9 +190,8 @@ class Model(object):
                 self.coral.population[:self.input.speciesNb,self.iter] = 0.
 
             # Compute carbonate production and update coral core characteristics
-            self.core.coralProduction(self.layID,self.coral.population[:,self.iter],
+            self.core.coralProduction(self.layID, fac, self.coral.population[:,self.iter],
                                       self.coral.epsilon, sedh)
-
             # Update time step
             self.tNow = self.tCoral
 

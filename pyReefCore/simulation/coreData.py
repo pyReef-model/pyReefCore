@@ -18,6 +18,7 @@ import skfuzzy as fuzz
 import matplotlib
 from matplotlib import gridspec
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mtick
 
 class coreData:
     """
@@ -50,6 +51,7 @@ class coreData:
         self.sealevel = numpy.zeros(len(self.layTime),dtype=float)
         self.sedinput = numpy.zeros(len(self.layTime),dtype=float)
         self.waterflow = numpy.zeros(len(self.layTime),dtype=float)
+        self.maxpop = input.maxpop
 
         # Shape functions
         self.seaOn = input.seaOn
@@ -186,8 +188,8 @@ class coreData:
             fig = plt.figure(figsize=size2, dpi=dpi)
             gs = gridspec.GridSpec(1,12)
             ax1 = fig.add_subplot(gs[:4])
-            ax2 = fig.add_subplot(gs[4:8], sharey=ax1)
-            ax3 = fig.add_subplot(gs[8:12], sharey=ax1)
+            ax2 = fig.add_subplot(gs[4:8]) #, sharey=ax1)
+            ax3 = fig.add_subplot(gs[8:12]) #, sharey=ax1)
             ax1.set_facecolor('#f2f2f3')
             ax2.set_facecolor('#f2f2f3')
             ax3.set_facecolor('#f2f2f3')
@@ -201,7 +203,8 @@ class coreData:
             ax1.locator_params(axis='y', nbins=10)
             ax1.plot(self.seaFunc(self.seatime), self.seatime, linewidth=width, c='slateblue')
             ax1.set_xlim(self.seaFunc(self.seatime).min()-0.0001, self.seaFunc(self.seatime).max()+0.0001)
-            ax2.set_xlim(self.sedFunc(self.sedtime).min()-0.0001, self.sedFunc(self.sedtime).max()+0.0001)
+            ax2.xaxis.set_major_formatter(mtick.FormatStrFormatter('%.1e'))
+            ax2.set_xlim(self.sedFunc(self.sedtime).min(), self.sedFunc(self.sedtime).max())
             ax3.plot(self.flowFunc(self.flowtime), self.flowtime, linewidth=width, c='darkcyan')
             ax3.set_xlim(self.flowFunc(self.flowtime).min()-0.0001, self.flowFunc(self.flowtime).max()+0.0001)
             # Axis
@@ -234,17 +237,17 @@ class coreData:
             ax1.plot(self.seaFunc(self.seatime), self.seatime, linewidth=width, c='slateblue')
             ax1.set_xlim(self.seaFunc(self.seatime).min()-0.0001, self.seaFunc(self.seatime).max()+0.0001)
             ax2.plot(self.sedFunc(self.sedtime), self.sedtime, linewidth=width, c='sandybrown')
-            ax2.set_xlim(self.sedFunc(self.sedtime).min()-0.0001, self.sedFunc(self.sedtime).max()+0.0001)
+            ax2.xaxis.set_major_formatter(mtick.FormatStrFormatter('%.1e'))
+            ax2.set_xlim(self.sedFunc(self.sedtime).min(), self.sedFunc(self.sedtime).max())
             # Axis
             ax1.set_ylabel('Time [years]', size=font+2)
             # Title
-            tt1 = ax1.set_title('Sea-level [m]', size=font+3)
-            tt2 = ax2.set_title('Sediment input [m/d]', size=font+3)
+            tt1 = ax1.set_title('Sea-level [m]', size=font+2)
+            tt2 = ax2.set_title('Sediment input [m/d]', size=font+2)
             tt1.set_position([.5, 1.03])
             tt2.set_position([.5, 1.03])
             fig.tight_layout()
             plt.show()
-
             if self.flowfcty is not None:
                 fig = plt.figure(figsize=size2, dpi=dpi)
                 gs = gridspec.GridSpec(1,12)
@@ -282,12 +285,12 @@ class coreData:
             ax1.plot(self.seaFunc(self.seatime), self.seatime, linewidth=width, c='slateblue')
             ax1.set_xlim(self.seaFunc(self.seatime).min()-0.0001, self.seaFunc(self.seatime).max()+0.0001)
             ax2.plot(self.flowFunc(self.sedtime), self.sedtime, linewidth=width, c='darkcyan')
-            ax2.set_xlim(self.flowFunc(self.sedtime).min()-0.0001, self.flowFunc(self.sedtime).max()+0.0001)
+            ax2.set_xlim(self.flowFunc(self.sedtime).min(), self.flowFunc(self.sedtime).max())
             # Axis
             ax1.set_ylabel('Time [years]', size=font+2)
             # Title
-            tt1 = ax1.set_title('Sea-level [m]', size=font+3)
-            tt2 = ax2.set_title('Water flow [m/d]', size=font+3)
+            tt1 = ax1.set_title('Sea-level [m]', size=font+2)
+            tt2 = ax2.set_title('Water flow [m/d]', size=font+2)
             tt1.set_position([.5, 1.03])
             tt2.set_position([.5, 1.03])
             fig.tight_layout()
@@ -303,11 +306,12 @@ class coreData:
                 ax1.locator_params(axis='x', nbins=4)
                 ax1.locator_params(axis='y', nbins=10)
                 ax1.plot(self.sedfctx, self.sedfcty, linewidth=width, c='sandybrown')
+                ax1.xaxis.set_major_formatter(mtick.FormatStrFormatter('%.1e'))
                 ax1.set_xlim(self.sedfctx.min(), self.sedfctx.max())
                 # Axis
                 ax1.set_ylabel('Depth [m]', size=font+2)
                 # Title
-                tt1 = ax1.set_title('Sediment input [m/d]', size=font+3)
+                tt1 = ax1.set_title('Sediment input [m/d]', size=font+2)
                 tt1.set_position([.5, 1.03])
                 plt.show()
 
@@ -332,7 +336,7 @@ class coreData:
             # Axis
             ax1.set_ylabel('Time [years]', size=font+2)
             # Title
-            tt1 = ax1.set_title('Sea-level [m]', size=font+3)
+            tt1 = ax1.set_title('Sea-level [m]', size=font+2)
             tt1.set_position([.5, 1.03])
             plt.show()
 
@@ -346,11 +350,12 @@ class coreData:
                 ax1.locator_params(axis='x', nbins=4)
                 ax1.locator_params(axis='y', nbins=10)
                 ax1.plot(self.sedfctx, self.sedfcty, linewidth=width, c='sandybrown')
+                ax1.xaxis.set_major_formatter(mtick.FormatStrFormatter('%.1e'))
                 ax1.set_xlim(self.sedfctx.min(), self.sedfctx.max())
                 # Axis
                 ax1.set_ylabel('Depth [m]', size=font+2)
                 # Title
-                tt1 = ax1.set_title('Sediment input [m/d]', size=font+3)
+                tt1 = ax1.set_title('Sediment input [m/d]', size=font+2)
                 tt1.set_position([.5, 1.03])
                 plt.show()
 
@@ -368,7 +373,7 @@ class coreData:
                 # Axis
                 ax1.set_ylabel('Depth [m]', size=font+2)
                 # Title
-                tt1 = ax1.set_title('Water flow [m/d]', size=font+3)
+                tt1 = ax1.set_title('Water flow [m/d]', size=font+2)
                 tt1.set_position([.5, 1.03])
                 plt.show()
 
@@ -376,7 +381,7 @@ class coreData:
 
         return
 
-    def coralProduction(self, layID, coral, epsilon, sedh):
+    def coralProduction(self, layID, envfac, coral, epsilon, sedh):
         """
         This function estimates the coral growth based on newly computed population.
 
@@ -399,7 +404,10 @@ class coreData:
         # Compute production for the given time step [m]
         production = numpy.zeros((coral.shape))
         ids = numpy.where(epsilon>0.)[0]
-        production[ids] = - self.prod[ids] * self.alpha[ids] / epsilon[ids] * coral[ids] * self.dt
+        production[ids] = self.prod[ids] * envfac * coral[ids] * self.dt / self.maxpop
+        maxProd = self.prod * self.dt
+        tmpids = numpy.where(production>maxProd)[0]
+        production[tmpids] = maxProd[tmpids]
 
         # Total thickness deposited
         sh = sedh * self.dt
