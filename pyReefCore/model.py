@@ -115,7 +115,6 @@ class Model(object):
         if self.tNow == self.input.tStart:
             # Initialise Generalized Lotka-Volterra equation
             self.coral = coralGLV.coralGLV(input=self.input)
-            self.odeRKF = self.coral.solverGLV()
 
         # Perform main simulation loop
         # NOTE: number of iteration for the ODE during a given time step, could be user defined...
@@ -158,9 +157,10 @@ class Model(object):
             # Limit species activity from environmental forces
             tmp = np.minimum(dfac, sfac)
             fac = np.minimum(ffac, tmp)
-            self.coral.epsilon = self.input.malthusParam
+            self.coral.epsilon = self.input.malthusParam * fac
 
             # Initialise RKF conditions
+            self.odeRKF = self.coral.solverGLV()
             self.odeRKF.set_initial_condition(self.coral.population[:,self.iter])
 
             # Define coral evolution time interval and time stepping
@@ -190,7 +190,7 @@ class Model(object):
                 self.coral.population[:self.input.speciesNb,self.iter] = 0.
 
             # Compute carbonate production and update coral core characteristics
-            self.core.coralProduction(self.layID, fac, self.coral.population[:,self.iter],
+            self.core.coralProduction(self.layID, self.coral.population[:,self.iter],
                                       self.coral.epsilon, sedh)
             # Update time step
             self.tNow = self.tCoral

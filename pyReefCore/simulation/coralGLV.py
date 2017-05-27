@@ -69,7 +69,7 @@ class coralGLV:
         """
         This function build the RKF solver used for the Generalized Lotka-Volterra equation.
         """
-
+        
         # RKF initialisation
         odeRKF = odespy.Fehlberg(self._functionGLV, atol=self.atol,
                                    rtol=self.rtol, min_step=self.min_step)

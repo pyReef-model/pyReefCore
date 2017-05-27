@@ -381,7 +381,7 @@ class coreData:
 
         return
 
-    def coralProduction(self, layID, envfac, coral, epsilon, sedh):
+    def coralProduction(self, layID, coral, epsilon, sedh):
         """
         This function estimates the coral growth based on newly computed population.
 
@@ -404,7 +404,7 @@ class coreData:
         # Compute production for the given time step [m]
         production = numpy.zeros((coral.shape))
         ids = numpy.where(epsilon>0.)[0]
-        production[ids] = self.prod[ids] * envfac * coral[ids] * self.dt / self.maxpop
+        production[ids] = self.prod[ids] * coral[ids] * self.dt / self.maxpop
         maxProd = self.prod * self.dt
         tmpids = numpy.where(production>maxProd)[0]
         production[tmpids] = maxProd[tmpids]
