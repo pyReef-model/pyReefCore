@@ -73,17 +73,17 @@ class enviForce:
         if input.flowfunc != None:
             self.flowfct = True
             if input.flowdecay != None:
-                y = input.flowdecay[0,:]
-                x = input.flowdecay[1,:]
+                yf = input.flowdecay[0,:]
+                xf = input.flowdecay[1,:]
+                self.xflow = xf
+                self.yflow = yf
                 warnings.filterwarnings('ignore', category=OptimizeWarning)
-                popt, pcov = curve_fit(self._expdecay_func, x, y)
+                popt, pcov = curve_fit(self._expdecay_func, xf, yf)
                 self.flowopt = popt
-                self.plotflowx = numpy.linspace(0., x.max(), 100)
+                self.plotflowx = numpy.linspace(0., xf.max(), 100)
                 self.plotflowy = self._expdecay_func(self.plotflowx, *popt)
                 self.plotflowy[self.plotflowy<0]=0.
             else:
-                self.xflow = x
-                self.yflow = y
                 self.flowlin = [input.flowlina,input.flowlinb]
                 self.plotflowx = numpy.linspace(0, input.flowlinb, 100)
                 self.plotflowy = (self.plotflowx-self.flowlin[1])/self.flowlin[0]
@@ -222,7 +222,7 @@ class enviForce:
 
         self.flowtime = flowdata.values[:,0]
         tmp = flowdata.values[:,1]
-        self.flowFunc = interpolate.interp1d(self.flowtime, tmp, kind='linear')
+        self.flowFunc = interpolate.interp1d(self.flowtime, tmp, kind='cubic')
 
         return
 

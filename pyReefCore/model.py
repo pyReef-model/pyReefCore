@@ -152,7 +152,7 @@ class Model(object):
             # Get flow velocity
             if self.input.flowOn:
                 ffac = self.force.getFlow(self.tNow, self.core.topH)
-                self.core.waterflow[self.layID] = self.force.sedlevel
+                self.core.waterflow[self.layID] = self.force.flowlevel
 
             # Limit species activity from environmental forces
             tmp = np.minimum(dfac, sfac)

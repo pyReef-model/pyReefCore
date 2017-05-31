@@ -415,7 +415,7 @@ class modelPlot():
             for s in range(len(self.names)):
                 cols.append('acc_'+self.names[s])
             cols.append('sealevel')
-            cols.append('watervel')
+            cols.append('waterflow')
             cols.append('sedinput')
 
             df = pd.DataFrame(tmp5)

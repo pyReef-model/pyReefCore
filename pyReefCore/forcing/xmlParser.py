@@ -254,7 +254,6 @@ class xmlParser:
                     raise ValueError('Flow velocity file is missing or the given path is incorrect.')
             else:
                 self.flowfile = None
-                
             element = None
             fun = flow.find('function')
             if fun is not None:
