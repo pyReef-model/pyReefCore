@@ -65,10 +65,8 @@ class enviForce:
 
         if self.seafile != None:
             self._build_Sea_function()
-
         if self.sedfile != None:
             self._build_Sed_function()
-
         if self.flowfile != None:
             self._build_Flow_function()
 
@@ -207,7 +205,7 @@ class enviForce:
 
         self.sedtime = seddata.values[:,0]
         tmp = seddata.values[:,1]
-        self.sedFunc = interpolate.interp1d(self.sedtime, tmp, kind='cubic')
+        self.sedFunc = interpolate.interp1d(self.sedtime, tmp, kind='linear')
 
         return
 
@@ -224,7 +222,7 @@ class enviForce:
 
         self.flowtime = flowdata.values[:,0]
         tmp = flowdata.values[:,1]
-        self.flowFunc = interpolate.interp1d(self.flowtime, tmp, kind='cubic')
+        self.flowFunc = interpolate.interp1d(self.flowtime, tmp, kind='linear')
 
         return
 

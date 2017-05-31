@@ -252,6 +252,9 @@ class xmlParser:
                 self.flowfile = element.text
                 if not os.path.isfile(self.flowfile):
                     raise ValueError('Flow velocity file is missing or the given path is incorrect.')
+            else:
+                self.flowfile = None
+                
             element = None
             fun = flow.find('function')
             if fun is not None:
@@ -284,7 +287,6 @@ class xmlParser:
                 if self.flowdecay is None and self.flowlina is None:
                     raise ValueError('Flow velocity function is declared but is missing some parameters.')
             else:
-                self.flowfile = None
                 self.flowfunc = None
         else:
             self.flowval = 0.
@@ -305,8 +307,11 @@ class xmlParser:
             element = sed.find('curve')
             if element is not None:
                 self.sedfile = element.text
-                if not os.path.isfile(self.salfile):
+                if not os.path.isfile(self.sedfile):
                     raise ValueError('Sediment input file is missing or the given path is incorrect.')
+            else:
+                self.sedfile = None
+
             element = None
             fct = sed.find('function')
             if fct is not None:
@@ -339,7 +344,6 @@ class xmlParser:
                 if self.seddecay is None and self.sedlina is None:
                     raise ValueError('Sediment input function is declared but is missing some parameters.')
             else:
-                self.sedfile = None
                 self.sedfunc = None
         else:
             self.sedval = 0.
