@@ -413,6 +413,8 @@ class coreData:
         sh = sedh * self.dt
         toth = production.sum() + sh
 
+        print ' Thick:', toth, '\n Prod:', production, '\n Accom: ', self.topH #, '\n fac: ', envfac
+        
         # In case there is no accomodation space
         if self.topH < 0.:
             # Do nothing
