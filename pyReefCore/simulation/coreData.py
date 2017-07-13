@@ -71,9 +71,9 @@ class coreData:
         self.seatime = None
         self.sedtime = None
         self.flowtime = None
-        self.seaFunc = None
-        self.sedFunc = None
-        self.flowFunc = None
+        self.seaFunc = input.sedfile
+        self.sedFunc = input.sedfunc
+        self.flowFunc = input.flowfunc
         self.sedfctx = None
         self.sedfcty = None
         self.flowfctx = None

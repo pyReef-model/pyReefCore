@@ -181,6 +181,7 @@
 		-->
 		<function>
 			<!--linear>
+				<fmax>20.</fmax>
 				<a>-0.33</a>
 				<b>20</b>
 			</linear-->
@@ -221,6 +222,7 @@
 		-->
 		<function>
 			<linear>
+				<dmax>20.</dmax>
 				<a>-6.e6</a>
 				<b>20.</b>
 			</linear>

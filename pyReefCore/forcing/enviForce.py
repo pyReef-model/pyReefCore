@@ -85,7 +85,7 @@ class enviForce:
                 self.plotflowy[self.plotflowy<0]=0.
             else:
                 self.flowlin = [input.flowlina,input.flowlinb]
-                self.plotflowx = numpy.linspace(0, input.flowlinb, 100)
+                self.plotflowx = numpy.linspace(0, input.flowdepth, 100)
                 self.plotflowy = (self.plotflowx-self.flowlin[1])/self.flowlin[0]
                 self.plotflowy[self.plotflowy<0]=0.
 
@@ -94,8 +94,6 @@ class enviForce:
             if input.seddecay != None:
                 y = input.seddecay[0,:]
                 x = input.seddecay[1,:]
-                self.xsed = y
-                self.ysed = x
                 warnings.filterwarnings('ignore', category=OptimizeWarning)
                 popt, pcov = curve_fit(self._expdecay_func, x, y)
                 self.sedopt = popt
@@ -104,7 +102,7 @@ class enviForce:
                 self.plotsedy[self.plotsedy<0]=0.
             else:
                 self.sedlin = [input.sedlina,input.sedlinb]
-                self.plotsedx = numpy.linspace(x[0], x[-1], 100)
+                self.plotsedx = numpy.linspace(0, input.seddepth, 100)
                 self.plotsedy = (self.plotsedx-self.sedlin[1])/self.sedlin[0]
                 self.plotsedy[self.plotsedy<0]=0.
 

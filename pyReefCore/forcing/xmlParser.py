@@ -64,6 +64,7 @@ class xmlParser:
         self.flowdecay = None
         self.flowlinb = None
         self.flowlina = None
+        self.flowdepth = None
 
         self.sedOn = False
         self.sedval = 0.
@@ -72,6 +73,7 @@ class xmlParser:
         self.seddecay = None
         self.sedlinb = None
         self.sedlina = None
+        self.seddepth = None
 
         self.enviDepth = None
         self.enviSed = None
@@ -260,6 +262,9 @@ class xmlParser:
                 self.flowfunc = 0
                 linear = fun.find('linear')
                 if linear is not None:
+                    element = linear.find('fmax')
+                    if element is not None:
+                        self.flowdepth = float(element.text)
                     element = linear.find('a')
                     if element is not None:
                         self.flowlina = float(element.text)
@@ -317,6 +322,9 @@ class xmlParser:
                 self.sedfunc = 0
                 linear = fct.find('linear')
                 if linear is not None:
+                    element = linear.find('dmax')
+                    if element is not None:
+                        self.seddepth = float(element.text)
                     element = linear.find('a')
                     if element is not None:
                         self.sedlina = float(element.text)
