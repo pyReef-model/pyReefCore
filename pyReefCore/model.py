@@ -11,7 +11,7 @@
 """
 import time
 import numpy as np
-import mpi4py.MPI as mpi
+#import mpi4py.MPI as mpi
 
 from pyReefCore import (preProc, xmlParser, enviForce, coralGLV, coreData, modelPlot)
 
@@ -41,9 +41,9 @@ class Model(object):
 
         self.dispRate = None
 
-        self._rank = mpi.COMM_WORLD.rank
-        self._size = mpi.COMM_WORLD.size
-        self._comm = mpi.COMM_WORLD
+        #self._rank = mpi.COMM_WORLD.rank
+        #self._size = mpi.COMM_WORLD.size
+        #self._comm = mpi.COMM_WORLD
 
         # Initialise pre-processing functions
         self.enviforcing = preProc.preProc()
@@ -54,17 +54,18 @@ class Model(object):
         """
 
         # Only the first node should create a unique output dir
-        self.input = xmlParser.xmlParser(filename, makeUniqueOutputDir=(self._rank == 0))
+        #self.input = xmlParser.xmlParser(filename, makeUniqueOutputDir=(self._rank == 0))
+        self.input = xmlParser.xmlParser(filename, makeUniqueOutputDir)
         self.tNow = self.input.tStart
         self.tCoral = self.tNow
         self.tLayer = self.tNow + self.input.laytime
 
         # Seed the random number generator consistently on all nodes
         seed = None
-        if self._rank == 0:
+        #if self._rank == 0:
             # limit to max uint32
-            seed = np.random.mtrand.RandomState().tomaxint() % 0xFFFFFFFF
-        seed = self._comm.bcast(seed, root=0)
+        seed = np.random.mtrand.RandomState().tomaxint() % 0xFFFFFFFF
+        #seed = self._comm.bcast(seed, root=0)
         np.random.seed(seed)
         self.iter = 0
         self.layID = 0
@@ -105,8 +106,8 @@ class Model(object):
             pr = cProfile.Profile()
             pr.enable()
 
-        if self._rank == 0:
-            print 'tNow = %s [yr]' %self.tNow
+        #if self._rank == 0:
+        print 'tNow = %s [yr]' %self.tNow
 
         if tEnd > self.input.tEnd:
             tEnd = self.input.tEnd
@@ -200,7 +201,8 @@ class Model(object):
                 self.tLayer += self.input.laytime
                 self.layID += 1
 
-            if self._rank == 0 and self.tNow>=timeVerbose:
+            #if self._rank == 0 and self.tNow>=timeVerbose:
+            if self.tNow>=timeVerbose:
                 timeVerbose = self.tNow+showtime
                 print 'tNow = %s [yr]' %self.tNow
 
