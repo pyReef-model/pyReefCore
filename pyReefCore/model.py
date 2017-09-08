@@ -55,7 +55,7 @@ class Model(object):
 
         # Only the first node should create a unique output dir
         #self.input = xmlParser.xmlParser(filename, makeUniqueOutputDir=(self._rank == 0))
-        self.input = xmlParser.xmlParser(filename, makeUniqueOutputDir)
+        self.input = xmlParser.xmlParser(filename)
         self.tNow = self.input.tStart
         self.tCoral = self.tNow
         self.tLayer = self.tNow + self.input.laytime
