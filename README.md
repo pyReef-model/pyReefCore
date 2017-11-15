@@ -1,6 +1,6 @@
 # pyReef-Core
 
-**pyReef-Core** is a deterministic, one-dimensional (1-D) numerical model, that simulates the vertical coralgal growth patterns observed in a drill core, as well as the physical, environmental processes that effect coralgal growth. The model is capable of integrating ecological processes like coralgal community interactions over centennial-to-millennial scales using predator-prey or_Generalised Lotka-Volterra Equations_. 
+**pyReef-Core** is a deterministic, one-dimensional (1-D) numerical model, that simulates the vertical coralgal growth patterns observed in a drill core, as well as the physical, environmental processes that effect coralgal growth. The model is capable of integrating ecological processes like coralgal community interactions over centennial-to-millennial scales using predator-prey or _Generalised Lotka-Volterra Equations_. 
 
 
 <div align="center">
