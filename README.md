@@ -126,8 +126,18 @@ reef.plot.drawCore(lwidth = 3, colsed=colors, coltime = colors2, size=(9,8), fon
                    figname='out.pdf', filename='out.csv', sep='\t')
 ```
 
-## Model results
+## Examples
 
 <div align="center">
-    <img width=600 src="http://sydney.edu.au/science/geosciences/images/core.jpg" alt="OTR core from the Geocoastal Group - USyD" title="Core sample, including a well-preserved Faviidae coral recovered from 16 m depth. The red arrows are drawn on to indicate upwards recovery direction."</img>   
+    <img width=600 src="http://sydney.edu.au/science/geosciences/images/core.jpg" alt="OTR core from the Geocoastal Group - USyD" title="OTR core from the Geocoastal Group - USyD"</img>   
 </div>
+
+Core sample, including a well-preserved Faviidae coral recovered from 16 m depth. The red arrows are drawn on to indicate upwards recovery direction from One Tree Reef (Geocoastal Research Group - The UNiversity of Sydney).
+
+### Idealised case shallowing-up fossil reef sequence
+
+<div align="center">
+    <img width=800 src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/ex1.jpg" alt="Idealised case shallowing-up fossil reef sequence" title="Idealised case shallowing-up fossil reef sequence"</img>
+</div>
+
+
