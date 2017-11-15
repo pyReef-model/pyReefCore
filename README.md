@@ -139,7 +139,7 @@ Example of a core sample, including a well-preserved Faviidae coral recovered fr
 Using the XmL input file you will be able to calibrate the environmental threshold functions for different assemblages. Figure below shows an example of calibration for shallow, moderate-deep and deep assemblages characteristic of a synthetic exposed margin. The x-axis indicates the limitation on maximum vertical accretion for conditions outside the optimal, 100% maximum growth window, indicated for clarity for the moderate-deep assemblage.
 
 <div align="center">
-    <img width=600 src="http://sydney.edu.au/science/geosciences/images/input.jpg" alt="environmental threshold functions" title="environmental threshold functions"</img>   
+    <img width=600 src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/input.jpg" alt="environmental threshold functions" title="environmental threshold functions"</img>   
 </div>
 
 ### Idealised case: Shallowing-up fossil reef sequence
