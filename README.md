@@ -1,10 +1,16 @@
 # pyReef-Core
 
+**pyReef-Core** is a deterministic, one-dimensional (1-D) numerical model, that simulates the vertical coralgal growth patterns observed in a drill core, as well as the physical, environmental processes that effect coralgal growth. The model is capable of integrating ecological processes like coralgal community interactions over centennial-to-millennial scales using predator-prey or_Generalised Lotka-Volterra Equations_. 
+
+
 <div align="center">
-    <img width=600 src="http://sydney.edu.au/science/geosciences/images/core.jpg" alt="OTR core from the Geocoastal Group - USyD" title="Core sample, including a well-preserved Faviidae coral recovered from 16 m depth. The red arrows are drawn on to indicate upwards recovery direction."</img>
+    <img width=1000 src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/fig1.jpg" alt="Schematic view" title="Schematic view"</img>
 </div>
 
-**pyReef-Core** is a deterministic, one-dimensional (1-D) numerical model, that simulates the vertical coralgal growth patterns observed in a drill core, as well as the physical, environmental processes that effect coralgal growth. The model is capable of integrating ecological processes like coralgal community interactions over centennial-to-millennial scales using predator-prey or_Generalised Lotka-Volterra Equations_. 
+_Schematic figure of a hypothetical reef with transitions from shallow to deep assemblages occurring down-core, illustrating growth-form responses of corals to environmental forcing including light, sea level changes (**sl**), hydrodynamic energy (**w** wave conditions and **c** currents) and sediment flux. Note that other factors contributing to accommodation have been excluded for simplicity._
+
+
+
 
 
 ## Generalized Lotka-Volterra model
@@ -123,3 +129,7 @@ reef.plot.drawCore(lwidth = 3, colsed=colors, coltime = colors2, size=(9,8), fon
 ```
 
 ## Model results
+
+<div align="center">
+    <img width=600 src="http://sydney.edu.au/science/geosciences/images/core.jpg" alt="OTR core from the Geocoastal Group - USyD" title="Core sample, including a well-preserved Faviidae coral recovered from 16 m depth. The red arrows are drawn on to indicate upwards recovery direction."</img>
+</div>
