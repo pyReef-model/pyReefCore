@@ -10,9 +10,6 @@
 _Schematic figure of a hypothetical reef with transitions from shallow to deep assemblages occurring down-core, illustrating growth-form responses of corals to environmental forcing including light, sea level changes (**sl**), hydrodynamic energy (**w** wave conditions and **c** currents) and sediment flux. Note that other factors contributing to accommodation have been excluded for simplicity._
 
 
-
-
-
 ## Generalized Lotka-Volterra model
 
 The most common models of species evolution in ecological modeling are the predator-prey **Lotka-Volterra (LV)** equation and its modifications.
@@ -41,14 +38,6 @@ Several other input are required and will need to be set in the **XmL** inputfil
 
 The mathematical model for the species population evolution results in a set of differential equations (ODEs), one for each species associations modeled. The **Runge-Kutta-Fehlberg** method (_RKF45_ or _Fehlberg_ as defined in the [**odespy**](http://hplgit.github.io/odespy/doc/pub/tutorial/html/main_odespy.html) library) is used to solve the **GLV ODE system**.
 
-The _Fehlberg_ method requires 5 parameters :
-
-- the step-size (or time step)
-- an initial population of the species association
-- the relative tolerance for solution
-- the absolute tolerance for solution
-- the minimum step size for an adaptive algorithm.
-
 ## Carbonate production
 
 Once a species association population is computed, carbonate production is calculated using a carbonate production factor. Production factors are specified for the maximum population, and linearly scaled to the actual population following the relation
@@ -63,6 +52,16 @@ which gives:
 <p align="center"><img src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/2baed347518e8396d33d82d9c18e283b.svg?invert_in_darkmode" align=middle width=124.960935pt height=36.235155pt/></p>
 
 We define the maximum carbonate production rate (m/y) for each species in the **XmL** input file.
+
+
+## Model workflow
+
+<div align="center">
+    <img width=1000 src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/fig2.jpg" alt="Schematic view" title="Schematic view"</img>
+</div>
+
+_Illustration outlining \textit{PyReef-Core} workflow (left) and of the resulting simulated core (right). First boundary conditions for sea level, sediment input and flow velocity are set, which describes their relationship to either depth or time. The boundary conditions are used to establish the environment factor 𝑓𝑒𝑛𝑣 which describes the proportion of the maximum growth rate that an assemblage can achieve, depending on whether the environmental conditions exceed the optimal conditions for growth. The environment factor is set to scale the Malthusian parameter, which is in turn used as input in the GLVE equations to determine assemblage populations. Larger assemblage populations contribute to a faster rate of vertical accretion (here referred to as carbonate production). At the end of the timestep, boundary conditions are updated and the process is repeated._
+
 
 ## Installation
 
