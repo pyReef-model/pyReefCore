@@ -128,13 +128,21 @@ reef.plot.drawCore(lwidth = 3, colsed=colors, coltime = colors2, size=(9,8), fon
 
 ## Examples
 
+A series of examples are shipped with the code and can form the basis for defining your own case.
+
 <div align="center">
     <img width=600 src="http://sydney.edu.au/science/geosciences/images/core.jpg" alt="OTR core from the Geocoastal Group - USyD" title="OTR core from the Geocoastal Group - USyD"</img>   
 </div>
 
 Example of a core sample, including a well-preserved Faviidae coral recovered from 16 m depth. The red arrows are drawn on to indicate upwards recovery direction from One Tree Reef (Geocoastal Research Group - The UNiversity of Sydney).
 
-### Idealised case shallowing-up fossil reef sequence
+Using the XmL input file you will be able to calibrate the environmental threshold functions for different assemblages. Figure below shows an example of calibration for shallow, moderate-deep and deep assemblages characteristic of a synthetic exposed margin. The x-axis indicates the limitation on maximum vertical accretion for conditions outside the optimal, 100% maximum growth window, indicated for clarity for the moderate-deep assemblage.
+
+<div align="center">
+    <img width=600 src="http://sydney.edu.au/science/geosciences/images/input.jpg" alt="environmental threshold functions" title="environmental threshold functions"</img>   
+</div>
+
+### Idealised case: Shallowing-up fossil reef sequence
 
 <div align="center">
     <img width=800 src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/ex1.jpg" alt="Idealised case shallowing-up fossil reef sequence" title="Idealised case shallowing-up fossil reef sequence"</img>
