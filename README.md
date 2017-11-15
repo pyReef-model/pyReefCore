@@ -4,7 +4,7 @@
 
 
 <div align="center">
-    <img width=1000 src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/fig1.jpg" alt="Schematic view" title="Schematic view"</img>
+    <img width=800 src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/fig1.jpg" alt="Schematic view" title="Schematic view"</img>
 </div>
 
 _Schematic figure of a hypothetical reef with transitions from shallow to deep assemblages occurring down-core, illustrating growth-form responses of corals to environmental forcing including light, sea level changes (**sl**), hydrodynamic energy (**w** wave conditions and **c** currents) and sediment flux. Note that other factors contributing to accommodation have been excluded for simplicity._
@@ -57,11 +57,10 @@ We define the maximum carbonate production rate (m/y) for each species in the **
 ## Model workflow
 
 <div align="center">
-    <img width=1000 src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/fig2.jpg" alt="Schematic view" title="Schematic view"</img>
+    <img width=800 src="https://rawgit.com/pyReef-model/pyReefCore/master/svgs/fig2.jpg" alt="workflow" title="Workflow"</img>
 </div>
 
-_Illustration outlining \textit{PyReef-Core} workflow (left) and of the resulting simulated core (right). First boundary conditions for sea level, sediment input and flow velocity are set, which describes their relationship to either depth or time. The boundary conditions are used to establish the environment factor 𝑓𝑒𝑛𝑣 which describes the proportion of the maximum growth rate that an assemblage can achieve, depending on whether the environmental conditions exceed the optimal conditions for growth. The environment factor is set to scale the Malthusian parameter, which is in turn used as input in the GLVE equations to determine assemblage populations. Larger assemblage populations contribute to a faster rate of vertical accretion (here referred to as carbonate production). At the end of the timestep, boundary conditions are updated and the process is repeated._
-
+Illustration outlining **PyReef-Core** workflow (left) and of the resulting simulated core (right). First boundary conditions for sea level, sediment input and flow velocity are set, which describes their relationship to either depth or time. The boundary conditions are used to establish the environment factor 𝑓𝑒𝑛𝑣 which describes the proportion of the maximum growth rate that an assemblage can achieve, depending on whether the environmental conditions exceed the optimal conditions for growth. The environment factor is set to scale the Malthusian parameter, which is in turn used as input in the GLVE equations to determine assemblage populations. Larger assemblage populations contribute to a faster rate of vertical accretion (here referred to as carbonate production). At the end of the timestep, boundary conditions are updated and the process is repeated.
 
 ## Installation
 
@@ -130,5 +129,5 @@ reef.plot.drawCore(lwidth = 3, colsed=colors, coltime = colors2, size=(9,8), fon
 ## Model results
 
 <div align="center">
-    <img width=600 src="http://sydney.edu.au/science/geosciences/images/core.jpg" alt="OTR core from the Geocoastal Group - USyD" title="Core sample, including a well-preserved Faviidae coral recovered from 16 m depth. The red arrows are drawn on to indicate upwards recovery direction."</img>
+    <img width=600 src="http://sydney.edu.au/science/geosciences/images/core.jpg" alt="OTR core from the Geocoastal Group - USyD" title="Core sample, including a well-preserved Faviidae coral recovered from 16 m depth. The red arrows are drawn on to indicate upwards recovery direction."</img>   
 </div>
