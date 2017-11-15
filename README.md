@@ -78,7 +78,7 @@ pip install -e /workspace/volume/pyReefCore/
 
 ### Docker container
 
-The code is available from Docker Hub at [pyreefmodel/pyreef-Docker](https://hub.docker.com/u/pyreefmodel/) and can be downloaded using **Kitematic**. An example of model is provided in the [Tests](https://github.com/pyReef-model/pyReefCore/tree/master/Tests) folder using IPython Notebook.
+The code is available from Docker Hub at [pyreefmodel/pyreef-Docker](https://hub.docker.com/u/pyreefmodel/) and can be downloaded using **Kitematic**. Examples are provided in the [Tests](https://github.com/pyReef-model/pyReefCore/tree/master/Tests) folder and are ran through IPython Notebooks.
 
 ## Usage
 
