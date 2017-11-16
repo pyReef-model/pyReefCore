@@ -303,7 +303,7 @@ class modelPlot():
 
         return
 
-    def drawCore(self, depthext = None, thext = None, propext = [0.,1.], lwidth = 3,
+    def drawCore(self, depthext = None, thext = None, propext = [0.,1.], tstep = 10, lwidth = 3,
                  colsed=None, coltime=None, size=(8,10), font=8, dpi=80, figname=None,
                  filename = None, sep = '\t'):
         """
@@ -320,6 +320,9 @@ class modelPlot():
 
         variable : propext
             Core ranging proportion to plot between [0,1.]
+
+        variable : tstep
+            Stpes used to output time layer intervals
 
         variable : lwidth
             Figure lines width
@@ -400,13 +403,15 @@ class modelPlot():
                 ax3.fill_betweenx(d, p3[s-1,:-1], p3[s,:-1], color=colsed[s])
             ax3.plot(p3[s,:-1], d, 'k--', label=self.names[s], linewidth=lwidth-1)
 
-        tmpx = np.zeros(len(self.timeLay))
+        tmpx = np.zeros(len(d))
         tmpx[-1] = 1
-        ax42.plot(tmpx[:-1], self.timeLay[:-1], zorder=1)
+        ax42.plot(tmpx, d, zorder=1)
         ax42.yaxis.tick_right()
-        ax52.plot(tmpx[:-1], self.timeLay[:-1], zorder=1)
+        ax52.plot(tmpx, d, zorder=1)
         ax52.yaxis.tick_right()
-
+        ticks = []
+        ttime = []
+        p = 0
         for s in range(len(d)):
             y[0] = d[s]
             y[1] = d[s]
@@ -414,8 +419,19 @@ class modelPlot():
             ax5.fill_between(x, old, y, color=colsed[facies[s]], zorder=10)
             old[0] = y[0]
             old[1] = y[1]
-            ax4.plot(x,y,'k', zorder=10,linewidth=1)
-            ax5.plot(x,y,'k', zorder=10,linewidth=1)
+            p += 1
+            ax4.plot(x,y,'k', zorder=10,linewidth=0.5)
+            if p == tstep:
+                ticks.append(y[1])
+                ttime.append(int(self.timeLay[s+1]))
+                p = 0
+                ax4.plot(x,y,'k', zorder=10,linewidth=1)
+                ax5.plot(x,y,'k', zorder=10,linewidth=1)
+
+        ax42.set_yticks(ticks)
+        ax42.set_yticklabels(ttime, minor=False)
+        ax52.set_yticks(ticks)
+        ax52.set_yticklabels(ttime, minor=False)
 
         # Legend, title and labels
         ax1.grid()
@@ -423,11 +439,8 @@ class modelPlot():
         ax3.grid()
         ax42.get_xaxis().set_visible(False)
         ax4.get_xaxis().set_visible(False)
-        #ax4.get_yaxis().set_visible(False)
         ax52.get_xaxis().set_visible(False)
         ax5.get_xaxis().set_visible(False)
-        #ax5.get_yaxis().set_visible(False)
-        # ax5.get_yaxis().set_visible(False)
         lgd = ax1.legend(frameon=False, loc=1, prop={'size':font+1}, bbox_to_anchor=(6.2,0.2))
         ax1.locator_params(axis='x', nbins=5)
         ax2.locator_params(axis='x', nbins=5)
@@ -441,25 +454,19 @@ class modelPlot():
         ax2.set_ylim(depthext[1], depthext[0])
         ax2.set_xlim(propext[0], propext[1])
         ax3.set_ylim(depthext[1], depthext[0])
-        ax42.set_ylim(self.timeLay[0],self.timeLay[-1])
+        ax42.set_ylim(depthext[1], depthext[0])
         ax4.set_ylim(depthext[1], depthext[0])
-        ax52.set_ylim(self.timeLay[0],self.timeLay[-1])
+        ax52.set_ylim(depthext[1], depthext[0])
         ax5.set_ylim(depthext[1], depthext[0])
         ax3.set_xlim(0., 1.)
         ax1.xaxis.tick_top()
         ax2.xaxis.tick_top()
         ax3.xaxis.tick_top()
         ax1.tick_params(axis='y', pad=5)
-        #ax4.tick_params(axis='y', pad=5)
         ax42.tick_params(axis='y', pad=5)
-        #ax42.set_ylabel('Time [years]', size=font+4)
-        #ax42.yaxis.set_label_position('right')
-
         ax52.tick_params(axis='y', pad=5)
         ax5.tick_params(axis='y', pad=5)
-        #ax5.set_ylabel('Time [years]', size=font+4)
         ax5.yaxis.set_label_position('right')
-
         ax1.tick_params(axis='x', pad=5)
         ax2.tick_params(axis='x', pad=5)
         ax3.tick_params(axis='x', pad=5)
@@ -477,12 +484,7 @@ class modelPlot():
         tt5.set_position([.5, 1.025])
         fig.tight_layout()
         plt.tight_layout()
-        #labels = [item.get_text() for item in ax2.get_yticklabels()]
-        #for l in range(len(labels)):
-        #    labels[l] = ' '
-        #ax2.set_yticklabels(labels)
-        #ax3.set_yticklabels(labels)
-        plt.figtext(0.885, 0.005, 'left axis:depth [m] - right axis:time [years]',horizontalalignment='center', fontsize=font)
+        plt.figtext(0.885, 0.003, 'left axis:depth [m] - right axis:time [years]',horizontalalignment='center', fontsize=font)
         plt.show()
 
 
