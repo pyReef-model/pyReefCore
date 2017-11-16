@@ -517,7 +517,7 @@ class modelPlot():
 
         # Title
         tt1 = ax1.set_title('Sea-level [m]', size=font+3)
-        tt2 = ax2.set_title('Water flow [m/d]', size=font+3)
+        tt2 = ax2.set_title('Water flow [m/s]', size=font+3)
         tt3 = ax3.set_title('Sediment input [m/d]', size=font+3)
         tt1.set_position([.5, 1.04])
         tt2.set_position([.5, 1.04])

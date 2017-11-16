@@ -102,7 +102,7 @@ class coreData:
             ax1.set_ylabel('Environmental Factor',size=font+3)
             ax1.set_ylim(-0.1, 1.1)
             ax1.set_xlabel('Water Depth [m]',size=font+2)
-            ax3.set_xlabel('Flow Velocity [m/d]',size=font+2)
+            ax3.set_xlabel('Flow Velocity [m/s]',size=font+2)
             ax3.set_ylim(-0.1, 1.1)
             ax2.set_xlabel('Sediment Input [m/d]',size=font+2)
             ax2.set_ylim(-0.1, 1.1)
@@ -213,7 +213,7 @@ class coreData:
             ax1.set_ylabel('Time [years]', size=font+2)
             # Title
             tt1 = ax1.set_title('Sea-level [m]', size=font+3)
-            tt2 = ax2.set_title('Water flow [m/d]', size=font+3)
+            tt2 = ax2.set_title('Water flow [m/s]', size=font+3)
             tt3 = ax3.set_title('Sediment input [m/d]', size=font+3)
             tt1.set_position([.5, 1.03])
             tt2.set_position([.5, 1.03])
@@ -270,7 +270,7 @@ class coreData:
                 # Axis
                 ax1.set_ylabel('Depth [m]', size=font+2)
                 # Title
-                tt1 = ax1.set_title('Water flow [m/d]', size=font+3)
+                tt1 = ax1.set_title('Water flow [m/s]', size=font+3)
                 tt1.set_position([.5, 1.03])
                 plt.show()
                 if fname is not None:
@@ -301,7 +301,7 @@ class coreData:
             ax1.set_ylabel('Time [years]', size=font+2)
             # Title
             tt1 = ax1.set_title('Sea-level [m]', size=font+2)
-            tt2 = ax2.set_title('Water flow [m/d]', size=font+2)
+            tt2 = ax2.set_title('Water flow [m/s]', size=font+2)
             tt1.set_position([.5, 1.03])
             tt2.set_position([.5, 1.03])
             fig.tight_layout()
@@ -396,7 +396,7 @@ class coreData:
                 # Axis
                 ax1.set_ylabel('Depth [m]', size=font+2)
                 # Title
-                tt1 = ax1.set_title('Water flow [m/d]', size=font+2)
+                tt1 = ax1.set_title('Water flow [m/s]', size=font+2)
                 tt1.set_position([.5, 1.03])
                 plt.show()
                 if fname is not None:
