@@ -41,6 +41,7 @@ class coralGLV:
         self.iterationTime = numpy.arange(input.tStart, input.tEnd+input.tCarb, input.tCarb)
         self.population = numpy.zeros((input.speciesNb,len(self.iterationTime)),dtype=float)
         self.accspace = numpy.zeros(len(self.iterationTime),dtype=float)
+        self.mbsl = numpy.zeros(len(self.iterationTime),dtype=float)
 
         return
 
@@ -69,7 +70,7 @@ class coralGLV:
         """
         This function build the RKF solver used for the Generalized Lotka-Volterra equation.
         """
-        
+
         # RKF initialisation
         odeRKF = odespy.Fehlberg(self._functionGLV, atol=self.atol,
                                    rtol=self.rtol, min_step=self.min_step)

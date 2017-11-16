@@ -404,22 +404,18 @@ class xmlParser:
                 self.enviSed = numpy.array(numpy.mat(';'.join(rows)))
 
         # Get output directory
-        #out = None
-        #out = root.find('outfolder')
-        #if out is not None:
-        #    self.outDir = out.text
-        #else:
-        #    self.outDir = os.getcwd()+'/out'
+        out = None
+        out = root.find('outfolder')
+        if out is not None:
+            self.outDir = out.text
+        else:
+            self.outDir = os.getcwd()+'/out'
 
-        #if self.makeUniqueOutputDir:
-            #if os.path.exists(self.outDir):
-            #    self.outDir += '_'+str(len(glob.glob(self.outDir+str('*')))-1)
+        if self.makeUniqueOutputDir:
+            if os.path.exists(self.outDir):
+                self.outDir += '_'+str(len(glob.glob(self.outDir+str('*')))-1)
 
-            #os.makedirs(self.outDir)
-            #os.makedirs(self.outDir+'/h5')
-            #os.makedirs(self.outDir+'/xmf')
-            #os.makedirs(self.outDir+'/vtk')
-
-            #shutil.copy(self.inputfile,self.outDir)
+            os.makedirs(self.outDir)
+            shutil.copy(self.inputfile,self.outDir)
 
         return

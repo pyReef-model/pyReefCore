@@ -111,7 +111,8 @@ class Model(object):
 
         if tEnd > self.input.tEnd:
             tEnd = self.input.tEnd
-            print 'Requested time is set to the simulation end time as defined in the XmL input file'
+            print 'Requested end time is longer than the one defined in your XmL input file'
+            print 'Your simulation will run for %s years.'%(tEnd)
 
         if self.tNow == self.input.tStart:
             # Initialise Generalized Lotka-Volterra equation
@@ -142,6 +143,10 @@ class Model(object):
                     self.core.sealevel[self.layID] = self.force.sealevel
                 else:
                     self.core.sealevel[self.layID+1] = self.force.sealevel
+            else:
+                self.force.sealevel = 0.
+
+            self.coral.mbsl[self.iter] = self.force.sealevel
 
             # Get sediment input
             if self.input.sedOn:
@@ -192,7 +197,7 @@ class Model(object):
 
             # Compute carbonate production and update coral core characteristics
             self.core.coralProduction(self.layID, self.coral.population[:,self.iter],
-                                      self.coral.epsilon, sedh)
+                                      self.coral.epsilon, sedh, verbose)
             # Update time step
             self.tNow = self.tCoral
 
@@ -209,6 +214,7 @@ class Model(object):
         # Update plotting parameters
         self.plot.pop = self.coral.population
         self.plot.timeCarb = self.coral.iterationTime
+        self.plot.mbsl = self.coral.mbsl
         self.plot.depth = self.core.thickness
         self.plot.sedH = self.core.coralH
         self.plot.timeLay = self.core.layTime

@@ -78,6 +78,7 @@ class coreData:
         self.sedfcty = None
         self.flowfctx = None
         self.flowfcty = None
+        self.folder = input.outDir
 
         return
 
@@ -109,7 +110,8 @@ class coreData:
             ax3.set_ylabel(self.names[s],size=font+3,fontweight='bold')
             plt.show()
             if fname is not None:
-                fig.savefig(name[s]+fname)
+                names = self.folder+'/'+self.names[s]+fname
+                fig.savefig(names)
 
         return
 
@@ -218,6 +220,9 @@ class coreData:
             tt3.set_position([.5, 1.03])
             fig.tight_layout()
             plt.show()
+            if fname is not None:
+                names = self.folder+'/'+'input-seasedflow.png'
+                fig.savefig(names)
             return
 
         if self.seaFunc is not None and self.sedFunc is not None:
@@ -248,6 +253,9 @@ class coreData:
             tt2.set_position([.5, 1.03])
             fig.tight_layout()
             plt.show()
+            if fname is not None:
+                names = self.folder+'/'+'input-seased.png'
+                fig.savefig(names)
             if self.flowfcty is not None:
                 fig = plt.figure(figsize=size2, dpi=dpi)
                 gs = gridspec.GridSpec(1,12)
@@ -265,6 +273,9 @@ class coreData:
                 tt1 = ax1.set_title('Water flow [m/d]', size=font+3)
                 tt1.set_position([.5, 1.03])
                 plt.show()
+                if fname is not None:
+                    names = self.folder+'/'+'input-flow.png'
+                    fig.savefig(names)
 
             return
 
@@ -295,6 +306,9 @@ class coreData:
             tt2.set_position([.5, 1.03])
             fig.tight_layout()
             plt.show()
+            if fname is not None:
+                names = self.folder+'/'+'input-seaflow.png'
+                fig.savefig(names)
 
             if self.sedfcty is not None:
                 fig = plt.figure(figsize=size2, dpi=dpi)
@@ -314,6 +328,9 @@ class coreData:
                 tt1 = ax1.set_title('Sediment input [m/d]', size=font+2)
                 tt1.set_position([.5, 1.03])
                 plt.show()
+                if fname is not None:
+                    names = self.folder+'/'+'input-sed.png'
+                    fig.savefig(names)
 
             return
 
@@ -339,6 +356,9 @@ class coreData:
             tt1 = ax1.set_title('Sea-level [m]', size=font+2)
             tt1.set_position([.5, 1.03])
             plt.show()
+            if fname is not None:
+                names = self.folder+'/'+'input-sea.png'
+                fig.savefig(names)
 
             if self.sedfcty is not None:
                 fig = plt.figure(figsize=size2, dpi=dpi)
@@ -358,6 +378,9 @@ class coreData:
                 tt1 = ax1.set_title('Sediment input [m/d]', size=font+2)
                 tt1.set_position([.5, 1.03])
                 plt.show()
+                if fname is not None:
+                    names = self.folder+'/'+'input-sed.png'
+                    fig.savefig(names)
 
             if self.flowfcty is not None:
                 fig = plt.figure(figsize=size2, dpi=dpi)
@@ -376,12 +399,15 @@ class coreData:
                 tt1 = ax1.set_title('Water flow [m/d]', size=font+2)
                 tt1.set_position([.5, 1.03])
                 plt.show()
+                if fname is not None:
+                    names = self.folder+'/'+'input-flow.png'
+                    fig.savefig(names)
 
             plt.show()
 
         return
 
-    def coralProduction(self, layID, coral, epsilon, sedh):
+    def coralProduction(self, layID, coral, epsilon, sedh, verbose):
         """
         This function estimates the coral growth based on newly computed population.
 
@@ -413,8 +439,9 @@ class coreData:
         sh = sedh * self.dt
         toth = production.sum() + sh
 
-        print ' Thick:', toth, '\n Prod:', production, '\n Accom: ', self.topH #, '\n fac: ', envfac
-        
+        if verbose:
+            print ' Thick:', toth, '\n Prod:', production, '\n Accom: ', self.topH #, '\n fac: ', envfac
+
         # In case there is no accomodation space
         if self.topH < 0.:
             # Do nothing
