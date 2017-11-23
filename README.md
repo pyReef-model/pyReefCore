@@ -6,7 +6,7 @@
 
 
 <div align="center">
-    <img width=800 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/fig1.jpg" alt="Schematic view" title="Schematic view"</img>
+    <img width=800 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/fig11.jpg" alt="Schematic view" title="Schematic view"</img>
 </div>
 
 _Schematic figure of a hypothetical reef with transitions from shallow to deep assemblages occurring down-core, illustrating growth-form responses of corals to environmental forcing including light, sea level changes (**sl**), uplift and subsidence (**u/s**), hydrodynamic energy (**w** wave conditions and **c** currents) and sediment flux. Note that other factors contributing to accommodation have been excluded for simplicity._
