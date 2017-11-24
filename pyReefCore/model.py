@@ -212,10 +212,15 @@ class Model(object):
             if self.core.topH <= 0.:
                 population[ids,-1] = 0.
                 self.coral.population[:self.input.speciesNb,self.iter] = 0.
+                ero = -self.input.karstRate*self.input.tCarb
+                if self.core.topH > ero:
+                    ero = self.core.topH
+            else:
+                ero = 0.
 
             # Compute carbonate production and update coral core characteristics
             self.core.coralProduction(self.layID, self.coral.population[:,self.iter],
-                                      self.coral.epsilon, sedh, verbose)
+                                      self.coral.epsilon, sedh, ero, verbose)
             # Update time step
             self.tNow = self.tCoral
 

@@ -89,7 +89,7 @@ class modelPlot():
         ax1.yaxis.label.set_color(c1)
 
         ax2.plot(time, data1, color=c2, linewidth=3)
-        ax2.set_ylabel('water depth [mbsl]',size=font+2)
+        ax2.set_ylabel('core elevation r.s.l. [m]',size=font+2)
         ax2.yaxis.label.set_color(c2)
 
         return ax1, ax2
@@ -128,7 +128,7 @@ class modelPlot():
 
         ax1.plot(time, data0, color=c1, linewidth=3)
         ax1.set_xlabel('Time [y]',size=font+2)
-        ax1.set_ylabel('core thickness [m]',size=font+2)
+        ax1.set_ylabel('cumulative thickness [m]',size=font+2)
         ax1.yaxis.label.set_color(c1)
 
         ax2.plot(time, data1, color=c2, linewidth=3) #, linestyle='--')
@@ -199,7 +199,7 @@ class modelPlot():
 
         ttl = ax.title
         ttl.set_position([.5, 1.05])
-        plt.title('Accomodation space & water depth evolution through time',size=font+3)
+        plt.title('Accomodation space & core elevation relative to sea-level through time',size=font+3)
 
         self.color_y_axis(ax1, c1)
         self.color_y_axis(ax2, c2)

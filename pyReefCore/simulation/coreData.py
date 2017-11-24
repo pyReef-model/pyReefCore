@@ -409,7 +409,7 @@ class coreData:
 
         return
 
-    def coralProduction(self, layID, coral, epsilon, sedh, verbose):
+    def coralProduction(self, layID, coral, epsilon, sedh, ero, verbose):
         """
         This function estimates the coral growth based on newly computed population.
 
@@ -427,6 +427,9 @@ class coreData:
 
         variable : sedh
             Silicilastic sediment input m/d
+
+        variable : ero
+            Amount of erosion due to karstification
         """
 
         # Compute production for the given time step [m]
@@ -445,8 +448,30 @@ class coreData:
             print ' Thick:', toth, '\n Prod:', production, '\n Accom: ', self.topH #, '\n fac: ', envfac
 
         # In case there is no accomodation space
-        if self.topH < 0.:
+        if self.topH < 0. and ero == 0:
             # Do nothing
+            return
+
+        # In case there is no accomodation space and karstification is activated
+        if self.topH < 0. and ero < 0:
+            remero = -ero
+            for k in range(layID,-1,-1):
+                if remero <= 0.:
+                    break
+                ch = self.thickness[k]
+                if self.thickness[k] > remero:
+                    perc = remero/self.thickness[k]
+                    self.thickness[k] -= remero
+                    self.topH += remero
+                    for j in range(len(self.prod)+1):
+                        self.coralH[j,k] -= perc*self.coralH[j,k]
+                    remero = 0.
+                else:
+                    remero -= self.thickness[k]
+                    self.coralH[:,k] = 0.
+                    self.topH += self.thickness[k]
+                    self.thickness[k] = 0.
+
             return
 
         # If there is some accomodation space but it is all filled by sediment

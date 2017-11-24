@@ -25,7 +25,7 @@
     <!-- Maximum population number. -->
     <maxPopulation>10</maxPopulation>
     <!-- Karstification rates in subaerial domain [m/y]. -->
-    <karstRate>0.01e-3</karstRate>
+    <karstRate>0.1e-3</karstRate>
 
     <!-- Community definition -->
     <community>
