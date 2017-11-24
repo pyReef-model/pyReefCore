@@ -46,6 +46,7 @@ class xmlParser:
 
         self.depth0 = None
         self.speciesNb = None
+        self.karstRate = 0.
         self.speciesName = None
         self.malthusParam = None
         self.speciesPopulation = None
@@ -56,6 +57,10 @@ class xmlParser:
         self.seaOn = False
         self.seaval = 0.
         self.seafile = None
+
+        self.tecOn = False
+        self.tecval = 0.
+        self.tecfile = None
 
         self.flowOn = False
         self.flowval = 0.
@@ -144,58 +149,66 @@ class xmlParser:
             if element is not None:
                 self.depth0 = float(element.text)
                 if self.depth0<0:
-                    raise ValueError('Error in the initial depth needs to be positive!')
+                    raise ValueError('Error in the definition of initial depth needs to be positive!')
             else:
                 raise ValueError('Error in the definition of the initial depth is required!')
             element = None
-            element = litho.find('speciesNb')
+            element = litho.find('communityNb')
             if element is not None:
                 self.speciesNb = int(element.text)
             else:
-                raise ValueError('Error you need to define at least 1 species!')
+                raise ValueError('Error you need to define at least 1 community!')
             element = None
             element = litho.find('maxPopulation')
             if element is not None:
                 self.maxpop = int(element.text)
             else:
                 self.maxpop = 20
+            element = None
+            element = litho.find('karstRate')
+            if element is not None:
+                self.karstRate = float(element.text)
+                if self.depth0<0:
+                    raise ValueError('Error the karstification rate needs to be positive!')
+            else:
+                self.karstRate = 0.
             self.speciesName = numpy.empty(self.speciesNb, dtype="S14")
             self.malthusParam = numpy.zeros(self.speciesNb, dtype=float)
             self.speciesPopulation = numpy.zeros(self.speciesNb, dtype=float)
             self.speciesProduction = numpy.zeros(self.speciesNb, dtype=float)
             self.communityMatrix = numpy.zeros((self.speciesNb,self.speciesNb), dtype=float)
             id = 0
-            for facies in litho.iter('species'):
+            for facies in litho.iter('community'):
                 if id >= self.speciesNb:
-                    raise ValueError('The number of species does not match the number of defined ones.')
+                    raise ValueError('The number of community does not match the number of defined ones.')
                 element = None
                 element = facies.find('name')
                 if element is not None:
                     self.speciesName[id] = element.text
                 else:
-                    raise ValueError('Species name %d is missing in the habitats structure.'%id)
+                    raise ValueError('Community name %d is missing in the habitats structure.'%id)
                 element = None
                 element = facies.find('malthus')
                 if element is not None:
                     self.malthusParam[id] = float(element.text)
                 else:
-                    raise ValueError('Malthusian parameter for species %d is missing in the habitats structure.'%id)
+                    raise ValueError('Malthusian parameter for community %d is missing in the habitats structure.'%id)
                 element = None
                 element = facies.find('population')
                 if element is not None:
                     self.speciesPopulation[id] = float(element.text)
                 else:
-                    raise ValueError('Initial population for species %d is missing in the habitats structure.'%id)
+                    raise ValueError('Initial population for community %d is missing in the habitats structure.'%id)
                 element = None
                 element = facies.find('production')
                 if element is not None:
                     self.speciesProduction[id] = float(element.text)
                 else:
-                    raise ValueError('Production for species %d is missing in the habitats structure.'%id)
+                    raise ValueError('Production for community %d is missing in the habitats structure.'%id)
                 id += 1
 
             if id != self.speciesNb:
-                raise ValueError('The number of species declared does not match the number of defined ones.')
+                raise ValueError('The number of community declared does not match the number of defined ones.')
             element = None
             element = litho.find('communityMatrix')
             if element is not None:
@@ -236,6 +249,30 @@ class xmlParser:
         else:
             self.seapos = 0.
             self.seafile = None
+
+        # Extract tectonic structure information
+        tec = None
+        tec = root.find('tec')
+        if tec is not None:
+            self.tecOn = True
+            element = None
+            element = tec.find('val')
+            if element is not None:
+                self.tecval = float(element.text)
+            else:
+                self.tecval = 0.
+            element = None
+            element = tec.find('curve')
+            if element is not None:
+                self.tecfile = element.text
+                if not os.path.isfile(self.tecfile):
+                    raise ValueError('Tectonic file is missing or the given path is incorrect.')
+            else:
+                self.tecfile = None
+        else:
+            self.tecOn = False
+            self.tecval = 0.
+            self.tecfile = None
 
         # Extract ocean flow information
         flow = None

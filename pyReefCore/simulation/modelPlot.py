@@ -43,6 +43,7 @@ class modelPlot():
         self.surf = None
         self.sedH = None
         self.sealevel = None
+        self.tecinput = None
         self.mbsl = None
         self.sedinput = None
         self.waterflow = None
@@ -89,6 +90,49 @@ class modelPlot():
 
         ax2.plot(time, data1, color=c2, linewidth=3)
         ax2.set_ylabel('water depth [mbsl]',size=font+2)
+        ax2.yaxis.label.set_color(c2)
+
+        return ax1, ax2
+
+    def two_scales2(self, ax1, time, data0, data1, c1, c2, font):
+        """
+
+        Parameters
+        ----------
+        ax : axis
+            Axis to put two scales on
+
+        time : array-like
+            x-axis values for both datasets
+
+        data1: array-like
+            Data for left hand scale
+
+        data2 : array-like
+            Data for right hand scale
+
+        c1 : color
+            Color for line 1
+
+        c2 : color
+            Color for line 2
+
+        Returns
+        -------
+        ax : axis
+            Original axis
+        ax2 : axis
+            New twin axis
+        """
+        ax2 = ax1.twinx()
+
+        ax1.plot(time, data0, color=c1, linewidth=3)
+        ax1.set_xlabel('Time [y]',size=font+2)
+        ax1.set_ylabel('core thickness [m]',size=font+2)
+        ax1.yaxis.label.set_color(c1)
+
+        ax2.plot(time, data1, color=c2, linewidth=3) #, linestyle='--')
+        ax2.set_ylabel('growth rate [mm/y]',size=font+2)
         ax2.yaxis.label.set_color(c2)
 
         return ax1, ax2
@@ -159,10 +203,13 @@ class modelPlot():
 
         self.color_y_axis(ax1, c1)
         self.color_y_axis(ax2, c2)
+        ax2.plot(self.timeLay, self.sealevel, linewidth=2, c='#68a6dd', linestyle='--', label='sealevel', zorder=0)
 
-        plt.xlim(0., self.timeCarb.max())
+        plt.xlim(self.timeCarb.min(), self.timeCarb.max())
 
         # Legend, title and labels
+        lgd = ax2.legend(frameon=False,bbox_to_anchor=(1.14, 1.05))
+        plt.setp(lgd.get_texts(), color='#68a6dd', fontsize=font+1)
         plt.grid()
         plt.show()
 
@@ -175,16 +222,24 @@ class modelPlot():
         ax.set_facecolor('#f2f2f3')
 
         # Plotting curves
-        ax.plot(self.timeCarb[:-2], d, linewidth=3,c='#2ca02c')
+        #ax.plot(self.timeCarb[:-2], d, linewidth=3,c='#2ca02c')
+
+        sedh = np.sum(self.sedH,axis=0)
+        sedhcoral = np.sum(self.sedH[:-1,:],axis=0)
+        rate = sedhcoral*1000./(self.timeLay[1]-self.timeLay[0])
+        ax1, ax2 = self.two_scales2(ax,self.timeLay,np.cumsum(sedh),rate,c1,c2,font)
+
 
         ttl = ax.title
         ttl.set_position([.5, 1.05])
-        plt.title('Core production thickness through time',size=font+3)
+        plt.title('Core cumulative thickness & production rate through time',size=font+3)
 
-        plt.xlabel('Time [y]',size=font+2)
-        plt.ylabel('Core thickness [m]',size=font+2)
-        ax.yaxis.label.set_color('#2ca02c')
-        plt.xlim(0., self.timeCarb.max())
+        self.color_y_axis(ax1, c1)
+        self.color_y_axis(ax2, c2)
+        # plt.xlabel('Time [y]',size=font+2)
+        # plt.ylabel('Core thickness [m]',size=font+2)
+        # ax.yaxis.label.set_color('#2ca02c')
+        plt.xlim(self.timeCarb.min(), self.timeCarb.max())
 
         # Legend, title and labels
         plt.grid()
@@ -235,7 +290,7 @@ class modelPlot():
         plt.xlabel('Time [y]',size=font+2)
         plt.ylabel('Population',size=font+2)
         plt.ylim(0., int(self.pop.max())+1)
-        plt.xlim(0., self.timeCarb.max())
+        plt.xlim(self.timeCarb.min(), self.timeCarb.max())
 
 
         ttl = ax.title
@@ -422,16 +477,29 @@ class modelPlot():
             p += 1
             ax4.plot(x,y,'k', zorder=10,linewidth=0.5)
             if p == tstep:
-                ticks.append(y[1])
-                ttime.append(int(self.timeLay[s+1]))
+                # if len(ticks)>0:
+                #     print len(ticks),ticks[-1],y[1]
+                # ticks.append(y[1])
+                # ttime.append(int(self.timeLay[s+1]))
+                # ax4.plot(x,y,'k', zorder=10,linewidth=1)
+                # ax5.plot(x,y,'k', zorder=10,linewidth=1)
+                if len(ticks) > 0:
+                    if ticks[-1] > y[1]:
+                        ticks.append(y[1])
+                        ttime.append(int(self.timeLay[s+1]))
+                        ax4.plot(x,y,'k', zorder=10,linewidth=1)
+                        ax5.plot(x,y,'k', zorder=10,linewidth=1)
+                else:
+                    ticks.append(y[1])
+                    ttime.append(int(self.timeLay[s+1]))
+                    ax4.plot(x,y,'k', zorder=10,linewidth=1)
+                    ax5.plot(x,y,'k', zorder=10,linewidth=1)
                 p = 0
-                ax4.plot(x,y,'k', zorder=10,linewidth=1)
-                ax5.plot(x,y,'k', zorder=10,linewidth=1)
 
         ax42.set_yticks(ticks)
-        ax42.set_yticklabels(ttime, minor=False)
+        ax42.set_yticklabels(ttime, minor=False, fontsize=font, rotation=90, va='center')
         ax52.set_yticks(ticks)
-        ax52.set_yticklabels(ttime, minor=False)
+        ax52.set_yticklabels(ttime, minor=False, fontsize=font, rotation=90, va='center')
 
         # Legend, title and labels
         ax1.grid()
@@ -484,7 +552,7 @@ class modelPlot():
         tt5.set_position([.5, 1.025])
         fig.tight_layout()
         plt.tight_layout()
-        plt.figtext(0.885, 0.003, 'left axis:depth [m] - right axis:time [years]',horizontalalignment='center', fontsize=font)
+        plt.figtext(0.887, 0.003, 'left axis:depth [m] - right axis:time [y]',horizontalalignment='center', fontsize=font)
         plt.show()
 
 
@@ -495,33 +563,44 @@ class modelPlot():
 
         # Define figure size
         fig = plt.figure(figsize=size, dpi=dpi)
-        gs = gridspec.GridSpec(1,11)
+        gs = gridspec.GridSpec(1,12)
         ax1 = fig.add_subplot(gs[:3])
         ax2 = fig.add_subplot(gs[3:6], sharey=ax1)
         ax3 = fig.add_subplot(gs[6:9], sharey=ax1)
+        ax4 = fig.add_subplot(gs[9:12], sharey=ax1)
 
         ax1.plot(self.sealevel, self.timeLay, linewidth=lwidth, c='slateblue')
         ax2.plot(self.waterflow, self.timeLay, linewidth=lwidth, c='darkcyan')
         ax3.plot(self.sedinput, self.timeLay, linewidth=lwidth, c='sandybrown')
+        ax4.plot(self.tecinput*1000., self.timeLay, linewidth=lwidth, c='limegreen')
 
-        ax1.set_ylabel('Simulation time [a]', size=font+4)
+        ax1.set_ylabel('Simulation time [y]', size=font+4)
         ax1.set_ylim(self.timeLay.min(), self.timeLay.max())
         ax2.set_ylim(self.timeLay.min(), self.timeLay.max())
         ax3.set_ylim(self.timeLay.min(), self.timeLay.max())
+        ax4.set_ylim(self.timeLay.min(), self.timeLay.max())
         ax1.set_facecolor('#f2f2f3')
         ax2.set_facecolor('#f2f2f3')
         ax3.set_facecolor('#f2f2f3')
+        ax4.set_facecolor('#f2f2f3')
         ax1.locator_params(axis='x', nbins=5)
         ax2.locator_params(axis='x', nbins=5)
         ax3.locator_params(axis='x', nbins=5)
+        ax4.locator_params(axis='x', nbins=4)
+
+        ax2.get_yaxis().set_visible(False)
+        ax3.get_yaxis().set_visible(False)
+        ax4.get_yaxis().set_visible(False)
 
         # Title
         tt1 = ax1.set_title('Sea-level [m]', size=font+3)
         tt2 = ax2.set_title('Water flow [m/s]', size=font+3)
         tt3 = ax3.set_title('Sediment input [m/d]', size=font+3)
+        tt4 = ax4.set_title('Tectonic rate [mm/y]', size=font+3)
         tt1.set_position([.5, 1.04])
         tt2.set_position([.5, 1.04])
         tt3.set_position([.5, 1.04])
+        tt4.set_position([.5, 1.04])
         fig.tight_layout()
         plt.tight_layout()
         plt.show()
@@ -538,6 +617,7 @@ class modelPlot():
             tmp3 = np.column_stack((tmp2,self.sealevel[:-1].T))
             tmp4 = np.column_stack((tmp3,self.waterflow[:-1].T))
             tmp5 = np.column_stack((tmp4,self.sedinput[:-1].T))
+            tmp6 = np.column_stack((tmp5,self.tecinput[:-1].T))
 
             cols = []
             cols.append('depth')
@@ -550,8 +630,9 @@ class modelPlot():
             cols.append('sealevel')
             cols.append('waterflow')
             cols.append('sedinput')
+            cols.append('tecrate')
 
-            df = pd.DataFrame(tmp5)
+            df = pd.DataFrame(tmp6)
             df.columns = cols
             name = self.folder+'/'+filename
             df.to_csv(name, sep=sep, encoding='utf-8', index=False)

@@ -108,6 +108,7 @@ class Model(object):
 
         #if self._rank == 0:
         print 'tNow = %s [yr]' %self.tNow
+        timetec = self.input.tStart
 
         if tEnd > self.input.tEnd:
             tEnd = self.input.tEnd
@@ -132,8 +133,18 @@ class Model(object):
             if self.tNow == self.input.tStart:
                 self.coral.population[:,self.iter] = self.input.speciesPopulation
 
-            # Store accomodation space through time
-            self.coral.accspace[self.iter] = max(self.core.topH,0.)
+            # Get tectonic
+            if self.input.tecOn:
+                tmp = self.core.topH
+                self.core.topH, dfac = self.force.getTec(self.tNow, timetec, tmp)
+                timetec = self.tNow
+                if self.tNow == self.input.tStart:
+                    self.core.tecrate[self.layID] = self.force.tecrate
+                else:
+                    self.core.tecrate[self.layID+1] = self.force.tecrate
+            else:
+                self.force.tecrate = 0.
+                self.core.tecrate[self.layID+1] = 0.
 
             # Get sea-level
             if self.input.seaOn:
@@ -145,8 +156,15 @@ class Model(object):
                     self.core.sealevel[self.layID+1] = self.force.sealevel
             else:
                 self.force.sealevel = 0.
+                if self.tNow == self.input.tStart:
+                    self.core.sealevel[self.layID] = self.force.sealevel
+                else:
+                    self.core.sealevel[self.layID+1] = self.force.sealevel
 
             self.coral.mbsl[self.iter] = self.force.sealevel
+
+            # Store accomodation space through time
+            self.coral.accspace[self.iter] = self.core.topH #max(self.core.topH,0.)
 
             # Get sediment input
             if self.input.sedOn:
@@ -220,6 +238,7 @@ class Model(object):
         self.plot.timeLay = self.core.layTime
         self.plot.surf = self.core.topH
         self.plot.sealevel = self.core.sealevel
+        self.plot.tecinput = self.core.tecrate
         self.plot.sedinput = self.core.sedinput
         self.plot.waterflow = self.core.waterflow
         self.plot.accspace = self.coral.accspace

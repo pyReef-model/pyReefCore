@@ -41,6 +41,12 @@ class enviForce:
         self.seatime = None
         self.seaFunc = None
 
+        self.tec0 = input.tecval
+        self.tecfile = input.tecfile
+        self.tecrate = None
+        self.tectime = None
+        self.tecFunc = None
+
         self.sed0 = input.sedval
         self.sedfile = input.sedfile
         self.sedlevel = None
@@ -65,6 +71,8 @@ class enviForce:
 
         if self.seafile != None:
             self._build_Sea_function()
+        if self.tecfile != None:
+            self._build_Tec_function()
         if self.sedfile != None:
             self._build_Sed_function()
         if self.flowfile != None:
@@ -190,6 +198,23 @@ class enviForce:
 
         return
 
+    def _build_Tec_function(self):
+        """
+        Using Pandas library to read the sea level file and define tectonic interpolation
+        function based on Scipy 1D cubic function.
+        """
+
+        # Read sea level file
+        tecdata = pandas.read_csv(self.tecfile, sep=r'\s+', engine='c',
+                               header=None, na_filter=False,
+                               dtype=numpy.float, low_memory=False)
+
+        self.tectime = tecdata.values[:,0]
+        tmp = tecdata.values[:,1]
+        self.tecFunc = interpolate.interp1d(self.tectime, tmp, kind='linear')
+
+        return
+
     def _build_Sed_function(self):
         """
         Using Pandas library to read the sediment input file and define interpolation
@@ -250,6 +275,51 @@ class enviForce:
             depth = top
         else:
             depth = top+(self.sealevel-oldsea)
+
+        factors = numpy.ones(self.speciesNb,dtype=float)
+
+        for s in range(self.speciesNb):
+            if depth<self.xd[0] and self.edepth[s,1] == self.edepth[s,0]:
+                factors[s] = 1.
+            elif depth<self.xd[0] and self.edepth[s,1] != self.edepth[s,0]:
+                factors[s] = 0.
+            elif depth>self.xd[-1] and self.edepth[s,2] == self.edepth[s,3]:
+                factors[s] = 1.
+            elif depth>self.xd[-1] and self.edepth[s,2] != self.edepth[s,3]:
+                factors[s] = 0.
+            else:
+                factors[s] = self._extract_enviParam( self.xd, self.dtrap[s], depth )
+
+        return depth,factors
+
+    def getTec(self, time, otime, top):
+        """
+        Computes for a given time the tectonic rate according to input file parameters.
+
+        Parameters
+        ----------
+        float : time
+            Requested time for which to compute tectonic rate.
+
+        float : otime
+            Previous time used to compute tectonic rate.
+
+        float : top
+            Elevation of the core.
+        """
+
+        if self.tecfile == None:
+            self.tecrate = self.tec0
+        else:
+            if time < self.tectime.min():
+                time = self.tectime.min()
+            if time > self.tectime.max():
+                time = self.tectime.max()
+            self.tecrate = self.tecFunc(time)
+        if otime == time:
+            depth = top
+        else:
+            depth = top-(self.tecrate*(time-otime))
 
         factors = numpy.ones(self.speciesNb,dtype=float)
 

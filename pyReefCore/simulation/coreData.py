@@ -50,6 +50,7 @@ class coreData:
         self.layTime = numpy.arange(input.tStart, input.tEnd+input.laytime, input.laytime)
         self.sealevel = numpy.zeros(len(self.layTime),dtype=float)
         self.sedinput = numpy.zeros(len(self.layTime),dtype=float)
+        self.tecrate = numpy.zeros(len(self.layTime),dtype=float)
         self.waterflow = numpy.zeros(len(self.layTime),dtype=float)
         self.maxpop = input.maxpop
 
@@ -144,7 +145,7 @@ class coreData:
         nbcolors = len(self.names)+3
         colors = terrain(numpy.linspace(0, 1, nbcolors))
 
-        print 'Community matrix aij representing the interactions between species:'
+        print 'Community matrix aij representing the interactions between communities:'
         print ''
         cols = []
         ids = []
@@ -155,7 +156,7 @@ class coreData:
         df.columns = cols
         print df
         print ''
-        print 'Species maximum production rates [m/y]:'
+        print 'Communities maximum production rates [m/y]:'
         print ''
         index = [self.names]
         df = pd.DataFrame(self.prod,index=index)
@@ -181,6 +182,7 @@ class coreData:
         if self.seaFunc is None and self.sedFunc is None and self.flowFunc is None:
             if self.sedfctx is None and self.flowfctx is None:
                 return
+        return
 
         print ''
         print 'Environmental functions:'
