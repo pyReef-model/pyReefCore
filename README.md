@@ -89,11 +89,13 @@ pyReefCore can be use from an _IPython notebook_ or a _python script_ directly. 
 ```python
 
 %matplotlib inline
+
+import numpy as np
+import cmocean as cmo
 import matplotlib.pyplot as plt
 
-import numpy
-
 %config InlineBackend.figure_format = 'svg'
+
 from pyReefCore.model import Model
 
 # Initialise model
@@ -103,29 +105,32 @@ reef = Model()
 reef.load_xml('input.xml')
 
 # Visualise initial setting parameters
-reef.core.initialSetting(size=(8,2.5), size2=(8,3.5))
+reef.core.initialSetting(size=(10,4), fname='input')
 
 # Run to a given time (for example 500 years)
-reef.run_to_time(500.,showtime=100.)
+reef.run_to_time(500.,showtime=500.,verbose=False)
 
 # Define a colorscale to display the core
 # Some colormaps are available from the following link:
 # http://matplotlib.org/examples/color/colormaps_reference.html
 from matplotlib.cm import terrain, plasma
 nbcolors = len(reef.core.coralH)+10
-colors = terrain(numpy.linspace(0, 1, nbcolors))
+colors = terrain(np.linspace(0, 1, nbcolors))
 nbcolors = len(reef.core.layTime)+3
-colors2 = plasma(numpy.linspace(0, 1, nbcolors))
+colors2 = plasma(np.linspace(0, 1, nbcolors))
 
 # Plot evolution of species population with time
-reef.plot.speciesTime(colors=colors, size=(8,4), font=8, dpi=80,fname='pop.pdf')
+reef.plot.speciesTime(colors=colors, size=(10,4), font=8, dpi=100,fname='apop_t.pdf')
 
 # Plot evolution of species population with depth
-reef.plot.speciesDepth(colors=colors, size=(8,4), font=8, dpi=80)
+reef.plot.speciesDepth(colors=colors, size=(10,4), font=8, dpi=100, fname ='apop_d.pdf')
 
-# Plot coral facies distribution core and assemblages
-reef.plot.drawCore(lwidth = 3, colsed=colors, coltime = colors2, size=(9,8), font=8, dpi=380,
-                   figname='out.pdf', filename='out.csv', sep='\t')
+# Plot temporal evolution of accommodation and core thickness 
+reef.plot.accomodationTime(size=(10,4), font=8, dpi=100, fname ='acc_t.pdf')
+
+# Plot coral facies distribution, assemblages as a synthetic core
+reef.plot.drawCore(lwidth = 3, colsed=colors, coltime = colors2, size=(10,8), font=8, dpi=380, 
+                   figname=('core.pdf'), filename='core.csv', sep='\t')
 ```
 
 ## Examples
