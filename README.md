@@ -45,11 +45,15 @@ To solve the ODEs, the user needs to define several initial conditions:
 - the intrinsic rate of a population species <img src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/7ccca27b5ccc533a2dd72dc6fa28ed84.svg?invert_in_darkmode" align=middle width=6.6475035pt height=14.10255pt/>
 - the interaction coefficients among the species association <img src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/c745b9b57c145ec5577b82542b2df546.svg?invert_in_darkmode" align=middle width=10.537065pt height=14.10255pt/>
 
-Several other input are required and will need to be set in the **XmL** inputfile. An example of such file is provided [here](https://github.com/pyReef-model/pyReefCore/blob/master/Tests/input.xml).
+Several other inputs are required and will need to be set in the **XmL** inputfile. An example of such file is provided in the Tests folder and all the options are explained in the [Input file structure](#input-file-structure).
+
+[Back to content](#content)
 
 ## <a name="solving-the-odes-system"></a> Solving the ODEs system
 
 The mathematical model for the species population evolution results in a set of differential equations (ODEs), one for each species associations modeled. The **Runge-Kutta-Fehlberg** method (_RKF45_ or _Fehlberg_ as defined in the [**odespy**](http://hplgit.github.io/odespy/doc/pub/tutorial/html/main_odespy.html) library) is used to solve the **GLV ODE system**.
+
+[Back to content](#content)
 
 ## <a name="carbonate-production"></a> Carbonate production
 
@@ -66,6 +70,8 @@ which gives:
 
 We define the maximum carbonate production rate (m/y) for each species in the **XmL** input file.
 
+[Back to content](#content)
+
 ## <a name="model-workflow"></a> Model workflow
 
 <div align="center">
@@ -73,6 +79,8 @@ We define the maximum carbonate production rate (m/y) for each species in the **
 </div>
 
 Illustration outlining **PyReef-Core** workflow (left) and of the resulting simulated core (right). First boundary conditions for sea level, sediment input, tectonics, temperature, pH, nutrients and flow velocity are set, which describes their relationship to either depth or time. The boundary conditions are used to establish the environment factor _fenv_ which describes the proportion of the maximum growth rate that an assemblage can achieve, depending on whether the environmental conditions exceed the optimal conditions for growth. The environment factor is set to scale the Malthusian parameter, which is in turn used as input in the GLVE equations to determine assemblage populations. Larger assemblage populations contribute to a faster rate of vertical accretion (here referred to as carbonate production). In case of subaerial exposure, karstification might occur. At the end of the timestep, boundary conditions are updated and the process is repeated.
+
+[Back to content](#content)
 
 ## <a name="installation"></a> Installation
 
@@ -94,6 +102,8 @@ pip install -e /workspace/volume/pyReefCore/
 ### <a name="docker-container"></a> Docker container
 
 The code is available from Docker Hub at [pyreefmodel/pyreef-Docker](https://hub.docker.com/u/pyreefmodel/) and can be downloaded using **Kitematic**. Examples are provided in the [Tests](https://github.com/pyReef-model/pyReefCore/tree/master/Tests) folder and are ran through IPython Notebooks.
+
+[Back to content](#content)
 
 ## <a name="usage"></a> Usage
 
@@ -146,6 +156,8 @@ reef.plot.drawCore(lwidth = 3, colsed=colors, coltime = colors2, size=(10,8), fo
                    figname=('core.pdf'), filename='core.csv', sep='\t')
 ```
 
+[Back to content](#content)
+
 ## <a name="input-file-structure"></a> Input file structure
 
 - [Grid structure](#grid-structure)
@@ -192,8 +204,11 @@ REQUIRED
     </grid>
 ```
 
+[Back to content](#content)
 
 ## <a name="examples"></a> Examples
+
+- [Idealised case shallowing-up fossil reef sequence](#idealised-case-shallowing-up-fossil-reef-sequence)
 
 A series of examples are shipped with the code and can form the basis for defining your own case.
 
@@ -216,3 +231,5 @@ Using the XmL input file you will be able to calibrate the environmental thresho
 </div>
 
 Schematic representation of synthetic data construction. (Left) Ideal shallowing-up fossil reef sequence representing a ‘catch-up’ growth strategy with associated assemblage compositions and changes, adapted from Dechnik (2016); (Right) Model output of synthetic core representing ideal shallowing-upward, ‘catch-up’ sequence and detail of the assignment of a vector of numerical IDs to synthetic core.
+
+[Back to content](#content)
