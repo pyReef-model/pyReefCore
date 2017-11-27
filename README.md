@@ -11,7 +11,7 @@
 
 _Schematic figure of a hypothetical reef with transitions from shallow to deep assemblages occurring down-core, illustrating growth-form responses of corals to environmental forcing including light, sea level changes (**sl**), uplift and subsidence (**u/s**), hydrodynamic energy (**w** wave conditions and **c** currents), nutrients input **nu**, ocean temperature (**T**) and acidity (**pH**), karstification (**k**) and sediment flux._
 
-Content:
+## <a name="content"></a> Content:
 - [Generalized Lotka-Volterra model](#generalized-lotka-volterra-model)
 - [Species rate and community matrix](#species-rate-and-community-matrix)
 - [Carbonate production](#carbonate-production)
@@ -34,6 +34,8 @@ where <img src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/9fc20fb1
 <p align="center"><img src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/75aeba56acecbc8c3ead4fd18a21d6b3.svg?invert_in_darkmode" align=middle width=169.01445pt height=33.769395pt/></p>
 
 where <img src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/cbfb1b2a33b28eab8a3e59464768e810.svg?invert_in_darkmode" align=middle width=14.85297pt height=22.38192pt/> is the vector of population densities of each species _i_, <img src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/7ccca27b5ccc533a2dd72dc6fa28ed84.svg?invert_in_darkmode" align=middle width=6.6475035pt height=14.10255pt/> is the vector of all _Mathusian_ parameters, <img src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/53d147e7f3fe6e47ee05b88b166bd3f6.svg?invert_in_darkmode" align=middle width=12.282765pt height=22.38192pt/> is the matrix of interaction coefficients, also known as community matrix, and <img src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/9f0dfe8a0e850780e96018103aa5fe64.svg?invert_in_darkmode" align=middle width=55.17996pt height=24.56553pt/> is a square matrix with diagonal elements equal to <img src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/cbfb1b2a33b28eab8a3e59464768e810.svg?invert_in_darkmode" align=middle width=14.85297pt height=22.38192pt/>, and zeros outside the diagonal.
+
+[Back to content](#content)
 
 ## <a name="species-rate-and-community-matrix"></a> Species rate and community matrix
 
