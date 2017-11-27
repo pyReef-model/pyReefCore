@@ -6,13 +6,22 @@
 
 
 <div align="center">
-    <img width=800 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/fig1.jpg" alt="Schematic view" title="Schematic view"</img>
+    <img width=900 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/fig1.jpg" alt="Schematic view" title="Schematic view"</img>
 </div>
 
 _Schematic figure of a hypothetical reef with transitions from shallow to deep assemblages occurring down-core, illustrating growth-form responses of corals to environmental forcing including light, sea level changes (**sl**), uplift and subsidence (**u/s**), hydrodynamic energy (**w** wave conditions and **c** currents), nutrients input **nu**, ocean temperature (**T**) and acidity (**pH**), karstification (**k**) and sediment flux._
 
+Content:
+- [Generalized Lotka-Volterra model](#generalized-lotka-volterra-model)
+- [Species rate and community matrix](#species-rate-and-community-matrix)
+- [Carbonate production](#carbonate-production)
+- [Model workflow](#model-workflow)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Input file structure](#input-file-structure)
+- [Examples](#examples)
 
-## Generalized Lotka-Volterra model
+## <a name="generalized-lotka-volterra-model"></a> Generalized Lotka-Volterra model 
 
 The most common models of species evolution in ecological modeling are the predator-prey **Lotka-Volterra (LV)** equation and its modifications.
 
@@ -26,7 +35,7 @@ where <img src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/9fc20fb1
 
 where <img src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/cbfb1b2a33b28eab8a3e59464768e810.svg?invert_in_darkmode" align=middle width=14.85297pt height=22.38192pt/> is the vector of population densities of each species _i_, <img src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/7ccca27b5ccc533a2dd72dc6fa28ed84.svg?invert_in_darkmode" align=middle width=6.6475035pt height=14.10255pt/> is the vector of all _Mathusian_ parameters, <img src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/53d147e7f3fe6e47ee05b88b166bd3f6.svg?invert_in_darkmode" align=middle width=12.282765pt height=22.38192pt/> is the matrix of interaction coefficients, also known as community matrix, and <img src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/9f0dfe8a0e850780e96018103aa5fe64.svg?invert_in_darkmode" align=middle width=55.17996pt height=24.56553pt/> is a square matrix with diagonal elements equal to <img src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/cbfb1b2a33b28eab8a3e59464768e810.svg?invert_in_darkmode" align=middle width=14.85297pt height=22.38192pt/>, and zeros outside the diagonal.
 
-## Definition of species rate and community matrix
+## <a name="species-rate-and-community-matrix"></a> Species rate and community matrix
 
 To solve the ODEs, the user needs to define several initial conditions:
 
@@ -36,11 +45,11 @@ To solve the ODEs, the user needs to define several initial conditions:
 
 Several other input are required and will need to be set in the **XmL** inputfile. An example of such file is provided [here](https://github.com/pyReef-model/pyReefCore/blob/master/Tests/input.xml).
 
-## Solving the ODEs system
+## <a name="solving-the-odes-system"></a> Solving the ODEs system
 
 The mathematical model for the species population evolution results in a set of differential equations (ODEs), one for each species associations modeled. The **Runge-Kutta-Fehlberg** method (_RKF45_ or _Fehlberg_ as defined in the [**odespy**](http://hplgit.github.io/odespy/doc/pub/tutorial/html/main_odespy.html) library) is used to solve the **GLV ODE system**.
 
-## Carbonate production
+## <a name="carbonate-production"></a> Carbonate production
 
 Once a species association population is computed, carbonate production is calculated using a carbonate production factor. Production factors are specified for the maximum population, and linearly scaled to the actual population following the relation
 <p align="center"><img src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/86747a51e4fe91aa94ce20bfe5b4a600.svg?invert_in_darkmode" align=middle width=106.14813pt height=36.235155pt/></p>
@@ -55,18 +64,20 @@ which gives:
 
 We define the maximum carbonate production rate (m/y) for each species in the **XmL** input file.
 
-
-## Model workflow
+## <a name="model-workflow"></a> Model workflow
 
 <div align="center">
-    <img width=800 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/fig2.jpg" alt="workflow" title="Workflow"</img>
+    <img width=900 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/fig2.jpg" alt="workflow" title="Workflow"</img>
 </div>
 
 Illustration outlining **PyReef-Core** workflow (left) and of the resulting simulated core (right). First boundary conditions for sea level, sediment input, tectonics, temperature, pH, nutrients and flow velocity are set, which describes their relationship to either depth or time. The boundary conditions are used to establish the environment factor _fenv_ which describes the proportion of the maximum growth rate that an assemblage can achieve, depending on whether the environmental conditions exceed the optimal conditions for growth. The environment factor is set to scale the Malthusian parameter, which is in turn used as input in the GLVE equations to determine assemblage populations. Larger assemblage populations contribute to a faster rate of vertical accretion (here referred to as carbonate production). In case of subaerial exposure, karstification might occur. At the end of the timestep, boundary conditions are updated and the process is repeated.
 
-## Installation
+## <a name="installation"></a> Installation
 
-### Local install
+- [Local install](#local-install)
+- [Docker container](#docker-container)
+
+### <a name="local-install"></a> Local install
 
 The code is available from our github [page](https://github.com/pyReef-model/pyReefCore.git) and can be obtained either from this page or using **git**
 ```
@@ -78,11 +89,11 @@ Once donwloaded, navigate to the **pyReefCore** folder and run the following com
 pip install -e /workspace/volume/pyReefCore/
 ```
 
-### Docker container
+### <a name="docker-container"></a> Docker container
 
 The code is available from Docker Hub at [pyreefmodel/pyreef-Docker](https://hub.docker.com/u/pyreefmodel/) and can be downloaded using **Kitematic**. Examples are provided in the [Tests](https://github.com/pyReef-model/pyReefCore/tree/master/Tests) folder and are ran through IPython Notebooks.
 
-## Usage
+## <a name="usage"></a> Usage
 
 pyReefCore can be use from an _IPython notebook_ or a _python script_ directly. An example of functions available is provided below:
 
@@ -133,7 +144,54 @@ reef.plot.drawCore(lwidth = 3, colsed=colors, coltime = colors2, size=(10,8), fo
                    figname=('core.pdf'), filename='core.csv', sep='\t')
 ```
 
-## Examples
+## <a name="input-file-structure"></a> Input file structure
+
+- [Grid structure](#grid-structure)
+- [Time structure](#time-structure)
+- [Stratal structure](#stratal-structure)
+- [Sea-level structure](#sea-level-structure)
+- [Tectonic structure](#tectonic-structure)
+- [Precipitation structure](#precipitation-structure)
+- [Stream power law structure](#stream-power-law-structure)
+- [Erodibility structure](#erodibility-structure)
+- [Hillslope structure](#hillslope-structure)
+- [Flexural isostasy structure](#flexural-isostasy-structure)
+- [Output folder](#output-folder)
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<badlands xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+```
+
+### <a name="grid-structure"></a> Grid structure
+
+REQUIRED
+
+```xml
+    <!-- Regular grid structure -->
+    <grid>
+        <!-- Digital elevation model file path -->
+        <demfile>data/regularMR.csv</demfile>
+        <!-- Optional parameter (integer) used to decrease TIN resolution.
+             The default value is set to 1. Increasing the factor
+             value will multiply the digital elevation model resolution
+             accordingly.  -->
+        <resfactor>2</resfactor>
+        <!-- Boundary type: flat, slope, fix or wall -->
+        <boundary>slope</boundary>
+        <!-- Optional parameter (integer) used to force depression-less
+             surface at the start of the simulation. The default value is 0
+             to turn the option off, put it to 1 to enable it. (Optional) -->
+        <nopit>0</nopit>
+        <!-- Underworld flag used to enable underworld linkage. The default value is 0
+             to turn the option off, put it to 1 to enable it.  (Optional) -->
+        <udw>0</udw>
+    </grid>
+```
+
+
+## <a name="examples"></a> Examples
 
 A series of examples are shipped with the code and can form the basis for defining your own case.
 
@@ -149,7 +207,7 @@ Using the XmL input file you will be able to calibrate the environmental thresho
     <img width=600 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/input.jpg" alt="environmental threshold functions" title="environmental threshold functions"</img>   
 </div>
 
-### Idealised case: Shallowing-up fossil reef sequence
+### <a name="idealised-case-shallowing-up-fossil-reef-sequence"></a> Idealised case shallowing-up fossil reef sequence
 
 <div align="center">
     <img width=800 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/ex1.jpg" alt="Idealised case shallowing-up fossil reef sequence" title="Idealised case shallowing-up fossil reef sequence"</img>
