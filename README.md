@@ -160,9 +160,8 @@ reef.plot.drawCore(lwidth = 3, colsed=colors, coltime = colors2, size=(10,8), fo
 
 ## <a name="input-file-structure"></a> Input file structure
 
-- [Grid structure](#grid-structure)
 - [Time structure](#time-structure)
-- [Stratal structure](#stratal-structure)
+- [Habitats structure](#habitats-structure)
 - [Sea-level structure](#sea-level-structure)
 - [Tectonic structure](#tectonic-structure)
 - [Precipitation structure](#precipitation-structure)
@@ -172,39 +171,289 @@ reef.plot.drawCore(lwidth = 3, colsed=colors, coltime = colors2, size=(10,8), fo
 - [Flexural isostasy structure](#flexural-isostasy-structure)
 - [Output folder](#output-folder)
 
+[Back to content](#content)
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<badlands xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<pyreefcore xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 ```
 
-### <a name="grid-structure"></a> Grid structure
+### <a name="time-structure"></a> Time structure
 
 REQUIRED
 
 ```xml
-    <!-- Regular grid structure -->
-    <grid>
-        <!-- Digital elevation model file path -->
-        <demfile>data/regularMR.csv</demfile>
-        <!-- Optional parameter (integer) used to decrease TIN resolution.
-             The default value is set to 1. Increasing the factor
-             value will multiply the digital elevation model resolution
-             accordingly.  -->
-        <resfactor>2</resfactor>
-        <!-- Boundary type: flat, slope, fix or wall -->
-        <boundary>slope</boundary>
-        <!-- Optional parameter (integer) used to force depression-less
-             surface at the start of the simulation. The default value is 0
-             to turn the option off, put it to 1 to enable it. (Optional) -->
-        <nopit>0</nopit>
-        <!-- Underworld flag used to enable underworld linkage. The default value is 0
-             to turn the option off, put it to 1 to enable it.  (Optional) -->
-        <udw>0</udw>
-    </grid>
+  <!-- Simulation time structure -->
+  <time>
+    <!-- Simulation start time [a] -->
+    <start>-140000.</start>
+    <!-- Simulation end time [a] -->
+    <end>0.</end>
+    <!-- Time step for carbonate module [a] -->
+    <tcarb>5.</tcarb>
+    <!-- Display interval [a] -->
+    <display>100.</display>
+    <!-- Stratigraphic layer interval [a] -->
+    <laytime>25.</laytime>
+  </time>
 ```
 
-[Back to content](#content)
+[Back to input structure](#input-file-structure)
+
+### <a name="habitats-structure"></a> Habitats structure
+
+REQUIRED
+
+```xml
+  <!-- Community definition, initial population and position. -->
+  <habitats>
+    <!-- Initial depth relative to sea-level at start time [m].
+         Note: positive when below sea-level. -->
+    <depth>25.</depth>
+    <!-- Number of communities to define. -->
+    <communityNb>3</communityNb>
+    <!-- Maximum population number. -->
+    <maxPopulation>10</maxPopulation>
+    <!-- Turn-on criterion. Population growth only occurs when the
+         optimum is met. This reflects the notion that reef ‘turn on’
+         events occur because of a confluence of optimal conditions [0,1]. -->
+    <facOpt>0.9</facOpt>
+    <!-- Karstification rates in subaerial domain [m/y]. -->
+    <karstRate>0.07e-3</karstRate>
+
+    <!-- Community definition -->
+    <community>
+      <!-- Community name needs to be lower than 10 characters -->
+      <!-- Shallow assemblage -->
+      <name>shallow</name>
+      <!-- Definition of intrinsic rate of increase/decrease of the
+           considered population of community (Malthusian parameter). -->
+      <malthus>0.004</malthus>
+      <!-- Initial population number for considered community. -->
+      <population>0.</population>
+      <!-- Community maximum production rate for considered community [m/y]. -->
+      <production>0.011</production>
+    </community>
+
+    <!-- Community definition -->
+    <!-- Medium assemblage (6-20 m), similar to tabular/branching coral facies of Indo-Pacific.
+         Represents growth at beginning of 'catch-up' reef -->
+    <community>
+      <!-- Community name needs to be lower than 10 characters -->
+      <name>moderate deep</name>
+      <!-- Definition of intrinsic rate of increase/decrease of the
+           considered population of community (Malthusian parameter). -->
+      <malthus>0.004</malthus>
+      <!-- Initial population number for considered community. -->
+      <population>0.</population>
+      <!-- Community maximum production rate for considered community [m/y]. -->
+      <production>0.012</production>
+    </community>
+
+    <!-- Community definition -->
+    <!-- Deep assemblage (20-30 m), of domal/branching and encrusting types.
+         Represents reef-drowning events -->
+    <community>
+      <!-- Community name needs to be lower than 10 characters -->
+      <name>deep</name>
+      <!-- Definition of intrinsic rate of increase/decrease of the
+           considered population of community (Malthusian parameter). -->
+      <malthus>0.004</malthus>
+      <!-- Initial population number for considered community. -->
+      <population>0.</population>
+      <!-- Community maximum production rate for considered community [m/y]. -->
+      <production>0.009</production>
+    </community>
+
+    <!-- Community matrix representing the interactions between communities.
+         αij is the interaction coefficient among the communities association i and j ,
+         (a particular case is αii, the interaction of one communities association with itself).
+
+         Example on how to define the following community matrix of αij coefficients
+         with i the column and j the row:
+                     -0.0005  -0.0001   0.
+                     -0.0001  -0.0005  -0.0001
+                      0.      -0.0001  -0.0005
+    -->
+    <communityMatrix>
+      <!-- Interaction for communities 1 -->
+      <value col="0" row="0">-0.0005</value>
+      <value col="1" row="0">-0.0001</value>
+      <value col="2" row="0">0.</value>
+
+      <!-- Interaction for communities 2 -->
+      <value col="0" row="1">-0.0001</value>
+      <value col="1" row="1">-0.0005</value>
+      <value col="2" row="1">-0.0001</value>
+
+      <!-- Interaction for communities 3 -->
+      <value col="0" row="2">0.0</value>
+      <value col="1" row="2">-0.0001</value>
+      <value col="2" row="2">-0.0005</value>
+    </communityMatrix>
+  </habitats>
+```
+
+[Back to input structure](#input-file-structure)
+
+### <a name="sea-level-structure"></a> Sea-level structure
+
+OPTIONAL
+
+```xml
+  <!-- Sea-level structure
+    The following methods can be used:
+      - a constant sea-level position for the entire simulation [m]
+      - a sea-level fluctuations curve (defined in a file)
+  -->
+  <sea>
+    <!-- Constant sea-level value [m] -->
+    <val>0.</val>
+    <!-- Sea-level curve - (optional). The file is made of 2 columns:
+      - first column: the time in year (increasing order)
+      - second column: the sea-level position for the considered time [m]
+       For any given time in the simulation the sea-level is obtained by linear interpolation
+    -->
+    <curve>data/grantetal.csv</curve>
+  </sea>
+```
+
+[Back to input structure](#input-file-structure)
+
+### <a name="tectonic-structure"></a> Tectonic structure
+
+OPTIONAL
+
+```xml
+  <!-- Uplift/subsidence structure
+    The following methods can be used:
+      - a constant subsidence/uplift rate for the entire simulation [m/y]
+      - a subsidence/uplift curve (defined in a file)
+  -->
+  <tec>
+    <!-- Constant tectonic value [m/y] -->
+    <val>-0.1e-3</val>
+    <!-- Tectonic curve - (optional). The file is made of 2 columns:
+      - first column: the time in year (increasing order)
+      - second column: the tectonic rate for the considered time [m/y]
+       For any given time in the simulation the tectonic rate is obtained by linear interpolation
+    <curve>data/tectonics.csv</curve>
+    -->
+  </tec>
+```
+
+[Back to input structure](#input-file-structure)
+
+### <a name="temperature-structure"></a> Temperature structure
+
+OPTIONAL
+
+```xml
+  <!-- Temperature structure - (optional). -->
+  <temp>
+    <!-- Defined in a file made of 2 columns:
+      - first column: the time in year (increasing order)
+      - second column: number ranging between [0,1]
+      The second column estimates the effect of temperature on all communities,
+      where 0 inhibitory effects (either too high or too low temperature) and 1 corresponds to
+      favourable conditions. -->
+    <curve>data/temperature.csv</curve>
+  </temp>
+```
+
+[Back to input structure](#input-file-structure)
+
+### <a name="ph-structure"></a> pH structure
+
+OPTIONAL
+
+```xml
+  <!-- pH structure - (optional). -->
+  <pH>
+    <!-- Defined in a file made of 2 columns:
+      - first column: the time in year (increasing order)
+      - second column: number ranging between [0,1]
+      The second column estimates the effect of pH on all communities,
+      where 0 inhibitory effects (either too high or too low pH) and 1 corresponds to
+      favourable conditions. -->
+    <curve>data/pH.csv</curve>
+  </pH>
+```
+
+[Back to input structure](#input-file-structure)
+
+### <a name="nutrients-structure"></a> Nutrients structure
+
+OPTIONAL
+
+```xml
+  <!-- Nutrients structure - (optional). -->
+  <Nu>
+    <!-- Defined in a file made of 2 columns:
+      - first column: the time in year (increasing order)
+      - second column: number ranging between [0,1]
+      The second column estimates the effect of pH on all communities,
+      where 0 inhibitory effects (either too high or too low Nutrients) and 1 corresponds to
+      favourable conditions. -->
+    <curve>data/pH.csv</curve>
+  </Nu>
+```
+
+[Back to input structure](#input-file-structure)
+
+### <a name="flow-structure"></a> Flow structure
+
+OPTIONAL
+
+```xml
+  <!-- Ocean flow structure
+    The following methods can be used:
+      - a constant flow velocity for the entire simulation [m/d]
+      - a flow velocity fluctuations curve (defined in a file)
+      - a flow velocity function dependent of water depth
+  -->
+  <flow>
+    <!-- Constant velocity value [m/d] -->
+    <!--val>0.</val-->
+    <!-- Flow velocity curve - (optional). The file is made of 2 columns:
+      - first column: the time in year (increasing order)
+      - second column: the flow velocity for the considered time [m/d]
+       For any given time in the simulation the flow velocity is obtained by linear interpolation
+    -->
+    <!--curve>data/flow.csv</curve-->
+    <!-- Flow velocity function - (optional).
+       For any given time in the simulation the flow velocity is obtained from water depth evaluation
+       using either :
+           - a linear function (y=ax+b) or
+          - an exponential decay function based on 3 points fitting.
+       The points need to be specify below:
+    -->
+    <function>
+      <!--linear>
+        <fmax>20.</fmax>
+        <a>-0.33</a>
+        <b>20</b>
+      </linear-->
+      <expdecay>
+      <!-- Values from Sebens et al., 2003 -->
+        <!-- X coordinates (velocity) m/s -->
+        <fdvalue col="0" row="0">0.03</fdvalue>
+        <fdvalue col="1" row="0">0.05</fdvalue>
+        <fdvalue col="2" row="0">0.06</fdvalue>
+        <fdvalue col="3" row="0">0.13</fdvalue>
+        <fdvalue col="4" row="0">0.25</fdvalue>
+        <!-- Y coordinates (depth) m -->
+        <fdvalue col="0" row="1">25</fdvalue>
+        <fdvalue col="1" row="1">15.</fdvalue>
+        <fdvalue col="2" row="1">10.</fdvalue>
+        <fdvalue col="3" row="1">3.</fdvalue>
+        <fdvalue col="4" row="1">0.</fdvalue>
+      </expdecay>
+    </function>
+  </flow>
+```
+
+[Back to input structure](#input-file-structure)
 
 ## <a name="examples"></a> Examples
 
