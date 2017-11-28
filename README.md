@@ -638,7 +638,7 @@ Example of a core sample, including a well-preserved Faviidae coral recovered fr
 ### <a name="idealised-case-shallowing-up-fossil-reef-sequence"></a> Idealised case shallowing-up fossil reef sequence
 
 <div align="center">
-    <img width=800 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/ex1.jpg" alt="Idealised case shallowing-up fossil reef sequence" title="Idealised case shallowing-up fossil reef sequence"</img>
+    <img width=900 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/case1.jpg" alt="Idealised case shallowing-up fossil reef sequence" title="Idealised case shallowing-up fossil reef sequence"</img>
 </div>
 
 Schematic representation of synthetic data construction. (Left) Ideal shallowing-up fossil reef sequence representing a ‘catch-up’ growth strategy with associated assemblage compositions and changes, adapted from Dechnik (2016); (Right) Model output of synthetic core representing ideal shallowing-upward, ‘catch-up’ sequence and detail of the assignment of a vector of numerical IDs to synthetic core.
