@@ -163,13 +163,13 @@ reef.plot.drawCore(lwidth = 3, colsed=colors, coltime = colors2, size=(10,8), fo
 - [Time structure](#time-structure)
 - [Habitats structure](#habitats-structure)
 - [Sea-level structure](#sea-level-structure)
-- [Tectonic structure](#tectonic-structure)
-- [Precipitation structure](#precipitation-structure)
-- [Stream power law structure](#stream-power-law-structure)
-- [Erodibility structure](#erodibility-structure)
-- [Hillslope structure](#hillslope-structure)
-- [Flexural isostasy structure](#flexural-isostasy-structure)
-- [Output folder](#output-folder)
+- [Temperature structure](#temperature-structure)
+- [pH structure](#pH-structure)
+- [Nutrients structure](#nutrients-structure)
+- [Flow structure](#flow-structure)
+- [Sediment structure](#sediment-structure)
+- [Environmental structure](#environmental-structure)
+- [Output folder structure](#output-folder-structure)
 
 [Back to content](#content)
 
@@ -454,6 +454,165 @@ OPTIONAL
 ```
 
 [Back to input structure](#input-file-structure)
+
+### <a name="sediment-structure"></a> Sediment structure
+
+OPTIONAL
+
+```xml
+  <!-- Siliciclastic input structure
+    The following methods can be used:
+      - a constant sediment influx for the entire simulation [m/y]
+      - a sediment influx fluctuations curve (defined in a file)
+      - a sediment influx function dependent of water depth
+  -->
+  <sedinput>
+    <!-- Constant velocity value [m/s] -->
+    <!--val>0.</val-->
+    <!-- Flow velocity curve - (optional). The file is made of 2 columns:
+      - first column: the time in year (increasing order)
+      - second column: the flow velocity for the considered time [m/s]
+       For any given time in the simulation the flow velocity is obtained by linear interpolation
+    -->
+    <!--curve>data/sedinput.csv</curve-->
+    <!-- Sediment input function - (optional).
+       For any given time in the simulation the sediment input is obtained from water depth evaluation
+       using either :
+           - a linear function (y=ax+b) or
+          - an exponential decay function based on 3 points fitting.
+       The points need to be specify below:
+    -->
+    <function>
+      <!-- Windward curve as 4x less sedimentation than leeward-->
+      <linear>
+        <dmax>30.</dmax>
+        <a>15000</a>   <!-- Max Sed = 0.008 m/y, intercepts = (0.004,0) (0.008,30)-->
+        <b>-15.</b>
+      </linear>
+      <?ignore
+      <expdecay>
+        <!-- X coordinates (sediment input) m/d -->
+        <sdvalue col="0" row="0">1.e-7</sdvalue>
+        <sdvalue col="1" row="0">5.e-7</sdvalue>
+        <sdvalue col="2" row="0">1.e-6</sdvalue>
+        <!-- Y coordinates (depth) m -->
+        <sdvalue col="0" row="1">20</sdvalue>
+        <sdvalue col="1" row="1">3.</sdvalue>
+        <sdvalue col="2" row="1">0.</sdvalue>
+      </expdecay>
+      ?>
+    </function>
+  </sedinput>
+```
+
+[Back to input structure](#input-file-structure)
+
+### <a name="environmental-structure"></a> Environmental structure
+
+REQUIRED
+
+```xml
+  <!-- Combining environmental parameters and carbonate production structure.
+    The influence functions for each environmental factor (water depth, flow velocity, and sediment input)
+    are used to model the interaction between communities and their environment. For the sake of simplicity,
+    these functions have a trapezoidal shape that the user can define through four points [A,B,C,D].
+    A is the minimal value below which the communities cannot live. Points B and C define the range where
+    the community has the best conditions for development. D is the value over which the communities cannot live.
+    The function is linearly interpolated between these points.
+    This is optional.
+  -->
+  <envishape>
+
+    <!-- Definition of water depth shape function influencing each community [m].
+                  Min.[A]    Opt.1 [B]    Opt.2 [C]    Max. [D]
+    Community1     0.           0.           6.          12.
+    Community2     4.           6.          20.          22.
+    Community3     18.          20.         30.          32.
+    -->
+    <depthshape>
+      <!-- Definition of point A, B, C and D for first community -->
+      <dvalue col="0" row="0">0.</dvalue>
+      <dvalue col="1" row="0">0.</dvalue>
+      <dvalue col="2" row="0">6.</dvalue>
+      <dvalue col="3" row="0">12.</dvalue>
+      <!-- Definition of point A, B, C and D for second community -->
+      <dvalue col="0" row="1">4.</dvalue>
+      <dvalue col="1" row="1">6.</dvalue>
+      <dvalue col="2" row="1">20.</dvalue>
+      <dvalue col="3" row="1">22.</dvalue>
+      <!-- Definition of point A, B, C and D for third community -->
+      <dvalue col="0" row="2">18.</dvalue>
+      <dvalue col="1" row="2">20.</dvalue>
+      <dvalue col="2" row="2">30.</dvalue>
+      <dvalue col="3" row="2">32.</dvalue>
+    </depthshape>
+
+    <!-- Definition of flow velocity shape function influencing each community [m/s].
+                        Min.[A]    Opt.1 [B]    Opt.2 [C]    Max. [D]
+            Community1   0.05       0.06         0.25         0.3
+            Community2   0.         0.05         0.09         0.12
+            Community3   0.         0.           0.04         0.08
+    -->
+    <flowshape>
+      <!-- Definition of point A, B, C and D for first community -->
+      <fvalue col="0" row="0">0.05</fvalue>
+      <fvalue col="1" row="0">0.06</fvalue>
+      <fvalue col="2" row="0">0.25</fvalue>
+      <fvalue col="3" row="0">0.3</fvalue>
+      <!-- Definition of point A, B, C and D for second community -->
+      <fvalue col="0" row="1">0.</fvalue>
+      <fvalue col="1" row="1">0.05</fvalue>
+      <fvalue col="2" row="1">0.09</fvalue>
+      <fvalue col="3" row="1">0.12</fvalue>
+      <!-- Definition of point A, B, C and D for third community -->
+      <fvalue col="0" row="2">0.</fvalue>
+      <fvalue col="1" row="2">0.</fvalue>
+      <fvalue col="2" row="2">0.04</fvalue>
+      <fvalue col="3" row="2">0.08</fvalue>
+    </flowshape>
+
+    <!-- Definition of sedimentation shape function influencing each community [m/d].
+                          Min.[A]   Opt.1 [B]    Opt.2 [C]    Max. [D]
+            Community1   0.         0.           0.0016       0.003
+            Community2   0.0015     0.0018       0.0024       0.003
+            Community3   0.0023     0.0026       0.004        0.0045
+    -->
+    <sedshape>
+      <!-- Definition of point A, B, C and D for first community -->
+      <svalue col="0" row="0">0.</svalue>
+      <svalue col="1" row="0">0.</svalue>
+      <svalue col="2" row="0">0.0016</svalue>
+      <svalue col="3" row="0">0.003</svalue>
+      <!-- Definition of point A, B, C and D for second community -->
+      <svalue col="0" row="1">0.0015</svalue>
+      <svalue col="1" row="1">0.0018</svalue>
+      <svalue col="2" row="1">0.0024</svalue>
+      <svalue col="3" row="1">0.003</svalue>
+      <!-- Definition of point A, B, C and D for third community -->
+      <svalue col="0" row="2">0.0023</svalue>
+      <svalue col="1" row="2">0.0026</svalue>
+      <svalue col="2" row="2">0.004</svalue>
+      <svalue col="3" row="2">0.0045</svalue>
+    </sedshape>
+  </envishape>
+```
+
+[Back to input structure](#input-file-structure)
+
+### <a name="output-folder-structure"></a> Output folder structure
+
+REQUIRED
+
+```xml
+  <!-- Name of the output folder (default folder name is out) -->
+  <outfolder>output-name</outfolder>
+```
+
+[Back to input structure](#input-file-structure)
+
+```xml
+</pyreefcore>
+```
 
 ## <a name="examples"></a> Examples
 
