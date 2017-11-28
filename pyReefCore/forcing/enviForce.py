@@ -41,6 +41,21 @@ class enviForce:
         self.seatime = None
         self.seaFunc = None
 
+        self.tempfile = input.tempfile
+        self.templevel = None
+        self.temptime = None
+        self.tempFunc = None
+
+        self.pHfile = input.pHfile
+        self.pHlevel = None
+        self.pHtime = None
+        self.pHFunc = None
+
+        self.nufile = input.nufile
+        self.nulevel = None
+        self.nutime = None
+        self.nuFunc = None
+
         self.tec0 = input.tecval
         self.tecfile = input.tecfile
         self.tecrate = None
@@ -77,6 +92,12 @@ class enviForce:
             self._build_Sed_function()
         if self.flowfile != None:
             self._build_Flow_function()
+        if self.tempfile != None:
+            self._build_Temp_function()
+        if self.pHfile != None:
+            self._build_pH_function()
+        if self.nufile != None:
+            self._build_nu_function()
 
         if input.flowfunc != None:
             self.flowfct = True
@@ -198,13 +219,76 @@ class enviForce:
 
         return
 
-    def _build_Tec_function(self):
+    def _build_Temp_function(self):
         """
-        Using Pandas library to read the sea level file and define tectonic interpolation
+        Using Pandas library to read the temperature file and define temperature interpolation
         function based on Scipy 1D cubic function.
         """
 
-        # Read sea level file
+        # Read temperature file
+        tempdata = pandas.read_csv(self.tempfile, sep=r'\s+', engine='c',
+                               header=None, na_filter=False,
+                               dtype=numpy.float, low_memory=False)
+
+        self.temptime = tempdata.values[:,0]
+        tmp = tempdata.values[:,1]
+        if tmp.max()>1.:
+            raise ValueError('Error the temperature function should have value between 0 and 1.')
+        if tmp.min()<0.:
+            raise ValueError('Error the temperature function should have value between 0 and 1.')
+        self.tempFunc = interpolate.interp1d(self.temptime, tmp, kind='linear')
+
+        return
+
+    def _build_pH_function(self):
+        """
+        Using Pandas library to read the pH file and define pH interpolation
+        function based on Scipy 1D cubic function.
+        """
+
+        # Read pH file
+        pHdata = pandas.read_csv(self.pHfile, sep=r'\s+', engine='c',
+                               header=None, na_filter=False,
+                               dtype=numpy.float, low_memory=False)
+
+        self.pHtime = pHdata.values[:,0]
+        tmp = pHdata.values[:,1]
+        if tmp.max()>1.:
+            raise ValueError('Error the pH function should have value between 0 and 1.')
+        if tmp.min()<0.:
+            raise ValueError('Error the pH function should have value between 0 and 1.')
+        self.pHFunc = interpolate.interp1d(self.pHtime, tmp, kind='linear')
+
+        return
+
+    def _build_nu_function(self):
+        """
+        Using Pandas library to read the nutrients file and define nutrients interpolation
+        function based on Scipy 1D cubic function.
+        """
+
+        # Read nutrients file
+        nudata = pandas.read_csv(self.nufile, sep=r'\s+', engine='c',
+                               header=None, na_filter=False,
+                               dtype=numpy.float, low_memory=False)
+
+        self.nutime = nudata.values[:,0]
+        tmp = nudata.values[:,1]
+        if tmp.max()>1.:
+            raise ValueError('Error the nutrient function should have value between 0 and 1.')
+        if tmp.min()<0.:
+            raise ValueError('Error the nutrient function should have value between 0 and 1.')
+        self.nuFunc = interpolate.interp1d(self.nutime, tmp, kind='linear')
+
+        return
+
+    def _build_Tec_function(self):
+        """
+        Using Pandas library to read the tectonic file and define tectonic interpolation
+        function based on Scipy 1D cubic function.
+        """
+
+        # Read tectonic file
         tecdata = pandas.read_csv(self.tecfile, sep=r'\s+', engine='c',
                                header=None, na_filter=False,
                                dtype=numpy.float, low_memory=False)
@@ -263,7 +347,7 @@ class enviForce:
         """
 
         oldsea = self.sealevel
-        if self.seafile == None:
+        if self.seafile is None:
             self.sealevel = self.sea0
         else:
             if time < self.seatime.min():
@@ -292,6 +376,78 @@ class enviForce:
 
         return depth,factors
 
+    def getTemp(self, time):
+        """
+        Computes for a given time the temperature according to input file parameters.
+
+        Parameters
+        ----------
+        float : time
+            Requested time for which to compute temperature.
+        """
+
+        factors = numpy.ones(self.speciesNb,dtype=float)
+        if self.tempfile is None:
+            self.templevel = 1.
+        else:
+            if time < self.temptime.min():
+                time = self.temptime.min()
+            if time > self.temptime.max():
+                time = self.temptime.max()
+            self.templevel = self.tempFunc(time)
+            for s in range(self.speciesNb):
+                factors[s] = self.templevel
+
+        return factors
+
+    def getpH(self, time):
+        """
+        Computes for a given time the pH according to input file parameters.
+
+        Parameters
+        ----------
+        float : time
+            Requested time for which to compute pH.
+        """
+
+        factors = numpy.ones(self.speciesNb,dtype=float)
+        if self.pHfile is None:
+            self.pHlevel = 1.
+        else:
+            if time < self.pHtime.min():
+                time = self.pHtime.min()
+            if time > self.pHtime.max():
+                time = self.pHtime.max()
+            self.pHlevel = self.pHFunc(time)
+            for s in range(self.speciesNb):
+                factors[s] = self.pHlevel
+
+        return factors
+
+    def getNu(self, time):
+        """
+        Computes for a given time the nutrients according to input file parameters.
+
+        Parameters
+        ----------
+        float : time
+            Requested time for which to compute nutrients.
+        """
+
+        factors = numpy.ones(self.speciesNb,dtype=float)
+        if self.nufile is None:
+            self.nulevel = 1.
+        else:
+            if time < self.nutime.min():
+                time = self.nutime.min()
+            if time > self.nutime.max():
+                time = self.nutime.max()
+            self.nulevel = self.nuFunc(time)
+            for s in range(self.speciesNb):
+                factors[s] = self.nulevel
+
+        return factors
+
     def getTec(self, time, otime, top):
         """
         Computes for a given time the tectonic rate according to input file parameters.
@@ -308,7 +464,7 @@ class enviForce:
             Elevation of the core.
         """
 
-        if self.tecfile == None:
+        if self.tecfile is None:
             self.tecrate = self.tec0
         else:
             if time < self.tectime.min():

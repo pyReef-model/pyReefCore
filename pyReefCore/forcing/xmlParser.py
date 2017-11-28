@@ -47,6 +47,7 @@ class xmlParser:
         self.depth0 = None
         self.speciesNb = None
         self.karstRate = 0.
+        self.facOpt = 0.5
         self.speciesName = None
         self.malthusParam = None
         self.speciesPopulation = None
@@ -57,6 +58,15 @@ class xmlParser:
         self.seaOn = False
         self.seaval = 0.
         self.seafile = None
+
+        self.tempOn = False
+        self.tempfile = None
+
+        self.pHOn = False
+        self.pHfile = None
+
+        self.nutrientOn = False
+        self.nufile = None
 
         self.tecOn = False
         self.tecval = 0.
@@ -165,6 +175,16 @@ class xmlParser:
             else:
                 self.maxpop = 20
             element = None
+            element = litho.find('facOpt')
+            if element is not None:
+                self.facOpt = float(element.text)
+                if self.facOpt<0:
+                    raise ValueError('Error the optimum factor rate needs to be positive!')
+                if self.facOpt>1:
+                    raise ValueError('Error the optimum factor rate needs to be <= 1!')
+            else:
+                self.facOpt = 0.5
+            element = None
             element = litho.find('karstRate')
             if element is not None:
                 self.karstRate = float(element.text)
@@ -249,6 +269,54 @@ class xmlParser:
         else:
             self.seapos = 0.
             self.seafile = None
+
+        # Extract temperature structure information
+        temp = None
+        temp = root.find('temp')
+        if temp is not None:
+            self.tempOn = True
+            element = None
+            element = temp.find('curve')
+            if element is not None:
+                self.tempfile = element.text
+                if not os.path.isfile(self.tempfile):
+                    raise ValueError('Temperature file is missing or the given path is incorrect.')
+            else:
+                self.tempfile = None
+        else:
+            self.tempfile = None
+
+        # Extract pH structure information
+        pH = None
+        pH = root.find('pH')
+        if pH is not None:
+            self.pHOn = True
+            element = None
+            element = pH.find('curve')
+            if element is not None:
+                self.pHfile = element.text
+                if not os.path.isfile(self.pHfile):
+                    raise ValueError('pH file is missing or the given path is incorrect.')
+            else:
+                self.pHfile = None
+        else:
+            self.pHfile = None
+
+        # Extract nutrients structure information
+        Nu = None
+        Nu = root.find('Nu')
+        if pH is not None:
+            self.nutrientOn = True
+            element = None
+            element = Nu.find('curve')
+            if element is not None:
+                self.nufile = element.text
+                if not os.path.isfile(self.nufile):
+                    raise ValueError('Nutrients file is missing or the given path is incorrect.')
+            else:
+                self.nufile = None
+        else:
+            self.nufile = None
 
         # Extract tectonic structure information
         tec = None

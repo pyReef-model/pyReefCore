@@ -17,6 +17,7 @@ from matplotlib import gridspec
 import matplotlib.pyplot as plt
 
 from scipy.ndimage.filters import gaussian_filter
+from matplotlib.ticker import FormatStrFormatter
 
 import warnings
 warnings.simplefilter(action = "ignore", category = FutureWarning)
@@ -47,6 +48,9 @@ class modelPlot():
         self.mbsl = None
         self.sedinput = None
         self.waterflow = None
+        self.pH = None
+        self.temperature = None
+        self.nutrient = None
         self.folder = input.outDir
 
         return
@@ -89,7 +93,7 @@ class modelPlot():
         ax1.yaxis.label.set_color(c1)
 
         ax2.plot(time, data1, color=c2, linewidth=3)
-        ax2.set_ylabel('core elevation r.s.l. [m]',size=font+2)
+        ax2.set_ylabel('core elevation [m]',size=font+2)
         ax2.yaxis.label.set_color(c2)
 
         return ax1, ax2
@@ -173,43 +177,36 @@ class modelPlot():
             c1 = colors[0]
             c2 = colors[-1]
         else:
-            c1 = '#1f77b4'
-            c2 = '#ff7f0e'
+            c2 = '#1f77b4'
+            c1 = '#229649'
 
         # Define figure size
         fig, ax = plt.subplots(1,figsize=size, dpi=dpi)
         ax.set_facecolor('#f2f2f3')
         tmp = self.mbsl[:-2]-self.accspace[:-2]
-
-
         tmp2 = np.ediff1d(tmp)
-        d = np.zeros(len(self.accspace[:-2]))
-        d[1:] = tmp2
-        d[0] = d[1]
-        d[-1] = d[-2]
 
         ax1, ax2 = self.two_scales(ax,self.timeCarb[:-2],self.accspace[:-2],tmp,c1,c2,font)
 
         # Plotting curves
         #ax.plot(self.timeCarb[:-2], self.accspace[:-2], linewidth=3,c=colors)
         #ax.plot(self.timeCarb[:-2], tmp, linewidth=3,c=colors)
-
         #plt.xlabel('Time [y]',size=font+2)
         #plt.ylabel('accomodation space [m]',size=font+2)
 
         ttl = ax.title
         ttl.set_position([.5, 1.05])
-        plt.title('Accomodation space & core elevation relative to sea-level through time',size=font+3)
+        plt.title('Accomodation space relative to sea-level & core elevation through time',size=font+3)
 
         self.color_y_axis(ax1, c1)
         self.color_y_axis(ax2, c2)
-        ax2.plot(self.timeLay, self.sealevel, linewidth=2, c='#68a6dd', linestyle='--', label='sealevel', zorder=0)
+        ax2.plot(self.timeLay, self.sealevel, linewidth=2, c='#4badf2', linestyle='--', label='sealevel', zorder=0)
 
         plt.xlim(self.timeCarb.min(), self.timeCarb.max())
 
         # Legend, title and labels
         lgd = ax2.legend(frameon=False,bbox_to_anchor=(1.14, 1.05))
-        plt.setp(lgd.get_texts(), color='#68a6dd', fontsize=font+1)
+        plt.setp(lgd.get_texts(), color='#4badf2', fontsize=font+1)
         plt.grid()
         plt.show()
 
@@ -223,7 +220,6 @@ class modelPlot():
 
         # Plotting curves
         #ax.plot(self.timeCarb[:-2], d, linewidth=3,c='#2ca02c')
-
         sedh = np.sum(self.sedH,axis=0)
         sedhcoral = np.sum(self.sedH[:-1,:],axis=0)
         rate = sedhcoral*1000./(self.timeLay[1]-self.timeLay[0])
@@ -486,12 +482,13 @@ class modelPlot():
                 if len(ticks) > 0:
                     if ticks[-1] > y[1]:
                         ticks.append(y[1])
-                        ttime.append(int(self.timeLay[s+1]))
+                        ttime.append((self.timeLay[s+1]/1000.))
                         ax4.plot(x,y,'k', zorder=10,linewidth=1)
                         ax5.plot(x,y,'k', zorder=10,linewidth=1)
                 else:
                     ticks.append(y[1])
-                    ttime.append(int(self.timeLay[s+1]))
+                    ttime.append((self.timeLay[s+1]/1000.))
+                    # ttime.append(int(self.timeLay[s+1]))
                     ax4.plot(x,y,'k', zorder=10,linewidth=1)
                     ax5.plot(x,y,'k', zorder=10,linewidth=1)
                 p = 0
@@ -552,7 +549,7 @@ class modelPlot():
         tt5.set_position([.5, 1.025])
         fig.tight_layout()
         plt.tight_layout()
-        plt.figtext(0.887, 0.003, 'left axis:depth [m] - right axis:time [y]',horizontalalignment='center', fontsize=font)
+        plt.figtext(0.887, 0.003, 'left axis:depth [m] - right axis:time [ky]',horizontalalignment='center', fontsize=font)
         plt.show()
 
 

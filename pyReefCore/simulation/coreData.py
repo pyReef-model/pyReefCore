@@ -52,6 +52,10 @@ class coreData:
         self.sedinput = numpy.zeros(len(self.layTime),dtype=float)
         self.tecrate = numpy.zeros(len(self.layTime),dtype=float)
         self.waterflow = numpy.zeros(len(self.layTime),dtype=float)
+        self.nutrient = numpy.zeros(len(self.layTime),dtype=float)
+        self.temperature = numpy.zeros(len(self.layTime),dtype=float)
+        self.pH = numpy.zeros(len(self.layTime),dtype=float)
+        self.waterflow = numpy.zeros(len(self.layTime),dtype=float)
         self.maxpop = input.maxpop
 
         # Shape functions

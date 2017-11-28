@@ -127,6 +127,9 @@ class Model(object):
         dfac = np.ones(self.input.speciesNb,dtype=float)
         sfac = np.ones(self.input.speciesNb,dtype=float)
         ffac = np.ones(self.input.speciesNb,dtype=float)
+        tfac = np.ones(self.input.speciesNb,dtype=float)
+        nfac = np.ones(self.input.speciesNb,dtype=float)
+        pfac = np.ones(self.input.speciesNb,dtype=float)
         while self.tNow < tEnd:
 
             # Initial coral population
@@ -178,9 +181,27 @@ class Model(object):
                 ffac = self.force.getFlow(self.tNow, self.core.topH)
                 self.core.waterflow[self.layID] = self.force.flowlevel
 
+            # Get temperature control
+            if self.input.tempOn:
+                tfac = self.force.getTemp(self.tNow)
+                self.core.temperature[self.layID] = self.force.templevel
+
+            # Get pH control
+            if self.input.pHOn:
+                pfac = self.force.getPh(self.tNow)
+                self.core.pH[self.layID] = self.force.pHlevel
+
+            # Get nutrients control
+            if self.input.nutrientOn:
+                nfac = self.force.getNu(self.tNow)
+                self.core.nutrient[self.layID] = self.force.nulevel
+
             # Limit species activity from environmental forces
             tmp = np.minimum(dfac, sfac)
-            fac = np.minimum(ffac, tmp)
+            tmp2 = np.minimum(tfac, tmp)
+            tmp3 = np.minimum(pfac, tmp2)
+            tmp4 = np.minimum(nfac, tmp3)
+            fac = np.minimum(ffac, tmp4)
             self.coral.epsilon = self.input.malthusParam * fac
 
             # Initialise RKF conditions
@@ -203,7 +224,7 @@ class Model(object):
             self.iter += 1
             ids = np.where(self.coral.epsilon==0.)[0]
             population[ids,-1] = 0.
-            ids = np.where(np.logical_and(fac>=0.5,population[:,-1]==0.))[0]
+            ids = np.where(np.logical_and(fac>=self.input.facOpt,population[:,-1]==0.))[0]
             population[ids,-1] = 1.
 
             self.coral.population[:self.input.speciesNb,self.iter] = population[:,-1]
@@ -246,6 +267,9 @@ class Model(object):
         self.plot.tecinput = self.core.tecrate
         self.plot.sedinput = self.core.sedinput
         self.plot.waterflow = self.core.waterflow
+        self.plot.pH = self.core.pH
+        self.plot.temperature = self.core.temperature
+        self.plot.nutrient = self.core.nutrient
         self.plot.accspace = self.coral.accspace
 
         return
