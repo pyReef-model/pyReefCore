@@ -107,7 +107,7 @@ The code is available from Docker Hub at [pyreefmodel/pyreef-Docker](https://hub
 
 ## <a name="usage"></a> Usage
 
-pyReefCore can be use from an _IPython notebook_ or a _python script_ directly. An example of functions available is provided below:
+**pyReef-Core** can be used from an _IPython notebook_ or a _python script_ directly. An example of functions available is provided below:
 
 ```python
 
@@ -651,8 +651,7 @@ Change in community population over time and through depth associated to sea-lev
     <img width=650 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/case1acc.jpg" alt="core characteristics"</img>
 </div>
 
-Evolution of accommodation space, elevation, cumulative thickness and communities production rates simulated using pyReef-Core.
-
+Evolution of accommodation space, elevation, cumulative thickness and communities production rates simulated using **pyReef-Core**.
 
 #### Synthetic core
 
