@@ -89,7 +89,7 @@ class modelPlot():
 
         ax1.plot(time, data0, color=c1, linewidth=3)
         ax1.set_xlabel('Time [y]',size=font+2)
-        ax1.set_ylabel('accomodation space [m]',size=font+2)
+        ax1.set_ylabel('accommodation space [m]',size=font+2)
         ax1.yaxis.label.set_color(c1)
 
         ax2.plot(time, data1, color=c2, linewidth=3)
@@ -150,7 +150,7 @@ class modelPlot():
 
     def accomodationTime(self, colors=None, size=(10,5), font=9, dpi=80, fname=None):
         """
-        This function estimates the accomodation space through time.
+        This function estimates the accommodation space through time.
 
         Parameters
         ----------
@@ -192,11 +192,11 @@ class modelPlot():
         #ax.plot(self.timeCarb[:-2], self.accspace[:-2], linewidth=3,c=colors)
         #ax.plot(self.timeCarb[:-2], tmp, linewidth=3,c=colors)
         #plt.xlabel('Time [y]',size=font+2)
-        #plt.ylabel('accomodation space [m]',size=font+2)
+        #plt.ylabel('accommodation space [m]',size=font+2)
 
         ttl = ax.title
         ttl.set_position([.5, 1.05])
-        plt.title('Accomodation space relative to sea-level & core elevation through time',size=font+3)
+        plt.title('Accommodation space & core elevation through time',size=font+3)
 
         self.color_y_axis(ax1, c1)
         self.color_y_axis(ax2, c2)
@@ -291,7 +291,7 @@ class modelPlot():
 
         ttl = ax.title
         ttl.set_position([.5, 1.05])
-        plt.title('Evolution of species populations with time',size=font+3)
+        plt.title('Evolution of community populations with time',size=font+3)
         plt.show()
 
         if fname is not None:
