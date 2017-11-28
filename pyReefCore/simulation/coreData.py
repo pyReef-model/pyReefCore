@@ -104,7 +104,7 @@ class coreData:
             ax1.plot(xd, dtrap[s], linewidth=width, label=self.names[s],c=colors[s])
             ax2.plot(xs, strap[s], linewidth=width, label=self.names[s],c=colors[s])
             ax3.plot(xf, ftrap[s], linewidth=width, label=self.names[s],c=colors[s])
-            ax1.set_ylabel('Environmental Factor',size=font+3)
+            ax1.set_ylabel('Proportion max. vertical \n accretion rate factor',size=font+3)
             ax1.set_ylim(-0.1, 1.1)
             ax1.set_xlabel('Water Depth [m]',size=font+2)
             ax3.set_xlabel('Flow Velocity [m/s]',size=font+2)
@@ -116,7 +116,7 @@ class coreData:
             plt.show()
             if fname is not None:
                 names = self.folder+'/'+self.names[s]+fname
-                fig.savefig(names)
+                fig.savefig(names, bbox_inches='tight')
 
         return
 
@@ -228,7 +228,7 @@ class coreData:
             plt.show()
             if fname is not None:
                 names = self.folder+'/'+'input-seasedflow.png'
-                fig.savefig(names)
+                fig.savefig(names, bbox_inches='tight')
             return
 
         if self.seaFunc is not None and self.sedFunc is not None:
@@ -281,7 +281,7 @@ class coreData:
                 plt.show()
                 if fname is not None:
                     names = self.folder+'/'+'input-flow.png'
-                    fig.savefig(names)
+                    fig.savefig(names, bbox_inches='tight')
 
             return
 
@@ -314,7 +314,7 @@ class coreData:
             plt.show()
             if fname is not None:
                 names = self.folder+'/'+'input-seaflow.png'
-                fig.savefig(names)
+                fig.savefig(names, bbox_inches='tight')
 
             if self.sedfcty is not None:
                 fig = plt.figure(figsize=size2, dpi=dpi)
@@ -336,7 +336,7 @@ class coreData:
                 plt.show()
                 if fname is not None:
                     names = self.folder+'/'+'input-sed.png'
-                    fig.savefig(names)
+                    fig.savefig(names, bbox_inches='tight')
 
             return
 
@@ -386,7 +386,7 @@ class coreData:
                 plt.show()
                 if fname is not None:
                     names = self.folder+'/'+'input-sed.png'
-                    fig.savefig(names)
+                    fig.savefig(names, bbox_inches='tight')
 
             if self.flowfcty is not None:
                 fig = plt.figure(figsize=size2, dpi=dpi)
@@ -407,7 +407,7 @@ class coreData:
                 plt.show()
                 if fname is not None:
                     names = self.folder+'/'+'input-flow.png'
-                    fig.savefig(names)
+                    fig.savefig(names, bbox_inches='tight')
 
             plt.show()
 
