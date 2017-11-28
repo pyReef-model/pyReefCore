@@ -625,17 +625,27 @@ REQUIRED
 
 ## <a name="examples"></a> Examples
 
-- [Idealised case shallowing-up fossil reef sequence](#idealised-case-shallowing-up-fossil-reef-sequence)
-
-A series of examples are shipped with the code and can form the basis for defining your own case.
-
 <div align="center">
     <img width=600 src="http://sydney.edu.au/science/geosciences/images/core.jpg" alt="OTR core from the Geocoastal Group - USyD" title="OTR core from the Geocoastal Group - USyD"</img>   
 </div>
 
 Example of a core sample, including a well-preserved Faviidae coral recovered from 16 m depth. The red arrows are drawn on to indicate upwards recovery direction from One Tree Reef (Geocoastal Research Group - The UNiversity of Sydney).
 
+Two case studies are shipped with the code and can form the basis for defining your own model.
+
+- [Idealised case shallowing-up fossil reef sequence](#idealised-case-shallowing-up-fossil-reef-sequence)
+
 ### <a name="idealised-case-shallowing-up-fossil-reef-sequence"></a> Idealised case shallowing-up fossil reef sequence
+
+#### Communities evolution 
+
+<div align="center">
+    <img width=900 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/case1pop.jpg" alt="communities change"</img>
+</div>
+
+Change in community population over time and through depth associated to sea-level changes imposed using Sloss et al. (2007) curve.
+
+#### Synthetic core
 
 <div align="center">
     <img width=900 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/case1.jpg" alt="Idealised case shallowing-up fossil reef sequence" title="Idealised case shallowing-up fossil reef sequence"</img>
