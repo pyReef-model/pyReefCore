@@ -510,6 +510,12 @@ OPTIONAL
 
 ### <a name="environmental-structure"></a> Environmental structure
 
+Using the XmL input file you will be able to calibrate the environmental threshold functions for different assemblages. Figure below shows an example of calibration for shallow, moderate-deep and deep assemblages characteristic of a synthetic exposed margin. The x-axis indicates the limitation on maximum vertical accretion for conditions outside the optimal.
+
+<div align="center">
+    <img width=800 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/input.jpg" alt="environmental threshold functions" title="environmental threshold functions"</img>   
+</div>
+
 REQUIRED
 
 ```xml
@@ -628,12 +634,6 @@ A series of examples are shipped with the code and can form the basis for defini
 </div>
 
 Example of a core sample, including a well-preserved Faviidae coral recovered from 16 m depth. The red arrows are drawn on to indicate upwards recovery direction from One Tree Reef (Geocoastal Research Group - The UNiversity of Sydney).
-
-Using the XmL input file you will be able to calibrate the environmental threshold functions for different assemblages. Figure below shows an example of calibration for shallow, moderate-deep and deep assemblages characteristic of a synthetic exposed margin. The x-axis indicates the limitation on maximum vertical accretion for conditions outside the optimal, 100% maximum growth window, indicated for clarity for the moderate-deep assemblage.
-
-<div align="center">
-    <img width=700 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/input.jpg" alt="environmental threshold functions" title="environmental threshold functions"</img>   
-</div>
 
 ### <a name="idealised-case-shallowing-up-fossil-reef-sequence"></a> Idealised case shallowing-up fossil reef sequence
 
