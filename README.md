@@ -171,12 +171,13 @@ reef.plot.drawCore(lwidth = 3, colsed=colors, coltime = colors2, size=(10,8), fo
 - [Environmental structure](#environmental-structure)
 - [Output folder structure](#output-folder-structure)
 
-[Back to content](#content)
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <pyreefcore xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 ```
+
+[Back to content](#content)
 
 ### <a name="time-structure"></a> Time structure
 
@@ -613,6 +614,8 @@ REQUIRED
 ```xml
 </pyreefcore>
 ```
+
+[Back to content](#content)
 
 ## <a name="examples"></a> Examples
 
