@@ -640,7 +640,7 @@ Two case studies are shipped with the code and can form the basis for defining y
 #### Communities evolution 
 
 <div align="center">
-    <img width=500 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/case1pop.jpg" alt="communities changes"</img>
+    <img width=650 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/case1pop.jpg" alt="communities changes"</img>
 </div>
 
 Change in community population over time and through depth associated to sea-level changes imposed using Sloss et al. (2007) curve.
@@ -648,7 +648,7 @@ Change in community population over time and through depth associated to sea-lev
 #### Core evolution 
 
 <div align="center">
-    <img width=500 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/case1acc.jpg" alt="core characteristics"</img>
+    <img width=650 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/case1acc.jpg" alt="core characteristics"</img>
 </div>
 
 Evolution of accommodation space, elevation, cumulative thickness and communities production rates simulated using pyReef-Core.
