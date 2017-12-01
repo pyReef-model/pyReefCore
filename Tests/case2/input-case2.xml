@@ -4,34 +4,32 @@
   <!-- Simulation time structure -->
   <time>
     <!-- Simulation start time [a] -->
-    <start>-8500.</start>
+    <start>-140000.</start>
     <!-- Simulation end time [a] -->
-    <end>-1500.</end>
+    <end>0.</end>
     <!-- Time step for carbonate module [a] -->
-    <tcarb>2.5</tcarb>
+    <tcarb>50.</tcarb>
     <!-- Display interval [a] -->
-    <display>100.</display>
+    <display>250.</display>
     <!-- Stratigraphic layer interval [a] -->
-    <laytime>50.</laytime>
+    <laytime>100.</laytime>
   </time>
 
   <!-- Community definition, initial population and position. -->
   <habitats>
     <!-- Initial depth relative to sea-level at start time [m].
          Note: positive when below sea-level. -->
-    <depth>20.</depth>
+    <depth>-20.</depth>
     <!-- Number of communities to define. -->
     <communityNb>3</communityNb>
-    <!-- Maximum population number (default is 20). -->
-    <maxPopulation>20</maxPopulation>
-    <!-- Maximum production scaling factor (default is 10). -->
-    <prodFactor>10</prodFactor>
-    <!-- Turn-on criterion. Population growth only occurs when the
-         optimum is met. This reflects the notion that reef ‘turn on’
+    <!-- Maximum population number. -->
+    <maxPopulation>10</maxPopulation>
+    <!-- Turn-on criterion. Population growth only occurs when the  
+         optimum is met. This reflects the notion that reef ‘turn on’ 
          events occur because of a confluence of optimal conditions [0,1]. -->
-    <facOpt>0.3</facOpt>
+    <facOpt>0.9</facOpt>
     <!-- Karstification rates in subaerial domain [m/y]. -->
-    <karstRate>0.1e-3</karstRate>
+    <karstRate>0.07e-3</karstRate>
 
     <!-- Community definition -->
     <community>
@@ -118,7 +116,7 @@
       - second column: the sea-level position for the considered time [m]
        For any given time in the simulation the sea-level is obtained by linear interpolation
     -->
-    <curve>data/slossetal.csv</curve>
+    <curve>data/grantetal.csv</curve>
   </sea>
 
   <!-- Uplift/subsidence structure
@@ -128,7 +126,7 @@
   -->
   <tec>
     <!-- Constant tectonic value [m/y] -->
-    <val>0.</val>
+    <val>-0.1e-3</val>
     <!-- Tectonic curve - (optional). The file is made of 2 columns:
       - first column: the time in year (increasing order)
       - second column: the tectonic rate for the considered time [m/y]
@@ -136,17 +134,6 @@
     <curve>data/tectonics.csv</curve>
     -->
   </tec>
-    
-  <!-- Temperature structure - (optional). -->
-  <temp>
-    <!-- Defined in a file made of 2 columns:
-      - first column: the time in year (increasing order)
-      - second column: number ranging between [0,1]
-      The second column estimates the effect of temperature on all communities,
-      where 0 inhibitory effects (either too high or too low temperature) and 1 corresponds to
-      favourable conditions. -->
-    <curve>data/temperature.csv</curve>
-  </temp>
     
   <!-- Ocean flow structure
     The following methods can be used:
@@ -323,6 +310,6 @@
   </envishape>
   
   <!-- Name of the output folder (default folder name is out) -->
-  <outfolder>output-case1</outfolder>
+  <outfolder>output-case2</outfolder>
 
 </pyreefcore>

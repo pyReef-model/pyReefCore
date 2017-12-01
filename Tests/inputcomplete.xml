@@ -196,7 +196,7 @@
       <!--linear>
         <fmax>20.</fmax>
         <a>-0.33</a>
-        <b>20</b>
+        <b>10</b>
       </linear-->
       <expdecay>
       <!-- Values from Sebens et al., 2003 -->
@@ -242,8 +242,8 @@
       <!-- Windward curve as 4x less sedimentation than leeward-->
       <linear>
         <dmax>30.</dmax>
-        <a>15000</a>   <!-- Max Sed = 0.008 m/y, intercepts = (0.004,0) (0.008,30)-->
-        <b>-15.</b>
+        <a>6.67e-05</a>
+        <b>0.001</b>
       </linear>
       <?ignore
       <expdecay>
