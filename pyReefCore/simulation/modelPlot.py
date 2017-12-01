@@ -40,6 +40,7 @@ class modelPlot():
         self.timeCarb = None
         self.depth = None
         self.accspace = None
+        self.karstero = None
         self.timeLay = None
         self.surf = None
         self.sedH = None
@@ -247,7 +248,7 @@ class modelPlot():
 
         return
 
-    def speciesTime(self, colors=None, size=(10,5), font=9, dpi=80, fname=None):
+    def communityTime(self, colors=None, size=(10,5), font=9, dpi=80, fname=None):
         """
         This function estimates the coral growth based on newly computed population.
 
@@ -300,7 +301,7 @@ class modelPlot():
 
         return
 
-    def speciesDepth(self, colors=None, size=(10,5), font=9, dpi=80, fname=None):
+    def communityDepth(self, colors=None, size=(10,5), font=9, dpi=80, fname=None):
         """
         Variation of coral growth with depth
 
@@ -373,7 +374,7 @@ class modelPlot():
             Core ranging proportion to plot between [0,1.]
 
         variable : tstep
-            Stpes used to output time layer intervals
+            Steps used to output time layer intervals
 
         variable : lwidth
             Figure lines width
@@ -407,7 +408,7 @@ class modelPlot():
         ids = np.where(self.depth[:-1]>0)[0]
         p2 = np.zeros((self.sedH.shape))
         p3 = np.zeros((self.sedH.shape))
-
+        p6 = self.karstero[:-1]
         p2[:,ids] = self.sedH[:,ids]/self.depth[ids]
         p3[:,ids] = np.cumsum(self.sedH[:,ids]/self.depth[ids],axis=0)
         bottom = self.surf + self.depth[:-1].sum()
@@ -425,14 +426,15 @@ class modelPlot():
 
         # Define figure size
         fig = plt.figure(figsize=size, dpi=dpi)
-        gs = gridspec.GridSpec(1,19)
+        gs = gridspec.GridSpec(1,21)
         ax1 = fig.add_subplot(gs[:5])
         ax2 = fig.add_subplot(gs[5:10], sharey=ax1)
         ax3 = fig.add_subplot(gs[10:15], sharey=ax1)
-        ax42 = fig.add_subplot(gs[15:17], frame_on=False)
-        ax4 = fig.add_subplot(gs[15:17], sharey=ax1)
-        ax52 = fig.add_subplot(gs[17:19], frame_on=False)
-        ax5 = fig.add_subplot(gs[17:19], sharey=ax1)
+        ax6 = fig.add_subplot(gs[15:17], sharey=ax1)
+        ax42 = fig.add_subplot(gs[17:19], frame_on=False)
+        ax4 = fig.add_subplot(gs[17:19], sharey=ax1)
+        ax52 = fig.add_subplot(gs[19:21], frame_on=False)
+        ax5 = fig.add_subplot(gs[19:21], sharey=ax1)
         ax3.set_facecolor('#f2f2f3')
         ax4.set_facecolor('#f2f2f3')
         ax5.set_facecolor('#f2f2f3')
@@ -452,7 +454,9 @@ class modelPlot():
                 ax3.fill_betweenx(d, 0, p3[s,:-1], color=colsed[s])
             else:
                 ax3.fill_betweenx(d, p3[s-1,:-1], p3[s,:-1], color=colsed[s])
-            ax3.plot(p3[s,:-1], d, 'k--', label=self.names[s], linewidth=lwidth-1)
+            ax3.plot(p3[s,:-1], d, 'w--', label=self.names[s], linewidth=lwidth-2)
+
+        ax6.plot(p6, d, linewidth=lwidth-1, c='#6349d2')
 
         tmpx = np.zeros(len(d))
         tmpx[-1] = 1
@@ -471,7 +475,7 @@ class modelPlot():
             old[0] = y[0]
             old[1] = y[1]
             p += 1
-            ax4.plot(x,y,'k', zorder=10,linewidth=0.5)
+            ax4.plot(x,y,'k', zorder=10,linewidth=0.25)
             if p == tstep:
                 # if len(ticks)>0:
                 #     print len(ticks),ticks[-1],y[1]
@@ -483,14 +487,14 @@ class modelPlot():
                     if ticks[-1] > y[1]:
                         ticks.append(y[1])
                         ttime.append((self.timeLay[s+1]/1000.))
-                        ax4.plot(x,y,'k', zorder=10,linewidth=1)
-                        ax5.plot(x,y,'k', zorder=10,linewidth=1)
+                        ax4.plot(x,y,'#db20bf', zorder=10,linewidth=3)
+                        ax5.plot(x,y,'#db20bf', zorder=10,linewidth=3)
                 else:
                     ticks.append(y[1])
                     ttime.append((self.timeLay[s+1]/1000.))
                     # ttime.append(int(self.timeLay[s+1]))
-                    ax4.plot(x,y,'k', zorder=10,linewidth=1)
-                    ax5.plot(x,y,'k', zorder=10,linewidth=1)
+                    ax4.plot(x,y,'#db20bf', zorder=10,linewidth=3)
+                    ax5.plot(x,y,'#db20bf', zorder=10,linewidth=3)
                 p = 0
 
         ax42.set_yticks(ticks)
@@ -502,6 +506,7 @@ class modelPlot():
         ax1.grid()
         ax2.grid()
         ax3.grid()
+        ax6.grid()
         ax42.get_xaxis().set_visible(False)
         ax4.get_xaxis().set_visible(False)
         ax52.get_xaxis().set_visible(False)
@@ -510,6 +515,7 @@ class modelPlot():
         ax1.locator_params(axis='x', nbins=5)
         ax2.locator_params(axis='x', nbins=5)
         ax3.locator_params(axis='x', nbins=5)
+        ax6.locator_params(axis='x', nbins=3)
         ax1.locator_params(axis='y', nbins=10)
 
         # Axis
@@ -519,14 +525,17 @@ class modelPlot():
         ax2.set_ylim(depthext[1], depthext[0])
         ax2.set_xlim(propext[0], propext[1])
         ax3.set_ylim(depthext[1], depthext[0])
+        ax6.set_ylim(depthext[1], depthext[0])
         ax42.set_ylim(depthext[1], depthext[0])
         ax4.set_ylim(depthext[1], depthext[0])
         ax52.set_ylim(depthext[1], depthext[0])
         ax5.set_ylim(depthext[1], depthext[0])
         ax3.set_xlim(0., 1.)
+        ax6.set_xlim(-0.1, p6.max()+0.1)
         ax1.xaxis.tick_top()
         ax2.xaxis.tick_top()
         ax3.xaxis.tick_top()
+        ax6.xaxis.tick_top()
         ax1.tick_params(axis='y', pad=5)
         ax42.tick_params(axis='y', pad=5)
         ax52.tick_params(axis='y', pad=5)
@@ -535,21 +544,24 @@ class modelPlot():
         ax1.tick_params(axis='x', pad=5)
         ax2.tick_params(axis='x', pad=5)
         ax3.tick_params(axis='x', pad=5)
+        ax6.tick_params(axis='x', pad=5)
 
         # Title
         tt1 = ax1.set_title('Thickness [m]', size=font+3)
-        tt2 = ax2.set_title('Proportion [%]', size=font+3)
-        tt3 = ax3.set_title('Accumulated [%]', size=font+3)
-        tt4 = ax4.set_title('Time \n layers', size=font+3)
-        tt5 = ax5.set_title('Bio. \n facies', size=font+3)
-        tt1.set_position([.5, 1.04])
-        tt2.set_position([.5, 1.04])
-        tt3.set_position([.5, 1.04])
+        tt2 = ax2.set_title('Proportion', size=font+3)
+        tt3 = ax3.set_title('Strat.\nabundance', size=font+3)
+        tt6 = ax6.set_title('Karst. [m]', size=font+3)
+        tt4 = ax4.set_title('Time\nlayers', size=font+3)
+        tt5 = ax5.set_title('Bio.\nfacies', size=font+3)
+        tt1.set_position([.5, 1.025])
+        tt2.set_position([.5, 1.025])
+        tt3.set_position([.5, 1.025])
+        tt6.set_position([.5, 1.025])
         tt4.set_position([.5, 1.025])
         tt5.set_position([.5, 1.025])
         fig.tight_layout()
         plt.tight_layout()
-        plt.figtext(0.887, 0.003, 'left axis:depth [m] - right axis:time [ky]',horizontalalignment='center', fontsize=font)
+        plt.figtext(1.01, 0.3, 'Two last cores axes \nleft: depth [m] \nright:time [ky]',horizontalalignment='left', fontsize=font+1)
         plt.show()
 
 
@@ -594,10 +606,10 @@ class modelPlot():
         tt2 = ax2.set_title('Water flow [m/s]', size=font+3)
         tt3 = ax3.set_title('Sediment input [m/d]', size=font+3)
         tt4 = ax4.set_title('Tectonic rate [mm/y]', size=font+3)
-        tt1.set_position([.5, 1.04])
-        tt2.set_position([.5, 1.04])
-        tt3.set_position([.5, 1.04])
-        tt4.set_position([.5, 1.04])
+        tt1.set_position([.5, 1.01])
+        tt2.set_position([.5, 1.01])
+        tt3.set_position([.5, 1.01])
+        tt4.set_position([.5, 1.01])
         fig.tight_layout()
         plt.tight_layout()
         plt.show()
@@ -615,6 +627,7 @@ class modelPlot():
             tmp4 = np.column_stack((tmp3,self.waterflow[:-1].T))
             tmp5 = np.column_stack((tmp4,self.sedinput[:-1].T))
             tmp6 = np.column_stack((tmp5,self.tecinput[:-1].T))
+            tmp7 = np.column_stack((tmp6,p6.T))
 
             cols = []
             cols.append('depth')
@@ -628,8 +641,9 @@ class modelPlot():
             cols.append('waterflow')
             cols.append('sedinput')
             cols.append('tecrate')
+            cols.append('karstification')
 
-            df = pd.DataFrame(tmp6)
+            df = pd.DataFrame(tmp7)
             df.columns = cols
             name = self.folder+'/'+filename
             df.to_csv(name, sep=sep, encoding='utf-8', index=False)

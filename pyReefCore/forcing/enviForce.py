@@ -115,7 +115,7 @@ class enviForce:
             else:
                 self.flowlin = [input.flowlina,input.flowlinb]
                 self.plotflowx = numpy.linspace(0, input.flowdepth, 100)
-                self.plotflowy = (self.plotflowx-self.flowlin[1])/self.flowlin[0]
+                self.plotflowy = self.flowlin[0]*self.plotflowx+self.flowlin[1]  #(self.plotflowx-self.flowlin[1])/self.flowlin[0]
                 self.plotflowy[self.plotflowy<0]=0.
 
         if input.sedfunc != None:
@@ -132,7 +132,7 @@ class enviForce:
             else:
                 self.sedlin = [input.sedlina,input.sedlinb]
                 self.plotsedx = numpy.linspace(0, input.seddepth, 100)
-                self.plotsedy = (self.plotsedx-self.sedlin[1])/self.sedlin[0]
+                self.plotsedy = input.sedlina*self.plotsedx+input.sedlinb #(self.plotsedx-self.sedlin[1])/self.sedlin[0]
                 self.plotsedy[self.plotsedy<0]=0.
 
         # Shape functions
@@ -514,7 +514,7 @@ class enviForce:
             elif self.sedlin is None:
                 self.sedlevel = self._expdecay_func(elev,*self.sedopt)
             else:
-                self.sedlevel = (elev-self.sedlin[1])/self.sedlin[0]
+                self.sedlevel = self.sedlin[0]*elev+self.sedlin[1]  
             if self.sedlevel<0:
                 self.sedlevel = 0.
         elif self.sedfile == None:
@@ -562,7 +562,7 @@ class enviForce:
             elif self.flowlin is None:
                 self.flowlevel = self._expdecay_func(elev,*self.flowopt)
             else:
-                self.flowlevel = (elev-self.flowlin[1])/self.flowlin[0]
+                self.flowlevel = self.flowlin[0]*elev+self.flowlin[1]
             if self.flowlevel<0.:
                 self.flowlevel = 0.
         elif self.flowfile == None:

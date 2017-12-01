@@ -22,8 +22,10 @@
     <depth>25.</depth>
     <!-- Number of communities to define. -->
     <communityNb>3</communityNb>
-    <!-- Maximum population number. -->
-    <maxPopulation>10</maxPopulation>
+    <!-- Maximum population number (default is 20). -->
+    <maxPopulation>20</maxPopulation>
+    <!-- Maximum production scaling factor (default is 10). -->
+    <prodFactor>10</prodFactor>
     <!-- Turn-on criterion. Population growth only occurs when the
          optimum is met. This reflects the notion that reef ‘turn on’
          events occur because of a confluence of optimal conditions [0,1]. -->

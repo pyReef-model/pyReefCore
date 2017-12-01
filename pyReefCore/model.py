@@ -217,7 +217,7 @@ class Model(object):
             coral,t = self.odeRKF.solve(tODE)
             population = coral.T
             tmppop = np.copy(population[:,-1])
-            tmppop[tmppop>20.] = 20.
+            tmppop[tmppop>self.input.maxpop] = self.input.maxpop
             population[:,-1] = tmppop
 
             # Update coral population
@@ -261,6 +261,7 @@ class Model(object):
         self.plot.mbsl = self.coral.mbsl
         self.plot.depth = self.core.thickness
         self.plot.sedH = self.core.coralH
+        self.plot.karstero = self.core.karstero
         self.plot.timeLay = self.core.layTime
         self.plot.surf = self.core.topH
         self.plot.sealevel = self.core.sealevel

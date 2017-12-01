@@ -51,7 +51,8 @@ class xmlParser:
         self.speciesName = None
         self.malthusParam = None
         self.speciesPopulation = None
-        self.maxpop = None
+        self.maxpop = 20.
+        self.prodscale = 10.
         self.speciesProduction = None
         self.communityMatrix = None
 
@@ -158,8 +159,8 @@ class xmlParser:
             element = litho.find('depth')
             if element is not None:
                 self.depth0 = float(element.text)
-                if self.depth0<0:
-                    raise ValueError('Error in the definition of initial depth needs to be positive!')
+                # if self.depth0<0:
+                #     raise ValueError('Error in the definition of initial depth needs to be positive!')
             else:
                 raise ValueError('Error in the definition of the initial depth is required!')
             element = None
@@ -175,6 +176,12 @@ class xmlParser:
             else:
                 self.maxpop = 20
             element = None
+            element = litho.find('prodFactor')
+            if element is not None:
+                self.prodscale = int(element.text)
+            else:
+                self.prodscale = 10
+            element = None
             element = litho.find('facOpt')
             if element is not None:
                 self.facOpt = float(element.text)
@@ -188,7 +195,7 @@ class xmlParser:
             element = litho.find('karstRate')
             if element is not None:
                 self.karstRate = float(element.text)
-                if self.depth0<0:
+                if self.karstRate<0:
                     raise ValueError('Error the karstification rate needs to be positive!')
             else:
                 self.karstRate = 0.

@@ -43,6 +43,7 @@ class coreData:
         self.layNb = int((input.tEnd - input.tStart)/input.laytime)+1
         self.thickness = numpy.zeros(self.layNb,dtype=float)
         self.coralH = numpy.zeros((input.speciesNb+1,self.layNb),dtype=float)
+        self.karstero = numpy.zeros(self.layNb,dtype=float)
 
         # Diagonal part of the community matrix (coefficient ii)
         self.communityMatrix = input.communityMatrix
@@ -56,7 +57,7 @@ class coreData:
         self.temperature = numpy.zeros(len(self.layTime),dtype=float)
         self.pH = numpy.zeros(len(self.layTime),dtype=float)
         self.waterflow = numpy.zeros(len(self.layTime),dtype=float)
-        self.maxpop = input.maxpop
+        self.prodscale = input.prodscale
 
         # Shape functions
         self.seaOn = input.seaOn
@@ -439,7 +440,7 @@ class coreData:
         # Compute production for the given time step [m]
         production = numpy.zeros((coral.shape))
         ids = numpy.where(epsilon>0.)[0]
-        production[ids] = self.prod[ids] * coral[ids] * self.dt / self.maxpop
+        production[ids] = self.prod[ids] * coral[ids] * self.dt / self.prodscale
         maxProd = self.prod * self.dt
         tmpids = numpy.where(production>maxProd)[0]
         production[tmpids] = maxProd[tmpids]
@@ -466,12 +467,14 @@ class coreData:
                 if self.thickness[k] > remero:
                     perc = remero/self.thickness[k]
                     self.thickness[k] -= remero
+                    self.karstero[k] += remero
                     self.topH += remero
                     for j in range(len(self.prod)+1):
                         self.coralH[j,k] -= perc*self.coralH[j,k]
                     remero = 0.
                 else:
                     remero -= self.thickness[k]
+                    self.karstero[k] += self.thickness[k]
                     self.coralH[:,k] = 0.
                     self.topH += self.thickness[k]
                     self.thickness[k] = 0.
