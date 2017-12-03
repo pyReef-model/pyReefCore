@@ -634,6 +634,7 @@ Example of a core sample, including a well-preserved Faviidae coral recovered fr
 Two case studies are shipped with the code and can form the basis for defining your own model.
 
 - [Idealised case shallowing-up fossil reef sequence](#idealised-case-shallowing-up-fossil-reef-sequence)
+- [Coral-reef records reconstruction since the last interglacial](#coral-reef-records-reconstruction-since-the-last-interglacial)
 
 ### <a name="idealised-case-shallowing-up-fossil-reef-sequence"></a> Idealised case shallowing-up fossil reef sequence
 
@@ -660,5 +661,9 @@ Evolution of accommodation space, elevation, cumulative thickness and communitie
 </div>
 
 Schematic representation of synthetic data construction. (Left) Ideal shallowing-up fossil reef sequence representing a ‘catch-up’ growth strategy with associated assemblage compositions and changes, adapted from Dechnik (2016); (Right) Model output of synthetic core representing ideal shallowing-upward, ‘catch-up’ sequence and detail of the assignment of a vector of numerical IDs to synthetic core.
+
+### <a name="coral-reef-records-reconstruction-since-the-last-interglacial"></a> Coral-reef records reconstruction since the last interglacial
+
+Deglacial sea-level reconstructions based on coral-reef records from Barbados (Peltier and Fairbanks, 2006), Huon Peninsula (Chappell and Polach, 1991; Edwards et al., 1993) and Tahiti (Bard et al., 2010; Deschamps et al., 2012). Generalised core stratigraphy is illustrated for selected cores (after Cabioch et al., 1999; Montaggioni and Braithwaite, 2009; Camoin et al., 2012); see original data sources for dating method, coral type, context and uplift correction information. The central left panel shows the vertical accretion rates derived from these published estimates (Blanchon and Shaw, 1995; Cabioch et al., 1999; Bard et al., 2010; Camoin et al., 2012). To highlight the main patterns these rates have been binned at 0.5 kyr intervals and the colours correspond to those on the age vs. depth plots.
 
 [Back to content](#content)
