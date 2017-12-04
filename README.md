@@ -638,32 +638,40 @@ Two case studies are shipped with the code and can form the basis for defining y
 
 ### <a name="idealised-case-shallowing-up-fossil-reef-sequence"></a> Idealised case shallowing-up fossil reef sequence
 
-#### Communities evolution 
+#### Communities & core evolution 
 
 <div align="center">
-    <img width=650 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/case1pop.jpg" alt="communities changes"</img>
+    <img width=850 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/fig5.jpg" alt="communities changes & core characteristics"</img>
 </div>
 
-Change in community population over time and through depth associated to sea-level changes imposed using Sloss et al. (2007) curve.
-
-#### Core evolution 
-
-<div align="center">
-    <img width=650 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/case1acc.jpg" alt="core characteristics"</img>
-</div>
-
-Evolution of accommodation space, elevation, cumulative thickness and communities production rates simulated using **pyReef-Core**.
+Change in community population over time and through depth associated to sea-level fluctuations imposed using Sloss et al. (2007) curve. As well as evolution of accommodation space, elevation, cumulative thickness and communities production rates simulated using **pyReef-Core**.
 
 #### Synthetic core
 
 <div align="center">
-    <img width=900 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/case1.jpg" alt="Idealised case shallowing-up fossil reef sequence" title="Idealised case shallowing-up fossil reef sequence"</img>
+    <img width=900 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/fig6.jpg" alt="Idealised case shallowing-up fossil reef sequence" title="Idealised case shallowing-up fossil reef sequence"</img>
 </div>
 
-Schematic representation of synthetic data construction. (Left) Ideal shallowing-up fossil reef sequence representing a ‘catch-up’ growth strategy with associated assemblage compositions and changes, adapted from Dechnik (2016); (Right) Model output of synthetic core representing ideal shallowing-upward, ‘catch-up’ sequence and detail of the assignment of a vector of numerical IDs to synthetic core.
+Schematic representation of synthetic data construction. (Left) Ideal shallowing-up fossil reef sequence representing a ‘catch-up’ growth strategy with associated assemblage compositions and changes, adapted from Dechnik (2016); (Right) Model output of synthetic core representing ideal shallowing-upward, ‘catch-up’ sequence.
 
 ### <a name="coral-reef-records-reconstruction-since-the-last-interglacial"></a> Coral-reef records reconstruction since the last interglacial
 
-Deglacial sea-level reconstructions based on coral-reef records from Barbados (Peltier and Fairbanks, 2006), Huon Peninsula (Chappell and Polach, 1991; Edwards et al., 1993) and Tahiti (Bard et al., 2010; Deschamps et al., 2012). Generalised core stratigraphy is illustrated for selected cores (after Cabioch et al., 1999; Montaggioni and Braithwaite, 2009; Camoin et al., 2012); see original data sources for dating method, coral type, context and uplift correction information. The central left panel shows the vertical accretion rates derived from these published estimates (Blanchon and Shaw, 1995; Cabioch et al., 1999; Bard et al., 2010; Camoin et al., 2012). To highlight the main patterns these rates have been binned at 0.5 kyr intervals and the colours correspond to those on the age vs. depth plots.
+
+#### Communities & core evolution 
+
+<div align="center">
+    <img width=850 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/fig7.jpg" alt="communities changes"</img>
+</div>
+
+Change in community population over time and through depth associated to sea-level fluctuations imposed using Grant et al. (2012) curve. As well as evolution of accommodation space, elevation, cumulative thickness and communities production rates simulated using **pyReef-Core**.
+
+#### Synthetic core
+
+<div align="center">
+    <img width=900 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/fig8.jpg" alt="Idealised case shallowing-up fossil reef sequence" title="Idealised case shallowing-up fossil reef sequence"</img>
+</div>
+
+Schematic representation of synthetic data construction.
+
 
 [Back to content](#content)
