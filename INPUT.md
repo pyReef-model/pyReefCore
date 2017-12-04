@@ -1,6 +1,6 @@
 # pyReefCore
 
-**pyReefCore** is a 1D model which simulates evolution of mixed carbonate-siliciclastic system under environmental forcing conditions (_e.g._ sea-level, water flow, siliciclastic input). The carbonate production model simulates the logistic growth and interaction among species based on **Generalized Lotka-Volterra** equations. The environmental forces are converted to factors and combined into one single environmental value to model the evolution of species. The interaction among species is quantified using a _community matrix_ that captures the beneficial or detrimental effects of the presence of each species on the other.
+**pyReefCore** is a 1D model which simulates evolution of mixed carbonate-siliciclastic system under environmental forcing conditions (_e.g._ sea-level, water flow, siliciclastic input). The carbonate production model simulates the logistic growth and interaction among species based on **Generalized Lotka-Volterra** equations. The environmental forces are converted to factors and combined into one single environmental value to model the evolution of communities. The interaction among species is quantified using a _community matrix_ that captures the beneficial or detrimental effects of the presence of each species on the other.
 
 ## Generalized Lotka-Volterra model
 
@@ -101,11 +101,11 @@ from matplotlib.cm import terrain
 nbcolors = len(reef.core.coralH)+3
 colors = terrain(numpy.linspace(0, 1, nbcolors))
 
-# Plot evolution of species population with time
+# Plot evolution of community population with time
 reef.plot.speciesTime(pop=reef.coral.population, time=reef.coral.iterationTime, colors=colors,
                       size=(8,4), font=8, dpi=80,fname='pop.pdf')
 
-# Plot evolution of species population with depth
+# Plot evolution of community population with depth
 reef.plot.speciesDepth(pop=reef.coral.population, depth=reef.core.thickness, colors=colors,
                        size=(8,4), font=8, dpi=80)
 

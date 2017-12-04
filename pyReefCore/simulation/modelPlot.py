@@ -346,7 +346,7 @@ class modelPlot():
 
         ttl = ax.title
         ttl.set_position([.5, 1.05])
-        plt.title('Evolution of species populations with depth',size=font+3)
+        plt.title('Evolution of communities population with depth',size=font+3)
         plt.show()
 
         if fname is not None:
