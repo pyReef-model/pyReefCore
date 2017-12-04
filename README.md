@@ -1,4 +1,4 @@
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1050997.svg)](https://doi.org/10.5281/zenodo.1050997)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.1080115.svg)](https://doi.org/10.5281/zenodo.1080115)
 
 # pyReef-Core
 
