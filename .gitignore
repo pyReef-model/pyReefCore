@@ -12,7 +12,6 @@
 *.vts
 *.xmf
 *.pdf
-*.csv
 *.xdmf
 .ipynb_checkpoints
 .AppleDouble
