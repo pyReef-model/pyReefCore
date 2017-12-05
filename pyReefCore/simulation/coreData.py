@@ -452,12 +452,12 @@ class coreData:
         if verbose:
             print ' Thick:', toth, '\n Prod:', production, '\n Accom: ', self.topH #, '\n fac: ', envfac
 
-        # In case there is no accomodation space
+        # In case there is no accommodation space
         if self.topH < 0. and ero == 0:
             # Do nothing
             return
 
-        # In case there is no accomodation space and karstification is activated
+        # In case there is no accommodation space and karstification is activated
         if self.topH < 0. and ero < 0:
             remero = -ero
             for k in range(layID,-1,-1):
@@ -481,7 +481,7 @@ class coreData:
 
             return
 
-        # If there is some accomodation space but it is all filled by sediment
+        # If there is some accommodation space but it is all filled by sediment
         elif self.topH > 0. and self.topH - sh < 0.:
             # Just add the sediments to the sea-level
             self.coralH[len(self.prod),layID] += self.topH
@@ -490,7 +490,7 @@ class coreData:
             # Update current layer top elevation
             self.topH = 0.
 
-        # If there is some accomodation space that will disappear due to a
+        # If there is some accommodation space that will disappear due to a
         # combination of carbonate growth and sediment input
         elif self.topH > 0. and self.topH - toth < 0:
             maxcarbh = self.topH - sh

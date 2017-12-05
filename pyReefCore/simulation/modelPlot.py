@@ -149,7 +149,7 @@ class modelPlot():
 
         return None
 
-    def accomodationTime(self, colors=None, size=(10,5), font=9, dpi=80, fname=None):
+    def accommodationTime(self, colors=None, size=(10,5), font=9, dpi=80, fname=None):
         """
         This function estimates the accommodation space through time.
 

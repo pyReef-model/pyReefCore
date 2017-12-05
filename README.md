@@ -21,7 +21,7 @@ _Schematic figure of a hypothetical reef with transitions from shallow to deep a
 - [Input file structure](#input-file-structure)
 - [Examples](#examples)
 
-## <a name="generalized-lotka-volterra-model"></a> Generalized Lotka-Volterra model 
+## <a name="generalized-lotka-volterra-model"></a> Generalized Lotka-Volterra model
 
 The most common models of communities evolution in ecological modeling are the predator-prey **Lotka-Volterra (LV)** equation and its modifications.
 
@@ -148,11 +148,11 @@ reef.plot.communityTime(colors=colors, size=(10,4), font=8, dpi=100,fname='apop_
 # Plot evolution of communities population with depth
 reef.plot.communityDepth(colors=colors, size=(10,4), font=8, dpi=100, fname ='apop_d.pdf')
 
-# Plot temporal evolution of accommodation and core thickness 
-reef.plot.accomodationTime(size=(10,4), font=8, dpi=100, fname ='acc_t.pdf')
+# Plot temporal evolution of accommodation and core thickness
+reef.plot.accommodationTime(size=(10,4), font=8, dpi=100, fname ='acc_t.pdf')
 
 # Plot coral facies distribution, assemblages as a synthetic core
-reef.plot.drawCore(lwidth = 3, colsed=colors, coltime = colors2, size=(10,8), font=8, dpi=380, 
+reef.plot.drawCore(lwidth = 3, colsed=colors, coltime = colors2, size=(10,8), font=8, dpi=380,
                    figname=('core.pdf'), filename='core.csv', sep='\t')
 ```
 
@@ -638,7 +638,7 @@ Two case studies are shipped with the code and can form the basis for defining y
 
 ### <a name="idealised-case-shallowing-up-fossil-reef-sequence"></a> Idealised case shallowing-up fossil reef sequence
 
-#### Communities & core evolution 
+#### Communities & core evolution
 
 <div align="center">
     <img width=850 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/fig5.jpg" alt="communities changes & core characteristics"</img>
@@ -657,7 +657,7 @@ Schematic representation of synthetic data construction. (Left) Ideal shallowing
 ### <a name="coral-reef-records-reconstruction-since-the-last-interglacial"></a> Coral-reef records reconstruction since the last interglacial
 
 
-#### Communities & core evolution 
+#### Communities & core evolution
 
 <div align="center">
     <img width=850 src="https://rawgit.com/pyReef-model/pyReefCore/master/mfigs/fig7.jpg" alt="communities changes"</img>

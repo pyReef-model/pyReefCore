@@ -166,7 +166,7 @@ class Model(object):
 
             self.coral.mbsl[self.iter] = self.force.sealevel
 
-            # Store accomodation space through time
+            # Store accommodation space through time
             self.coral.accspace[self.iter] = self.core.topH #max(self.core.topH,0.)
 
             # Get sediment input
@@ -229,7 +229,7 @@ class Model(object):
 
             self.coral.population[:self.input.speciesNb,self.iter] = population[:,-1]
 
-            # In case there is no accomodation space
+            # In case there is no accommodation space
             if self.core.topH <= 0.:
                 population[ids,-1] = 0.
                 self.coral.population[:self.input.speciesNb,self.iter] = 0.
