@@ -84,24 +84,24 @@ class enviForce:
         self.plotflowx = None
         self.plotflowy = None
 
-        if self.seafile != None:
+        if self.seafile is not None:
             self._build_Sea_function()
-        if self.tecfile != None:
+        if self.tecfile is not None:
             self._build_Tec_function()
-        if self.sedfile != None:
+        if self.sedfile is not None:
             self._build_Sed_function()
-        if self.flowfile != None:
+        if self.flowfile is not None:
             self._build_Flow_function()
-        if self.tempfile != None:
+        if self.tempfile is not None:
             self._build_Temp_function()
-        if self.pHfile != None:
+        if self.pHfile is not None:
             self._build_pH_function()
-        if self.nufile != None:
+        if self.nufile is not None:
             self._build_nu_function()
 
-        if input.flowfunc != None:
+        if input.flowfunc is not None:
             self.flowfct = True
-            if input.flowdecay != None:
+            if input.flowdecay is not None:
                 yf = input.flowdecay[0,:]
                 xf = input.flowdecay[1,:]
                 self.xflow = xf
@@ -118,9 +118,9 @@ class enviForce:
                 self.plotflowy = self.flowlin[0]*self.plotflowx+self.flowlin[1]  #(self.plotflowx-self.flowlin[1])/self.flowlin[0]
                 self.plotflowy[self.plotflowy<0]=0.
 
-        if input.sedfunc != None:
+        if input.sedfunc is not None:
             self.sedfct = True
-            if input.seddecay != None:
+            if input.seddecay is not None:
                 y = input.seddecay[0,:]
                 x = input.seddecay[1,:]
                 warnings.filterwarnings('ignore', category=OptimizeWarning)
@@ -514,7 +514,7 @@ class enviForce:
             elif self.sedlin is None:
                 self.sedlevel = self._expdecay_func(elev,*self.sedopt)
             else:
-                self.sedlevel = self.sedlin[0]*elev+self.sedlin[1]  
+                self.sedlevel = self.sedlin[0]*elev+self.sedlin[1]
             if self.sedlevel<0:
                 self.sedlevel = 0.
         elif self.sedfile == None:

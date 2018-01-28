@@ -52,7 +52,7 @@ class Model(object):
         """
         Load an XML configuration file.
         """
-
+        
         # Only the first node should create a unique output dir
         #self.input = xmlParser.xmlParser(filename, makeUniqueOutputDir=(self._rank == 0))
         self.input = xmlParser.xmlParser(filename)
